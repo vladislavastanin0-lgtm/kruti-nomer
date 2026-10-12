@@ -146,7 +146,7 @@
       border: none;
       color: var(--text-sub);
       font-weight: 600;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
@@ -861,9 +861,9 @@
     <div id="sellModal" class="modal-overlay">
       <div class="modal-card">
         <h2>Выставить на продажу</h2>
-        <p>Выберите номер из инвентаря и укажите желаемую цену:</p>
+        <p id="sellLimitHint" style="font-size: 0.8rem; color: var(--gold); margin-bottom: 10px;">Лимит цены зависит от редкости номера</p>
         
-        <select id="plateToSellSelect" style="width:100%; padding:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; margin-bottom:12px; font-size:0.9rem;">
+        <select id="plateToSellSelect" style="width:100%; padding:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; margin-bottom:12px; font-size:0.9rem;" onchange="updateSellLimitHint()">
           <!-- Dyn generated -->
         </select>
 
@@ -940,7 +940,7 @@
       specialCases: 0,
       hasLegendary: false,
       prestigeLvl: 0,
-      activeSale: null, // { plate, askPrice, botName, botOfferPrice, chatHistory: [], stage }
+      activeSale: null,
       daily: {
         lastWeek: 0,
         claimedDays: 0,
@@ -975,7 +975,6 @@
       return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
     }
 
-    // Load State
     const saved = localStorage.getItem('kruti_nomera_state');
     if (saved) {
       try {
@@ -1124,17 +1123,17 @@
         baseVal = 5000;
       } else if (canDropLegendary && rand < (1.0 * luckMult)) {
         rarity = 'purple';
-        rarityName = '✨ Легендарный ✨';
+        rarityName = '✨ Эпический ✨';
         color = '#A855F7';
         baseVal = 3000 + Math.floor(Math.random() * 2000);
       } else if (rand < 10) {
         rarity = 'blue';
-        rarityName = 'Редкий номер';
+        rarityName = 'Супер-редкий';
         color = '#3B82F6';
         baseVal = 1500 + Math.floor(Math.random() * 1000);
       } else if (rand < 40) {
         rarity = 'green';
-        rarityName = 'Необычный номер';
+        rarityName = 'Редкий номер';
         color = '#22C55E';
         baseVal = 1000 + Math.floor(Math.random() * 500);
       } else {
@@ -1164,7 +1163,18 @@
       }
     }
 
-    // MARKET & CHAT SYSTEM
+    // MARKET & CHAT SYSTEM WITH PRICE LIMITS
+    function getMaxPriceForPlate(plate) {
+      switch (plate.rarity) {
+        case 'white': return 200;      // Обычные: до 200
+        case 'green': return 500;      // Редкие: до 500
+        case 'blue': return 1000;      // Супер-редкие: до 1 000
+        case 'purple': return 5000;    // Эпические: до 5 000
+        case 'yellow': return 40000;   // Супер-легендарные: до 40 000
+        default: return 200;
+      }
+    }
+
     function openSellModal() {
       if (state.ownedPlates.length === 0) {
         alert("У вас нет сохраненных номеров для продажи!");
@@ -1181,7 +1191,18 @@
         select.appendChild(opt);
       });
 
+      updateSellLimitHint();
       document.getElementById('sellModal').classList.add('active');
+    }
+
+    function updateSellLimitHint() {
+      const select = document.getElementById('plateToSellSelect');
+      const idx = select.value;
+      if (idx === undefined || !state.ownedPlates[idx]) return;
+
+      const plate = state.ownedPlates[idx];
+      const maxPrice = getMaxPriceForPlate(plate);
+      document.getElementById('sellLimitHint').innerText = `Макс. цена для "${plate.rarityName}": до ${maxPrice.toLocaleString()} 🪙`;
     }
 
     function closeSellModal() {
@@ -1194,15 +1215,20 @@
       const idx = parseInt(select.value);
       const askPrice = parseInt(priceInput.value);
 
+      const plate = state.ownedPlates[idx];
+      const maxAllowedPrice = getMaxPriceForPlate(plate);
+
       if (isNaN(askPrice) || askPrice <= 0) {
         alert("Пожалуйста, укажите корректную цену!");
         return;
       }
 
-      const plate = state.ownedPlates[idx];
+      if (askPrice > maxAllowedPrice) {
+        alert(`Превышен лимит цены! Для этого типа номера максимальная цена составляет ${maxAllowedPrice.toLocaleString()} 🪙.`);
+        return;
+      }
+
       const botName = BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)];
-      
-      // Calculate offer price (bot offers ~75-85% of asked price)
       const offerPrice = Math.round(askPrice * (0.75 + Math.random() * 0.1));
 
       state.activeSale = {
@@ -1214,14 +1240,13 @@
         chatHistory: [
           { author: "Система", text: `Номер ${plate.text} выставлен на продажу за ${askPrice.toLocaleString()} 🪙.` }
         ],
-        stage: 'waiting' // waiting, chatting, done
+        stage: 'waiting'
       };
 
       closeSellModal();
       saveState();
       renderMarketChat();
 
-      // Trigger bot contact after 3 seconds
       setTimeout(() => {
         if (!state.activeSale) return;
         state.activeSale.stage = 'chatting';
@@ -1261,7 +1286,6 @@
       });
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // Render negotiation action buttons
       actions.innerHTML = '';
       if (state.activeSale.stage === 'chatting') {
         const btnAccept = document.createElement('button');
@@ -1276,7 +1300,7 @@
         btnCounter.className = 'main-btn';
         btnCounter.style.padding = '8px';
         btnCounter.style.fontSize = '0.85rem';
-        btnCounter.innerText = `Сторговаться на 중간-цену (${Math.round((state.activeSale.askPrice + state.activeSale.botOfferPrice)/2).toLocaleString()} 🪙)`;
+        btnCounter.innerText = `Сторговаться на среднюю цену (${Math.round((state.activeSale.askPrice + state.activeSale.botOfferPrice)/2).toLocaleString()} 🪙)`;
         btnCounter.onclick = () => handleChatResponse('counter');
 
         const btnFirm = document.createElement('button');
@@ -1322,7 +1346,7 @@
         const midPrice = Math.round((sale.askPrice + sale.botOfferPrice) / 2);
         sale.chatHistory.push({ author: 'Вы', text: `Давай ни тебе, ни мне — за ${midPrice.toLocaleString()} 🪙 отдадам.` });
         
-        if (Math.random() < 0.8) { // 80% success
+        if (Math.random() < 0.8) {
           sale.chatHistory.push({ author: sale.botName, text: `Эх, ладно, договорились! Забираю за ${midPrice.toLocaleString()} 🪙.` });
           state.coins += midPrice;
           state.ownedPlates.splice(sale.plateIdx, 1);
@@ -1335,7 +1359,7 @@
       } else if (type === 'firm') {
         sale.chatHistory.push({ author: 'Вы', text: `Не, скидки не будет. Цена окончательная — ${sale.askPrice.toLocaleString()} 🪙.` });
         
-        if (Math.random() < 0.5) { // 50% success
+        if (Math.random() < 0.5) {
           sale.chatHistory.push({ author: sale.botName, text: `Ладно, уж больно номер хорош. По рукам за ${sale.askPrice.toLocaleString()} 🪙!` });
           state.coins += sale.askPrice;
           state.ownedPlates.splice(sale.plateIdx, 1);
@@ -1428,12 +1452,12 @@
           id: Date.now(),
           text: generateRandomPlateText(),
           rarity: 'blue',
-          rarityName: 'Редкий номер',
+          rarityName: 'Супер-редкий',
           color: '#3B82F6',
           value: 1500
         };
         state.ownedPlates.push(rarePlate);
-        msg = `🎁 В инвентарь добавлен редкий номер ${rarePlate.text}!`;
+        msg = `🎁 В инвентарь добавлен номер ${rarePlate.text}!`;
       } else if (dayIdx === 5) {
         state.coins += 500000;
         msg = "🎁 Получено 500 000 монет!";
