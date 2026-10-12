@@ -643,8 +643,8 @@
 
     const BOT_TOKEN = "8977809186:AAF0fqobqVRQf8wbnwApirFl_dwSrHZvxPc";
 
-    // GAME STATE (СБРОС СДЕЛАН АВТОМАТИЧЕСКИ ЧЕРЕЗ ВЕРСИЮ СОХРАНЕНИЯ)
-    const CURRENT_VERSION = "v2_reset";
+    // ПРИНУДИТЕЛЬНЫЙ СБРОС (Ключ версии v3_forced_reset)
+    const CURRENT_VERSION = "v3_forced_reset";
     let state = {
       version: CURRENT_VERSION,
       coins: 2000,
@@ -670,7 +670,7 @@
       { id: 9, name: "Lamborghini Aventador SVJ", price: 10000000, type: "Gas", color: "#E74C3C" }
     ];
 
-    // Load State с проверкой версии (если версия старая — игра сбрасывается к 2000)
+    // Загрузка состояния с проверкой версии
     const saved = localStorage.getItem('kruti_nomera_state');
     if (saved) {
       try {
@@ -678,10 +678,11 @@
         if (parsed.version === CURRENT_VERSION) {
           state = { ...state, ...parsed };
         } else {
-          // Версия изменилась -> полный сброс к дефолту
-          saveState();
+          saveState(); // Сбросить все старые данные в 2000 монет
         }
-      } catch(e){}
+      } catch(e){
+        saveState();
+      }
     } else {
       saveState();
     }
