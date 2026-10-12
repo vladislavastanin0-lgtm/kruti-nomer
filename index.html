@@ -16,6 +16,7 @@
       --text-sub: #A0AEC0;
       --gold: #FFD700;
       --red: #E74C3C;
+      --purple: #A855F7;
     }
 
     * {
@@ -134,22 +135,24 @@
       display: flex;
       background: var(--card-bg);
       border-bottom: 2px solid rgba(255,255,255,0.05);
+      overflow-x: auto;
     }
 
     .nav-btn {
       flex: 1;
-      padding: 10px 0;
+      padding: 8px 4px;
       background: none;
       border: none;
       color: var(--text-sub);
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
+      gap: 2px;
+      white-space: nowrap;
     }
 
     .nav-btn.active {
@@ -163,7 +166,7 @@
       flex: 1;
       display: none;
       flex-direction: column;
-      padding: 20px;
+      padding: 15px;
       overflow-y: auto;
     }
 
@@ -281,9 +284,9 @@
       background: var(--accent-color);
       color: white;
       border: none;
-      padding: 16px;
+      padding: 14px;
       border-radius: 14px;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(59,130,246,0.4);
@@ -309,7 +312,7 @@
     /* LUCK UPGRADE SECTION */
     .luck-box {
       background: var(--card-bg);
-      padding: 15px;
+      padding: 12px 15px;
       border-radius: 14px;
       display: flex;
       justify-content: space-between;
@@ -318,12 +321,12 @@
     }
 
     .luck-info h4 {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       margin-bottom: 2px;
     }
 
     .luck-info p {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-sub);
     }
 
@@ -333,7 +336,7 @@
       border: 1px solid rgba(255,215,0,0.3);
       padding: 8px 12px;
       border-radius: 10px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 700;
       cursor: pointer;
     }
@@ -353,12 +356,12 @@
       align-items: center;
       position: relative;
       border: 1px solid rgba(255,255,255,0.05);
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .car-canvas-container {
       width: 100%;
-      height: 200px;
+      height: 180px;
       position: relative;
       display: flex;
       justify-content: center;
@@ -402,7 +405,7 @@
     }
 
     .car-title {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 700;
     }
 
@@ -416,28 +419,28 @@
     }
 
     .equipped-plate-info {
-      margin-top: 10px;
-      font-size: 0.85rem;
+      margin-top: 8px;
+      font-size: 0.8rem;
       color: var(--text-sub);
     }
 
     .inventory-title {
-      font-size: 1rem;
-      margin-bottom: 10px;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
       color: var(--text-sub);
     }
 
     .plates-grid {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .plate-item {
       background: var(--card-bg);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 10px;
-      padding: 12px 16px;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -452,25 +455,72 @@
     .plate-item-mini {
       font-family: monospace;
       font-weight: bold;
-      font-size: 1.1rem;
-      padding: 4px 10px;
+      font-size: 1rem;
+      padding: 4px 8px;
       background: #FFF;
       color: #000;
       border-radius: 4px;
       border: 1px solid #000;
     }
 
+    /* CASES & TASKS SCREEN UI */
+    .section-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 15px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .section-card h3 {
+      font-size: 1rem;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .section-card p {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+    }
+
+    .daily-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .day-box {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 0.75rem;
+    }
+
+    .day-box.claimed {
+      opacity: 0.4;
+      border-color: #22C55E;
+    }
+
+    .day-box.active-day {
+      border-color: var(--gold);
+      background: rgba(255,215,0,0.1);
+    }
+
     /* SHOP SCREEN */
     .shop-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     .car-shop-item {
       background: var(--card-bg);
       border-radius: 12px;
-      padding: 14px;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -478,11 +528,11 @@
     }
 
     .car-shop-info h4 {
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
 
     .car-shop-info p {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--gold);
       font-weight: bold;
       margin-top: 2px;
@@ -517,13 +567,13 @@
 
     .modal-card h2 {
       color: var(--gold);
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       margin-bottom: 10px;
     }
 
     .modal-card p {
       color: var(--text-sub);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       line-height: 1.4;
       margin-bottom: 20px;
     }
@@ -533,21 +583,20 @@
       color: #000;
       font-weight: 800;
       text-align: center;
-      padding: 10px;
-      font-size: 0.85rem;
+      padding: 8px;
+      font-size: 0.8rem;
       display: none;
     }
 
-    /* STARS SHOP MODAL */
     .stars-item {
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,215,0,0.2);
       border-radius: 12px;
-      padding: 12px;
+      padding: 10px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
   </style>
 </head>
@@ -583,6 +632,12 @@
       </button>
       <button class="nav-btn" onclick="switchTab('shop')">
         <span>🏬</span> Салон
+      </button>
+      <button class="nav-btn" onclick="switchTab('cases')">
+        <span>📦</span> Кейсы
+      </button>
+      <button class="nav-btn" onclick="switchTab('tasks')">
+        <span>🏆</span> Задания
       </button>
     </nav>
 
@@ -628,7 +683,7 @@
         <button class="carousel-nav-btn next" onclick="nextCar()">▶</button>
         
         <div class="car-canvas-container">
-          <canvas id="carCanvas" width="380" height="200"></canvas>
+          <canvas id="carCanvas" width="380" height="180"></canvas>
         </div>
 
         <div class="car-details">
@@ -651,16 +706,59 @@
       </div>
     </div>
 
+    <!-- CASES & DAILY SCREEN -->
+    <div id="casesScreen" class="screen">
+      <div class="section-card">
+        <h3>🎁 Ежедневные бонусы</h3>
+        <p>Заходите каждый день! Сетка наград обновляется автоматически каждую неделю.</p>
+        <div id="dailyGrid" class="daily-grid">
+          <!-- Dyn generated -->
+        </div>
+        <button id="claimDailyBtn" class="main-btn" style="width: 100%; padding: 10px; font-size: 0.95rem;" onclick="claimDailyReward()">Забрать бонус дня</button>
+      </div>
+
+      <div class="section-card">
+        <h3>📦 Особый кейс</h3>
+        <p>Содержит от 1 000 000 монет до эксклюзивного Tank 500!</p>
+        <div style="font-size: 0.85rem; color: var(--gold); margin-bottom: 10px;">
+          Доступно кейсов: <span id="specialCasesCount" style="font-weight: bold;">0</span>
+        </div>
+        <button id="openSpecialCaseBtn" class="main-btn" style="width: 100%; padding: 12px;" onclick="openSpecialCase()">Открыть особый кейс</button>
+      </div>
+    </div>
+
+    <!-- TASKS & ACHIEVEMENTS SCREEN -->
+    <div id="tasksScreen" class="screen">
+      <div class="section-card">
+        <h3>🏆 Достижения и Задания</h3>
+        <p>Выполняйте условия и получайте ценные награды!</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+            <div style="font-weight: bold; font-size: 0.9rem; margin-bottom: 4px;">🎯 Сделай 500 спинов</div>
+            <div style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 8px;">Прогресс: <span id="spinTaskProg">0</span> / 500</div>
+            <button id="claimSpinTask" class="btn-small" style="width: 100%;" disabled onclick="claimTask('spins')">Забрать: 1 Особый кейс</button>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+            <div style="font-weight: bold; font-size: 0.9rem; margin-bottom: 4px;">✨ Выбей легендарный номер</div>
+            <div style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 8px;">Статус: <span id="legendaryTaskProg">Не выполнено</span></div>
+            <button id="claimLegendaryTask" class="btn-small" style="width: 100%;" disabled onclick="claimTask('legendary')">Забрать: 200 000 🪙</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- STARS MODAL -->
     <div id="starsModal" class="modal-overlay">
       <div class="modal-card" style="max-width: 380px;">
         <h2>Магазин Telegram Stars ⭐</h2>
-        <p style="margin-bottom: 15px;">Выберите пакет монет для мгновенного зачисления:</p>
+        <p style="margin-bottom: 12px;">Выберите пакет монет для мгновенного зачисления:</p>
         
         <div class="stars-item">
           <div style="text-align: left;">
             <div style="font-weight: bold; color: var(--gold);">1 000 000 🪙</div>
-            <div style="font-size: 0.8rem; color: var(--text-sub);">Стартовый пакет</div>
+            <div style="font-size: 0.75rem; color: var(--text-sub);">Стартовый пакет</div>
           </div>
           <button class="btn-small" onclick="buyWithStars('1 000 000 монет', 'Зачисление 1 000 000 монет в игре', 10, 1000000)">⭐ 10</button>
         </div>
@@ -668,20 +766,20 @@
         <div class="stars-item">
           <div style="text-align: left;">
             <div style="font-weight: bold; color: var(--gold);">5 000 000 🪙</div>
-            <div style="font-size: 0.8rem; color: var(--text-sub);">Выгодный пакет</div>
+            <div style="font-size: 0.75rem; color: var(--text-sub);">Выгодный пакет</div>
           </div>
           <button class="btn-small" onclick="buyWithStars('5 000 000 монет', 'Зачисление 5 000 000 монет в игре', 20, 5000000)">⭐ 20</button>
         </div>
 
-        <div class="stars-item" style="margin-bottom: 20px;">
+        <div class="stars-item" style="margin-bottom: 15px;">
           <div style="text-align: left;">
             <div style="font-weight: bold; color: var(--gold);">10 000 000 🪙</div>
-            <div style="font-size: 0.8rem; color: var(--text-sub);">Элитный пакет</div>
+            <div style="font-size: 0.75rem; color: var(--text-sub);">Элитный пакет</div>
           </div>
           <button class="btn-small" onclick="buyWithStars('10 000 000 монет', 'Зачисление 10 000 000 монет в игре', 50, 10000000)">⭐ 50</button>
         </div>
 
-        <button class="main-btn" style="width: 100%; padding: 12px; font-size: 1rem;" onclick="closeStarsModal()">Закрыть</button>
+        <button class="main-btn" style="width: 100%; padding: 10px; font-size: 0.95rem;" onclick="closeStarsModal()">Закрыть</button>
       </div>
     </div>
 
@@ -714,6 +812,17 @@
       selectedCarIdx: 0,
       equippedPlates: {},
       ownedPlates: [],
+      specialCases: 0,
+      hasLegendary: false,
+      daily: {
+        lastWeek: 0,
+        claimedDays: 0,
+        lastClaimDate: null
+      },
+      tasks: {
+        spinsClaimed: false,
+        legendaryClaimed: false
+      },
       isSpinning: false
     };
 
@@ -730,12 +839,28 @@
       { id: 9, name: "Lamborghini Aventador SVJ", price: 10000000, type: "Gas", color: "#E74C3C" }
     ];
 
+    // Helper: Get current week number of the year
+    function getWeekNumber(d) {
+      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+      var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+      return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+    }
+
     // Load State
     const saved = localStorage.getItem('kruti_nomera_state');
     if (saved) {
       try {
         state = { ...state, ...JSON.parse(saved) };
       } catch(e){}
+    }
+
+    // Check weekly reset for daily bonuses
+    const currentWeek = getWeekNumber(new Date());
+    if (state.daily.lastWeek !== currentWeek) {
+      state.daily.lastWeek = currentWeek;
+      state.daily.claimedDays = 0;
+      state.daily.lastClaimDate = null;
     }
 
     function saveState() {
@@ -813,6 +938,11 @@
 
         state.coins += result.value;
         state.ownedPlates.push(result);
+
+        if (result.rarity === 'purple' || result.rarity === 'yellow') {
+          state.hasLegendary = true;
+        }
+
         state.isSpinning = false;
         
         saveState();
@@ -884,6 +1014,171 @@
       }
     }
 
+    // DAILY REWARDS SYSTEM (7 Days)
+    const DAILY_REWARDS = [
+      { day: 1, name: "Обычный кейс", desc: "10k монет или Camry 70" },
+      { day: 2, name: "50 000 🪙", desc: "Монеты" },
+      { day: 3, name: "Ап Удачи", desc: "+1 Уровень Удачи" },
+      { day: 4, name: "150 000 🪙", desc: "Монеты" },
+      { day: 5, name: "Редкий номер", desc: "В инвентарь" },
+      { day: 6, name: "500 000 🪙", desc: "Монеты" },
+      { day: 7, name: "Особый кейс", desc: "1M монет или Tank 500" }
+    ];
+
+    function renderDailyRewards() {
+      const grid = document.getElementById('dailyGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const todayStr = new Date().toDateString();
+      const canClaimToday = state.daily.lastClaimDate !== todayStr && state.daily.claimedDays < 7;
+
+      DAILY_REWARDS.forEach((rew, idx) => {
+        const box = document.createElement('div');
+        const isClaimed = idx < state.daily.claimedDays;
+        const isCurrent = idx === state.daily.claimedDays;
+
+        box.className = `day-box ${isClaimed ? 'claimed' : ''} ${isCurrent && canClaimToday ? 'active-day' : ''}`;
+        box.innerHTML = `
+          <div style="font-weight:bold; margin-bottom:2px;">Д.${rew.day}</div>
+          <div style="font-size:0.65rem; color:var(--gold);">${rew.name}</div>
+        `;
+        grid.appendChild(box);
+      });
+
+      const claimBtn = document.getElementById('claimDailyBtn');
+      if (state.daily.claimedDays >= 7) {
+        claimBtn.innerText = "Все бонусы недели получены!";
+        claimBtn.disabled = true;
+      } else if (!canClaimToday) {
+        claimBtn.innerText = "Бонус сегодня уже получен";
+        claimBtn.disabled = true;
+      } else {
+        claimBtn.innerText = "Забрать бонус дня";
+        claimBtn.disabled = false;
+      }
+    }
+
+    function claimDailyReward() {
+      const todayStr = new Date().toDateString();
+      if (state.daily.lastClaimDate === todayStr || state.daily.claimedDays >= 7) return;
+
+      const dayIdx = state.daily.claimedDays;
+      state.daily.claimedDays++;
+      state.daily.lastClaimDate = todayStr;
+
+      let msg = "";
+      if (dayIdx === 0) {
+        // День 1: Обычный кейс (10к монет или Camry 70)
+        if (Math.random() < 0.25 && !state.ownedCars.includes(2)) {
+          state.ownedCars.push(2);
+          msg = "🎁 Из кейса выпал автомобиль Toyota Camry 70!";
+        } else {
+          state.coins += 10000;
+          msg = "🎁 Из кейса выпало 10 000 монет!";
+        }
+      } else if (dayIdx === 1) {
+        state.coins += 50000;
+        msg = "🎁 Получено 50 000 монет!";
+      } else if (dayIdx === 2) {
+        state.luckLvl++;
+        msg = "🎁 Уровень удачи бесплатно повышен!";
+      } else if (dayIdx === 3) {
+        state.coins += 150000;
+        msg = "🎁 Получено 150 000 монет!";
+      } else if (dayIdx === 4) {
+        // Редкий номер
+        const rarePlate = {
+          id: Date.now(),
+          text: generateRandomPlateText(),
+          rarity: 'blue',
+          rarityName: 'Редкий номер',
+          color: '#3B82F6',
+          value: 1500
+        };
+        state.ownedPlates.push(rarePlate);
+        msg = `🎁 В инвентарь добавлен редкий номер ${rarePlate.text}!`;
+      } else if (dayIdx === 5) {
+        state.coins += 500000;
+        msg = "🎁 Получено 500 000 монет!";
+      } else if (dayIdx === 6) {
+        state.specialCases++;
+        msg = "🎁 Получен 1 Особый кейс!";
+      }
+
+      saveState();
+      updateHeader();
+      renderDailyRewards();
+      showModal("ЕЖЕДНЕВНЫЙ БОНУС", msg);
+    }
+
+    // SPECIAL CASE & TASKS SYSTEM
+    function updateTasksUI() {
+      document.getElementById('specialCasesCount').innerText = state.specialCases;
+
+      // Spins task (500 spins)
+      const spinProgEl = document.getElementById('spinTaskProg');
+      const spinBtnEl = document.getElementById('claimSpinTask');
+      spinProgEl.innerText = Math.min(state.spins, 500);
+
+      if (state.spins >= 500 && !state.tasks.spinsClaimed) {
+        spinBtnEl.disabled = false;
+      } else if (state.tasks.spinsClaimed) {
+        spinBtnEl.innerText = "Получено ✓";
+        spinBtnEl.disabled = true;
+      }
+
+      // Legendary task
+      const legProgEl = document.getElementById('legendaryTaskProg');
+      const legBtnEl = document.getElementById('claimLegendaryTask');
+      if (state.hasLegendary) {
+        legProgEl.innerText = "Выполнено!";
+        if (!state.tasks.legendaryClaimed) {
+          legBtnEl.disabled = false;
+        } else {
+          legBtnEl.innerText = "Получено ✓";
+          legBtnEl.disabled = true;
+        }
+      }
+    }
+
+    function claimTask(type) {
+      if (type === 'spins' && state.spins >= 500 && !state.tasks.spinsClaimed) {
+        state.tasks.spinsClaimed = true;
+        state.specialCases++;
+        showModal("НАГРАДА ЗАЧИСЛЕНА!", "Вы получили 1 Особый кейс за 500 спинов!");
+      } else if (type === 'legendary' && state.hasLegendary && !state.tasks.legendaryClaimed) {
+        state.tasks.legendaryClaimed = true;
+        state.coins += 200000;
+        showModal("НАГРАДА ЗАЧИСЛЕНА!", "Вы получили 200 000 монет за легендарный номер!");
+      }
+      saveState();
+      updateHeader();
+      updateTasksUI();
+    }
+
+    function openSpecialCase() {
+      if (state.specialCases <= 0) {
+        alert("У вас нет Особых кейсов! Получайте их за задания или бонус 7-го дня.");
+        return;
+      }
+
+      state.specialCases--;
+      saveState();
+      updateTasksUI();
+
+      // Drop logic: 1M coins (medium chance) or Tank 500 (small chance)
+      let rand = Math.random();
+      if (rand < 0.2 && !state.ownedCars.includes(7)) {
+        state.ownedCars.push(7);
+        showModal("ОТКРЫТИЕ КЕЙСА!", "🎉 Потрясающе! Из Особого кейса выпал внедорожник Tank 500!");
+      } else {
+        state.coins += 1000000;
+        showModal("ОТКРЫТИЕ КЕЙСА!", "💰 Вам выпало 1 000 000 монет из Особого кейса!");
+      }
+      updateHeader();
+    }
+
     // GARAGE & CAR CANVAS DRAWING
     let carAngle = 0;
     let isDragging = false;
@@ -925,13 +1220,13 @@
       const equippedPlate = state.equippedPlates[carData.id];
 
       ctx.save();
-      ctx.translate(canvas.width / 2, canvas.height / 2 + 20);
+      ctx.translate(canvas.width / 2, canvas.height / 2 + 10);
 
       let cos = Math.cos(carAngle);
 
       ctx.fillStyle = "rgba(0,0,0,0.4)";
       ctx.beginPath();
-      ctx.ellipse(0, 45, 120 * Math.abs(cos) + 60, 20, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 40, 100 * Math.abs(cos) + 50, 16, 0, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.fillStyle = carData.color;
@@ -939,22 +1234,22 @@
       ctx.lineWidth = 3;
 
       ctx.beginPath();
-      let width = 160 * Math.abs(cos) + 40;
-      let height = 50;
-      ctx.roundRect(-width/2, -height/2, width, height, 10);
+      let width = 140 * Math.abs(cos) + 35;
+      let height = 45;
+      ctx.roundRect(-width/2, -height/2, width, height, 8);
       ctx.fill();
       ctx.stroke();
 
       ctx.fillStyle = "#111";
       ctx.beginPath();
-      ctx.roundRect(-width/3, -height/2 - 30, width/1.5, 35, 5);
+      ctx.roundRect(-width/3, -height/2 - 25, width/1.5, 30, 4);
       ctx.fill();
       ctx.stroke();
 
       ctx.fillStyle = "#222";
       ctx.beginPath();
-      ctx.arc(-width/3, 25, 18, 0, Math.PI * 2);
-      ctx.arc(width/3, 25, 18, 0, Math.PI * 2);
+      ctx.arc(-width/3, 22, 15, 0, Math.PI * 2);
+      ctx.arc(width/3, 22, 15, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
 
@@ -963,15 +1258,15 @@
         ctx.strokeStyle = "#000";
         ctx.lineWidth = 1;
         
-        let plateW = 60 * Math.abs(cos) + 20;
-        let plateH = 16;
-        ctx.fillRect(-plateW/2, 10, plateW, plateH);
-        ctx.strokeRect(-plateW/2, 10, plateW, plateH);
+        let plateW = 50 * Math.abs(cos) + 15;
+        let plateH = 14;
+        ctx.fillRect(-plateW/2, 8, plateW, plateH);
+        ctx.strokeRect(-plateW/2, 8, plateW, plateH);
 
         ctx.fillStyle = "#000";
-        ctx.font = "bold 9px monospace";
+        ctx.font = "bold 8px monospace";
         ctx.textAlign = "center";
-        ctx.fillText(equippedPlate.text, 0, 22);
+        ctx.fillText(equippedPlate.text, 0, 18);
       }
 
       ctx.restore();
@@ -1001,7 +1296,7 @@
       grid.innerHTML = '';
 
       if (state.ownedPlates.length === 0) {
-        grid.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.9rem;">У вас нет сохраненных номеров</p>';
+        grid.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.85rem;">У вас нет сохраненных номеров</p>';
         return;
       }
 
@@ -1011,11 +1306,11 @@
         item.className = `plate-item ${isEquipped ? 'equipped' : ''}`;
         
         item.innerHTML = `
-          <div style="display:flex; align-items:center; gap:10px; cursor:pointer; flex:1;" onclick="equipPlate(${index})">
+          <div style="display:flex; align-items:center; gap:8px; cursor:pointer; flex:1;" onclick="equipPlate(${index})">
             <div class="plate-item-mini">${plate.text}</div>
             <div>
-              <div style="font-size:0.75rem; color:${plate.color}">${plate.rarityName}</div>
-              <div style="font-size:0.7rem; color:var(--text-sub);">${isEquipped ? 'На авто ✓' : 'Нажмите, чтобы надеть'}</div>
+              <div style="font-size:0.7rem; color:${plate.color}">${plate.rarityName}</div>
+              <div style="font-size:0.65rem; color:var(--text-sub);">${isEquipped ? 'На авто ✓' : 'Нажмите, чтобы надеть'}</div>
             </div>
           </div>
         `;
@@ -1153,6 +1448,14 @@
         document.querySelectorAll('.nav-btn')[2].classList.add('active');
         document.getElementById('shopScreen').classList.add('active');
         try { renderShop(); } catch(e) { console.error(e); }
+      } else if (tab === 'cases') {
+        document.querySelectorAll('.nav-btn')[3].classList.add('active');
+        document.getElementById('casesScreen').classList.add('active');
+        try { renderDailyRewards(); } catch(e) { console.error(e); }
+      } else if (tab === 'tasks') {
+        document.querySelectorAll('.nav-btn')[4].classList.add('active');
+        document.getElementById('tasksScreen').classList.add('active');
+        try { updateTasksUI(); } catch(e) { console.error(e); }
       }
     }
 
@@ -1170,6 +1473,8 @@
     window.onload = () => {
       initGarageCanvas();
       updateHeader();
+      renderDailyRewards();
+      updateTasksUI();
     };
   </script>
 </body>
