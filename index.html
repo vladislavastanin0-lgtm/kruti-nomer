@@ -925,6 +925,7 @@
 
     function initGarageCanvas() {
       const canvas = document.getElementById('carCanvas');
+      if (!canvas) return;
       canvas.addEventListener('mousedown', (e) => { isDragging = true; startX = e.clientX; });
       window.addEventListener('mouseup', () => { isDragging = false; });
       window.addEventListener('mousemove', (e) => {
@@ -948,6 +949,7 @@
 
     function drawGarageCar() {
       const canvas = document.getElementById('carCanvas');
+      if (!canvas) return;
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -1016,15 +1018,20 @@
       const carData = CARS_DATA[carId];
       const equippedPlate = state.equippedPlates[carId];
 
-      document.getElementById('carTitle').innerText = carData.name;
-      document.getElementById('carType').innerText = carData.type === 'Electric' ? '⚡ Электрокар' : '⛽ Бензиновый';
-      document.getElementById('equippedPlateInfo').innerText = equippedPlate 
+      const carTitleEl = document.getElementById('carTitle');
+      const carTypeEl = document.getElementById('carType');
+      const equippedPlateInfoEl = document.getElementById('equippedPlateInfo');
+      
+      if (carTitleEl) carTitleEl.innerText = carData.name;
+      if (carTypeEl) carTypeEl.innerText = carData.type === 'Electric' ? '⚡ Электрокар' : '⛽ Бензиновый';
+      if (equippedPlateInfoEl) equippedPlateInfoEl.innerText = equippedPlate 
         ? `Номер: ${equippedPlate.text}` 
         : "Номер: Не установлен";
 
       drawGarageCar();
 
       const grid = document.getElementById('platesGrid');
+      if (!grid) return;
       grid.innerHTML = '';
 
       if (state.ownedPlates.length === 0) {
@@ -1075,6 +1082,7 @@
     // SHOP SYSTEM
     function renderShop() {
       const shopList = document.getElementById('shopList');
+      if (!shopList) return;
       shopList.innerHTML = '';
 
       CARS_DATA.forEach(car => {
@@ -1165,15 +1173,15 @@
       } else if (tab === 'garage') {
         document.querySelectorAll('.nav-btn')[1].classList.add('active');
         document.getElementById('garageScreen').classList.add('active');
-        renderGarage();
+        try { renderGarage(); } catch(e) { console.error(e); }
       } else if (tab === 'shop') {
         document.querySelectorAll('.nav-btn')[2].classList.add('active');
         document.getElementById('shopScreen').classList.add('active');
-        renderShop();
+        try { renderShop(); } catch(e) { console.error(e); }
       } else if (tab === 'leaderboard') {
         document.querySelectorAll('.nav-btn')[3].classList.add('active');
         document.getElementById('leaderboardScreen').classList.add('active');
-        loadLeaderboard();
+        try { loadLeaderboard(); } catch(e) { console.error(e); }
       }
     }
 
@@ -1196,3 +1204,4 @@
   </script>
 </body>
 </html>
+
