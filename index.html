@@ -15,6 +15,7 @@
       --text-main: #FFFFFF;
       --text-sub: #A0AEC0;
       --gold: #FFD700;
+      --red: #E74C3C;
     }
 
     * {
@@ -412,8 +413,8 @@
     }
 
     .plates-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      display: flex;
+      flex-direction: column;
       gap: 10px;
     }
 
@@ -421,13 +422,11 @@
       background: var(--card-bg);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 10px;
-      padding: 10px;
+      padding: 12px 16px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      position: relative;
+      justify-content: space-between;
+      gap: 10px;
     }
 
     .plate-item.equipped {
@@ -438,12 +437,28 @@
     .plate-item-mini {
       font-family: monospace;
       font-weight: bold;
-      font-size: 0.95rem;
-      padding: 4px 8px;
+      font-size: 1.1rem;
+      padding: 4px 10px;
       background: #FFF;
       color: #000;
       border-radius: 4px;
       border: 1px solid #000;
+    }
+
+    .plate-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .sell-btn {
+      background: var(--red);
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.8rem;
+      cursor: pointer;
     }
 
     /* SHOP SCREEN */
@@ -931,24 +946,64 @@
       const grid = document.getElementById('platesGrid');
       grid.innerHTML = '';
 
-      state.ownedPlates.forEach((plate) => {
+      if (state.ownedPlates.length === 0) {
+        grid.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.9rem;">У вас нет сохраненных номеров</p>';
+        return;
+      }
+
+      state.ownedPlates.forEach((plate, index) => {
         const item = document.createElement('div');
         const isEquipped = equippedPlate && equippedPlate.id === plate.id;
         item.className = `plate-item ${isEquipped ? 'equipped' : ''}`;
         
         item.innerHTML = `
-          <div class="plate-item-mini">${plate.text}</div>
-          <div style="font-size:0.75rem; color:${plate.color}">${plate.rarityName}</div>
+          <div style="display:flex; align-items:center; gap:10px; cursor:pointer; flex:1;" onclick="equipPlate(${index})">
+            <div class="plate-item-mini">${plate.text}</div>
+            <div>
+              <div style="font-size:0.75rem; color:${plate.color}">${plate.rarityName}</div>
+              <div style="font-size:0.7rem; color:var(--text-sub);">${isEquipped ? 'На авто ✓' : 'Нажмите, чтобы надеть'}</div>
+            </div>
+          </div>
+          <div class="plate-actions">
+            <button class="sell-btn" onclick="sellPlate(${index})">Продать</button>
+          </div>
         `;
-
-        item.onclick = () => {
-          state.equippedPlates[carId] = plate;
-          saveState();
-          renderGarage();
-        };
 
         grid.appendChild(item);
       });
+    }
+
+    function equipPlate(index) {
+      const carId = state.ownedCars[state.selectedCarIdx];
+      state.equippedPlates[carId] = state.ownedPlates[index];
+      saveState();
+      renderGarage();
+    }
+
+    function sellPlate(index) {
+      const plate = state.ownedPlates[index];
+      const priceInput = prompt(`За сколько хотите продать номер ${plate.text}?`, plate.value);
+
+      if (priceInput !== null) {
+        const sellPrice = parseInt(priceInput);
+        if (isNaN(sellPrice) || sellPrice < 0) {
+          alert("Введите корректную сумму!");
+          return;
+        }
+
+        // Если проданный номер был надет на авто, снимаем его
+        const carId = state.ownedCars[state.selectedCarIdx];
+        if (state.equippedPlates[carId] && state.equippedPlates[carId].id === plate.id) {
+          delete state.equippedPlates[carId];
+        }
+
+        state.coins += sellPrice;
+        state.ownedPlates.splice(index, 1);
+        saveState();
+        updateHeader();
+        renderGarage();
+        alert(`Вы успешно продали номер ${plate.text} за $${sellPrice.toLocaleString()}!`);
+      }
     }
 
     function prevCar() {
