@@ -717,7 +717,7 @@
       syncScoreToCloud();
     }
 
-    // Отправка счета в Supabase
+    // Отправка счета в Supabase (согласно колонкам: Telegramm_id, Имя, Счет, Обновлено_в)
     async function syncScoreToCloud() {
       const tgUser = tg?.initDataUnsafe?.user;
       if (!tgUser) return;
@@ -726,11 +726,11 @@
         await supabase
           .from('leaderboard')
           .upsert({
-            telegram_id: String(tgUser.id),
-            name: tgUser.first_name || 'Игрок',
-            score: state.coins,
-            updated_at: new Date()
-          }, { onConflict: 'telegram_id' });
+            Telegramm_id: String(tgUser.id),
+            Имя: tgUser.first_name || 'Игрок',
+            Счет: state.coins,
+            Обновлено_в: new Date()
+          }, { onConflict: 'Telegramm_id' });
       } catch (err) {
         console.error("Ошибка синхронизации счета:", err);
       }
@@ -744,8 +744,8 @@
       try {
         const { data, error } = await supabase
           .from('leaderboard')
-          .select('name, score')
-          .order('score', { ascending: false })
+          .select('Имя, Счет')
+          .order('Счет', { ascending: false })
           .limit(10);
 
         if (error) throw error;
@@ -766,8 +766,8 @@
           if (index === 2) medal = '🥉 3';
 
           item.innerHTML = `
-            <span style="font-weight: bold;">${medal} ${player.name}</span>
-            <span style="color: var(--gold); font-weight: bold;">${player.score.toLocaleString()} 🪙</span>
+            <span style="font-weight: bold;">${medal} ${player.Имя}</span>
+            <span style="color: var(--gold); font-weight: bold;">${player.Счет.toLocaleString()} 🪙</span>
           `;
           listEl.appendChild(item);
         });
@@ -1204,4 +1204,3 @@
   </script>
 </body>
 </html>
-
