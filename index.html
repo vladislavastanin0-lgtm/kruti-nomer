@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Крути Номера — С Продажей Номеров</title>
+    <title>Крути Номера</title>
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
@@ -102,12 +102,12 @@
 
         .tab-btn {
             flex: 1;
-            padding: 12px 8px;
+            padding: 12px 6px;
             background: none;
             border: none;
             color: var(--text-muted);
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             cursor: pointer;
             border-bottom: 2px solid transparent;
             white-space: nowrap;
@@ -185,9 +185,9 @@
             color: white;
             border: none;
             flex: 1;
-            padding: 14px;
+            padding: 12px;
             border-radius: 12px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
         }
@@ -197,9 +197,9 @@
             color: white;
             border: none;
             flex: 1;
-            padding: 14px;
+            padding: 12px;
             border-radius: 12px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
         }
@@ -208,7 +208,7 @@
             opacity: 0.85;
         }
 
-        /* Списки гаража и номеров */
+        /* Списки */
         .item-list {
             display: flex;
             flex-direction: column;
@@ -269,11 +269,11 @@
 </head>
 <body>
 
-    <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
+    <!-- ШАПКА -->
     <div class="header">
         <div class="brand-title">🏎️ Крути Номера</div>
         <div class="stats-bar">
-            <div class="balance-badge" id="balanceDisplay">💵 $1,000</div>
+            <div class="balance-badge" id="balanceDisplay">💵 $2,000</div>
             <button class="donate-btn" onclick="buyWithStars('Поддержка проекта', 'Зачисление $50,000 в игре', 50)">
                 ⭐ 50 Stars
             </button>
@@ -288,10 +288,10 @@
         <button class="tab-btn" id="tab-shop" onclick="switchTab('shop')">🏪 Автосалон</button>
     </div>
 
-    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <!-- КОНТЕНТ -->
     <div class="container">
         
-        <!-- ВКЛАДКА: ИГРА -->
+        <!-- РУЛЕТКА -->
         <div id="gameTab" class="tab-content active">
             <div class="game-card">
                 <div class="car-display" id="currentCarIcon">🚗</div>
@@ -300,33 +300,33 @@
 
                 <div class="number-plate" id="plateDisplay">777 AAA 01</div>
 
-                <p id="spinReward" style="color: var(--accent-gold); font-weight: bold; min-height: 20px; font-size: 0.95rem;"></p>
+                <p id="spinReward" style="color: var(--accent-gold); font-weight: bold; min-height: 20px; font-size: 0.9rem;"></p>
 
                 <div class="btn-group">
                     <button class="action-btn" onclick="spinPlate()">Крутить ($100)</button>
-                    <button class="save-btn" onclick="saveCurrentPlate()">Сохранить номер</button>
+                    <button class="save-btn" onclick="saveCurrentPlate()">В инвентарь</button>
                 </div>
             </div>
         </div>
 
-        <!-- ВКЛАДКА: МОИ НОМЕРА (ПРОДАЖА) -->
+        <!-- МОИ НОМЕРА (ПРОДАЖА) -->
         <div id="platesTab" class="tab-content">
-            <h3 style="margin: 0 0 5px 0;">Моя коллекция номеров</h3>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0;">Вы можете продать любой номер за свою цену</p>
+            <h3 style="margin: 0 0 5px 0;">Мои номера</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0;">Продавайте номера по своей цене</p>
             <div class="item-list" id="platesList"></div>
         </div>
 
-        <!-- ВКЛАДКА: ГАРАЖ -->
+        <!-- ГАРАЖ -->
         <div id="garageTab" class="tab-content">
             <h3 style="margin: 0 0 5px 0;">Мой гараж</h3>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0;">Выберите авто для игры</p>
             <div class="item-list" id="garageList"></div>
         </div>
 
-        <!-- ВКЛАДКА: АВТОСАЛОН -->
+        <!-- АВТОСАЛОН -->
         <div id="shopTab" class="tab-content">
             <h3 style="margin: 0 0 5px 0;">Автосалон</h3>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0;">Покупайте новые машины за игровые деньги</p>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0;">Покупайте новые машины</p>
             <div class="item-list" id="shopList"></div>
         </div>
 
@@ -350,8 +350,12 @@
             { id: 5, name: "Bugatti Chiron", icon: "🏎️", price: 1000000 }
         ];
 
-        // Загрузка сохранённых данных
-        let balance = parseInt(localStorage.getItem('balance')) || 1000;
+        // Инициализация баланса 2000 монет по умолчанию
+        let balance = parseInt(localStorage.getItem('balance'));
+        if (isNaN(balance)) {
+            balance = 2000;
+        }
+
         let ownedCars = JSON.parse(localStorage.getItem('ownedCars')) || [0];
         let currentCarIndex = parseInt(localStorage.getItem('currentCarIndex')) || 0;
         let myPlates = JSON.parse(localStorage.getItem('myPlates')) || [];
@@ -411,19 +415,18 @@
             lastGeneratedPlate = `${numbers} ${randLetters} ${region}`;
             document.getElementById("plateDisplay").innerText = lastGeneratedPlate;
 
-            // Расчет оценочной стоимости
             lastEstimatedValue = 50;
-            let rewardText = "+ $50 (Обычный номер)";
+            let rewardText = "Обычный номер (Оценка: $50)";
 
             if (numbers === 777 || numbers === 111 || numbers === 999) {
                 lastEstimatedValue = 5000;
-                rewardText = "🔥 КРУТОЙ БЛАТНОЙ НОМЕР! Оценка: $5,000";
+                rewardText = "🔥 КРУТОЙ НОМЕР! (Оценка: $5,000)";
             } else if (numbers % 111 === 0) {
                 lastEstimatedValue = 1500;
-                rewardText = "✨ ОДИНАКОВЫЕ ЦИФРЫ! Оценка: $1,500";
+                rewardText = "✨ ЗЕРКАЛЬНЫЙ! (Оценка: $1,500)";
             } else if (region === "777") {
                 lastEstimatedValue = 800;
-                rewardText = "🌟 ЭЛИТНЫЙ РЕГИОН 777! Оценка: $800";
+                rewardText = "🌟 РЕГИОН 777! (Оценка: $800)";
             }
 
             document.getElementById("spinReward").innerText = rewardText;
@@ -435,36 +438,30 @@
             updateUI();
         }
 
-        // Сохранить номер в коллекцию
         function saveCurrentPlate() {
-            if (myPlates.some(p => p.number === lastGeneratedPlate)) {
-                alert("Этот номер уже у вас в коллекции!");
-                return;
-            }
             myPlates.push({
                 number: lastGeneratedPlate,
                 estimatedPrice: lastEstimatedValue
             });
             updateUI();
-            alert(`Номер ${lastGeneratedPlate} сохранён в вашу коллекцию!`);
+            alert(`Номер ${lastGeneratedPlate} сохранён в ваши номера!`);
         }
 
-        // Отрисовка списка моих номеров
         function renderPlates() {
             const list = document.getElementById('platesList');
             list.innerHTML = '';
 
             if (myPlates.length === 0) {
-                list.innerHTML = '<p style="color:var(--text-muted); text-align:center;">У вас пока нет сохранённых номеров</p>';
+                list.innerHTML = '<p style="color:var(--text-muted); text-align:center;">У вас нет сохраненных номеров</p>';
                 return;
             }
 
             myPlates.forEach((item, index) => {
                 list.innerHTML += `
                     <div class="list-item">
-                        <div class="small-plate">${item.number}</div>
                         <div>
-                            <div style="font-size:0.8rem; color:var(--text-muted);">Оценка: $${item.estimatedPrice.toLocaleString()}</div>
+                            <div class="small-plate">${item.number}</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Реком: $${item.estimatedPrice.toLocaleString()}</div>
                         </div>
                         <button class="sell-btn" onclick="sellPlate(${index})">Продать</button>
                     </div>
@@ -472,22 +469,21 @@
             });
         }
 
-        // Продажа номера за свою цену
         function sellPlate(index) {
             const item = myPlates[index];
-            const userPriceInput = prompt(`За какую цену вы хотите продать номер ${item.number}?`, item.estimatedPrice);
+            const priceInput = prompt(`За сколько хотите продать номер ${item.number}?`, item.estimatedPrice);
 
-            if (userPriceInput !== null) {
-                const sellPrice = parseInt(userPriceInput);
-                if (isNaN(sellPrice) || sellPrice <= 0) {
-                    alert("Пожалуйста, введите корректную сумму!");
+            if (priceInput !== null) {
+                const sellPrice = parseInt(priceInput);
+                if (isNaN(sellPrice) || sellPrice < 0) {
+                    alert("Введите корректную сумму!");
                     return;
                 }
 
                 balance += sellPrice;
                 myPlates.splice(index, 1);
                 updateUI();
-                alert(`Вы успешно продали номер ${item.number} за $${sellPrice.toLocaleString()}!`);
+                alert(`Вы продали номер ${item.number} за $${sellPrice.toLocaleString()}!`);
             }
         }
 
@@ -500,14 +496,14 @@
                 const isCurrent = id === currentCarIndex;
                 list.innerHTML += `
                     <div class="list-item">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <span style="font-size:2rem;">${car.icon}</span>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-size:1.8rem;">${car.icon}</span>
                             <div>
                                 <div><strong>${car.name}</strong></div>
-                                <div style="font-size:0.8rem; color:var(--text-muted);">${isCurrent ? 'Выбран для игры' : 'В гараже'}</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted);">${isCurrent ? 'Активен' : 'В гараже'}</div>
                             </div>
                         </div>
-                        ${!isCurrent ? `<button class="select-btn" onclick="selectCar(${id})">Выбрать</button>` : '<span style="color:var(--accent-green); font-weight:bold;">Активно ✅</span>'}
+                        ${!isCurrent ? `<button class="select-btn" onclick="selectCar(${id})">Выбрать</button>` : '<span style="color:var(--accent-green); font-weight:bold; font-size:0.85rem;">✓</span>'}
                     </div>
                 `;
             });
@@ -521,14 +517,14 @@
                 const isOwned = ownedCars.includes(car.id);
                 list.innerHTML += `
                     <div class="list-item">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <span style="font-size:2rem;">${car.icon}</span>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-size:1.8rem;">${car.icon}</span>
                             <div>
                                 <div><strong>${car.name}</strong></div>
-                                <div style="font-size:0.85rem; color:var(--accent-green); font-weight:bold;">$${car.price.toLocaleString()}</div>
+                                <div style="font-size:0.8rem; color:var(--accent-green); font-weight:bold;">$${car.price.toLocaleString()}</div>
                             </div>
                         </div>
-                        ${isOwned ? '<span style="color:var(--text-muted);">Куплено</span>' : `<button class="buy-btn" onclick="buyCar(${car.id})">Купить</button>`}
+                        ${isOwned ? '<span style="color:var(--text-muted); font-size:0.85rem;">Куплено</span>' : `<button class="buy-btn" onclick="buyCar(${car.id})">Купить</button>`}
                     </div>
                 `;
             });
@@ -550,12 +546,12 @@
             ownedCars.push(id);
             currentCarIndex = id;
             updateUI();
-            alert(`Поздравляем! Вы приобрели ${car.name}!`);
+            alert(`Поздравляем! Вы купили ${car.name}!`);
         }
 
         async function buyWithStars(title, description, amountStars) {
             if (!tg) {
-                alert("Пожалуйста, откройте игру через Telegram!");
+                alert("Откройте игру через Telegram!");
                 return;
             }
 
@@ -580,15 +576,15 @@
                         if (status === 'paid') {
                             balance += 50000;
                             updateUI();
-                            tg.showAlert("Спасибо за поддержку! ⭐ Вам зачислено $50,000 в игре!");
+                            tg.showAlert("Спасибо за поддержку! ⭐ Вам зачислено $50,000!");
                         }
                     });
                 } else {
-                    alert("Ошибка создания счета: " + (data.description || "Неизвестная ошибка"));
+                    alert("Ошибка создания счета: " + (data.description || "Ошибка"));
                 }
             } catch (err) {
                 console.error(err);
-                alert("Ошибка сети при связывании с Telegram.");
+                alert("Ошибка сети Telegram.");
             }
         }
 
