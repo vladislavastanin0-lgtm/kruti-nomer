@@ -12,6 +12,7 @@
             --card-bg: #1c1e24;
             --accent-gold: #f39c12;
             --accent-blue: #3498db;
+            --accent-green: #2ecc71;
             --text-color: #ffffff;
             --text-muted: #a0a0a0;
         }
@@ -32,67 +33,123 @@
 
         .header {
             width: 100%;
-            padding: 15px 20px;
+            padding: 12px 16px;
             box-sizing: border-box;
             background: var(--card-bg);
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #2a2d34;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .brand-title {
             font-size: 1.1rem;
             font-weight: 700;
-            letter-spacing: 0.5px;
             color: var(--accent-gold);
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
+        .stats-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .balance-badge {
+            background: #2a2d34;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--accent-green);
+        }
+
         .donate-btn {
             background: linear-gradient(135deg, #f1c40f, #f39c12);
             color: #000;
             border: none;
-            padding: 8px 14px;
+            padding: 7px 12px;
             border-radius: 20px;
             font-weight: 700;
             font-size: 0.85rem;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3);
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .donate-btn:active {
-            transform: scale(0.96);
-            box-shadow: 0 2px 5px rgba(243, 156, 18, 0.2);
+            transform: scale(0.95);
+        }
+
+        .nav-tabs {
+            display: flex;
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            border-bottom: 1px solid #2a2d34;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: var(--accent-gold);
+            border-bottom-color: var(--accent-gold);
         }
 
         .container {
             width: 100%;
             max-width: 480px;
-            padding: 20px;
+            padding: 16px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            flex-grow: 1;
+            gap: 16px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
         .game-card {
             background-color: var(--card-bg);
-            width: 100%;
             border-radius: 16px;
             padding: 20px;
             box-sizing: border-box;
             text-align: center;
             border: 1px solid #2a2d34;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .car-display {
+            font-size: 3rem;
+            margin: 10px 0;
+        }
+
+        .car-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
 
         .number-plate {
@@ -100,14 +157,12 @@
             color: #000000;
             border: 3px solid #000000;
             border-radius: 8px;
-            padding: 10px 20px;
-            font-size: 2rem;
+            padding: 8px 16px;
+            font-size: 1.8rem;
             font-weight: 900;
             letter-spacing: 2px;
-            margin: 20px 0;
+            margin: 15px 0;
             display: inline-block;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            text-transform: uppercase;
             font-family: 'Courier New', Courier, monospace;
         }
 
@@ -121,11 +176,56 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s ease;
         }
 
         .action-btn:active {
             opacity: 0.85;
+        }
+
+        .car-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .car-item {
+            background: var(--card-bg);
+            border: 1px solid #2a2d34;
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .car-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .car-icon {
+            font-size: 2rem;
+        }
+
+        .buy-btn {
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .select-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -133,37 +233,206 @@
 
     <div class="header">
         <div class="brand-title">🏎️ Крути Номера</div>
-        <button class="donate-btn" onclick="buyWithStars('Донат разработчику 🏎️', 'Поддержка проекта Крути Номера', 50)">
-            ⭐ 50 Stars
-        </button>
+        <div class="stats-bar">
+            <div class="balance-badge" id="balanceDisplay">💵 $1,000</div>
+            <button class="donate-btn" onclick="buyWithStars('Донат разработчику 🏎️', 'Поддержка проекта Крути Номера', 50)">
+                ⭐ 50 Stars
+            </button>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('game')">🎲 Рулетка</button>
+        <button class="tab-btn" onclick="switchTab('garage')">🚗 Гараж</button>
+        <button class="tab-btn" onclick="switchTab('shop')">🏪 Автосалон</button>
     </div>
 
     <div class="container">
-        <div class="game-card">
-            <h2 style="margin-top:0;">Испытай удачу!</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Выбей редкий блатный номер для своего авто</p>
+        <!-- Вкладка Игры -->
+        <div id="gameTab" class="tab-content active">
+            <div class="game-card">
+                <div class="car-display" id="currentCarIcon">🚗</div>
+                <div class="car-title" id="currentCarName">ВАЗ 2107</div>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0;">Текущий авто</p>
 
-            <div class="number-plate" id="plateDisplay">777 AAA 01</div>
+                <div class="number-plate" id="plateDisplay">777 AAA 01</div>
 
-            <button class="action-btn" onclick="spinPlate()">Крутить номер</button>
+                <p id="spinReward" style="color: var(--accent-gold); font-weight: bold; min-height: 20px;"></p>
+
+                <button class="action-btn" onclick="spinPlate()">Крутить номер ($100)</button>
+            </div>
+        </div>
+
+        <!-- Вкладка Гаража -->
+        <div id="garageTab" class="tab-content">
+            <h3>Мои автомобили</h3>
+            <div class="car-list" id="garageList"></div>
+        </div>
+
+        <!-- Вкладка Автосалона -->
+        <div id="shopTab" class="tab-content">
+            <h3>Покупка авто</h3>
+            <div class="car-list" id="shopList"></div>
         </div>
     </div>
 
     <script>
-        // Инициализация Telegram WebApp
         const tg = window.Telegram?.WebApp;
         if (tg) {
             tg.ready();
             tg.expand();
         }
 
-        // ТОКЕН БОТА С ПРАВИЛЬНЫМ СИНТАКСИСОМ
         const BOT_TOKEN = "8977809186:AAF0fqobqVRQf8wbnwApirFl_dwSrHZvxPc";
 
-        // Функция оплаты через Telegram Stars (XTR)
+        // Состояние игры
+        let balance = parseInt(localStorage.getItem('balance')) || 1000;
+        let ownedCars = JSON.parse(localStorage.getItem('ownedCars')) || [0];
+        let currentCarIndex = parseInt(localStorage.getItem('currentCarIndex')) || 0;
+
+        const cars = [
+            { id: 0, name: "ВАЗ 2107", icon: "🚗", price: 0 },
+            { id: 1, name: "Toyota Camry", icon: "🚘", price: 5000 },
+            { id: 2, name: "BMW M5", icon: "🏎️", price: 25000 },
+            { id: 3, name: "Mercedes G63 AMG", icon: "🚙", price: 75000 },
+            { id: 4, name: "Porsche 911", icon: "🏎️", price: 200000 },
+            { id: 5, name: "Bugatti Chiron", icon: "🏎️", price: 1000000 }
+        ];
+
+        function updateUI() {
+            document.getElementById('balanceDisplay').innerText = `💵 $${balance.toLocaleString()}`;
+            document.getElementById('currentCarIcon').innerText = cars[currentCarIndex].icon;
+            document.getElementById('currentCarName').innerText = cars[currentCarIndex].name;
+            
+            localStorage.setItem('balance', balance);
+            localStorage.setItem('ownedCars', JSON.stringify(ownedCars));
+            localStorage.setItem('currentCarIndex', currentCarIndex);
+
+            renderGarage();
+            renderShop();
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            if (tabName === 'game') {
+                document.getElementById('gameTab').classList.add('active');
+                event.target.classList.add('active');
+            } else if (tabName === 'garage') {
+                document.getElementById('garageTab').classList.add('active');
+                event.target.classList.add('active');
+            } else if (tabName === 'shop') {
+                document.getElementById('shopTab').classList.add('active');
+                event.target.classList.add('active');
+            }
+        }
+
+        function spinPlate() {
+            if (balance < 100) {
+                alert("Недостаточно денег для прокрутки! Нужен $100");
+                return;
+            }
+
+            balance -= 100;
+
+            const letters = "ABEKMHOPCTYX";
+            const numbers = Math.floor(100 + Math.random() * 900);
+            const randLetters = letters[Math.floor(Math.random() * letters.length)] +
+                                letters[Math.floor(Math.random() * letters.length)] +
+                                letters[Math.floor(Math.random() * letters.length)];
+            const regions = ["01", "02", "05", "13", "17", "777"];
+            const region = regions[Math.floor(Math.random() * regions.length)];
+
+            const plate = `${numbers} ${randLetters} ${region}`;
+            document.getElementById("plateDisplay").innerText = plate;
+
+            // Расчет награды за номер
+            let reward = 50;
+            let rewardText = "+ $50 (Обычный номер)";
+
+            if (numbers === 777 || numbers === 111 || numbers === 999) {
+                reward = 5000;
+                rewardText = "🔥 КРУТОЙ НОМЕР! + $5,000";
+            } else if (numbers % 111 === 0) {
+                reward = 1500;
+                rewardText = "✨ ЗЕРКАЛЬНЫЙ НОМЕР! + $1,500";
+            }
+
+            balance += reward;
+            document.getElementById("spinReward").innerText = rewardText;
+
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
+
+            updateUI();
+        }
+
+        function renderGarage() {
+            const list = document.getElementById('garageList');
+            list.innerHTML = '';
+
+            ownedCars.forEach(id => {
+                const car = cars[id];
+                const isCurrent = id === currentCarIndex;
+                list.innerHTML += `
+                    <div class="car-item">
+                        <div class="car-info">
+                            <span class="car-icon">${car.icon}</span>
+                            <div>
+                                <div><strong>${car.name}</strong></div>
+                                <div style="font-size:0.8rem; color:var(--text-muted);">${isCurrent ? 'Выбран' : 'В гараже'}</div>
+                            </div>
+                        </div>
+                        ${!isCurrent ? `<button class="select-btn" onclick="selectCar(${id})">Выбрать</button>` : '<span>✅</span>'}
+                    </div>
+                `;
+            });
+        }
+
+        function renderShop() {
+            const list = document.getElementById('shopList');
+            list.innerHTML = '';
+
+            cars.forEach(car => {
+                const isOwned = ownedCars.includes(car.id);
+                list.innerHTML += `
+                    <div class="car-item">
+                        <div class="car-info">
+                            <span class="car-icon">${car.icon}</span>
+                            <div>
+                                <div><strong>${car.name}</strong></div>
+                                <div style="font-size:0.85rem; color:var(--accent-green);">$${car.price.toLocaleString()}</div>
+                            </div>
+                        </div>
+                        ${isOwned ? '<span>Куплено</span>' : `<button class="buy-btn" onclick="buyCar(${car.id})">Купить</button>`}
+                    </div>
+                `;
+            });
+        }
+
+        function selectCar(id) {
+            currentCarIndex = id;
+            updateUI();
+        }
+
+        function buyCar(id) {
+            const car = cars[id];
+            if (balance < car.price) {
+                alert("Недостаточно денег на балансе!");
+                return;
+            }
+            balance -= car.price;
+            ownedCars.push(id);
+            currentCarIndex = id;
+            updateUI();
+            alert(`Поздравляем! Вы купили ${car.name}!`);
+        }
+
         async function buyWithStars(title, description, amountStars) {
             if (!tg) {
-                alert("Пожалуйста, откройте игру внутри Telegram!");
+                alert("Пожалуйста, откройте игру через Telegram!");
                 return;
             }
 
@@ -175,50 +444,33 @@
                         title: title,
                         description: description,
                         payload: `user_donate_${Date.now()}`,
-                        provider_token: "", // Для Stars обязательно оставляем ПУСТЫМ
-                        currency: "XTR",     // Код Telegram Stars
-                        prices: [
-                            { label: title, amount: amountStars }
-                        ]
+                        provider_token: "",
+                        currency: "XTR",
+                        prices: [{ label: title, amount: amountStars }]
                     })
                 });
 
                 const data = await response.json();
 
                 if (data.ok && data.result) {
-                    // Открываем нативное окно оплаты Telegram Stars
                     tg.openInvoice(data.result, function(status) {
                         if (status === 'paid') {
-                            tg.showAlert("Спасибо за поддержку! Звёзды успешно зачислены! ⭐");
-                        } else if (status === 'failed') {
-                            tg.showAlert("Не удалось завершить оплату.");
+                            balance += 50000; // Бонус за донат
+                            updateUI();
+                            tg.showAlert("Спасибо за поддержку! Вам зачислено $50,000 в игре! ⭐");
                         }
                     });
                 } else {
                     alert("Ошибка создания счета: " + (data.description || "Неизвестная ошибка"));
                 }
             } catch (err) {
-                console.error("Ошибка сети:", err);
-                alert("Не удалось связаться с сервером Telegram.");
+                console.error(err);
+                alert("Ошибка соединения с Telegram API");
             }
         }
 
-        // Простая функция прокрутки номеров
-        function spinPlate() {
-            const letters = "ABEKMHOPCTYX";
-            const numbers = Math.floor(100 + Math.random() * 900);
-            const randLetters = letters[Math.floor(Math.random() * letters.length)] +
-                                letters[Math.floor(Math.random() * letters.length)] +
-                                letters[Math.floor(Math.random() * letters.length)];
-            const regions = ["01", "02", "05", "13", "17"];
-            const region = regions[Math.floor(Math.random() * regions.length)];
-
-            document.getElementById("plateDisplay").innerText = `${numbers} ${randLetters} ${region}`;
-
-            if (tg && tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred('medium');
-            }
-        }
+        // Старт игры
+        updateUI();
     </script>
 </body>
 </html>
