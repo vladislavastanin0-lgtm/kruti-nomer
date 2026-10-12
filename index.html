@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Крути Номера — Полная Версия</title>
+    <title>Крути Номера — С Продажей Номеров</title>
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
@@ -13,6 +13,7 @@
             --accent-gold: #f39c12;
             --accent-blue: #3498db;
             --accent-green: #2ecc71;
+            --accent-red: #e74c3c;
             --text-color: #ffffff;
             --text-muted: #a0a0a0;
         }
@@ -31,7 +32,7 @@
             user-select: none;
         }
 
-        /* Шапка игры */
+        /* Шапка */
         .header {
             width: 100%;
             padding: 12px 16px;
@@ -89,26 +90,27 @@
             transform: scale(0.95);
         }
 
-        /* Вкладки навигации */
+        /* Навигация */
         .nav-tabs {
             display: flex;
             width: 100%;
             max-width: 480px;
             background: var(--card-bg);
             border-bottom: 1px solid #2a2d34;
+            overflow-x: auto;
         }
 
         .tab-btn {
             flex: 1;
-            padding: 12px;
+            padding: 12px 8px;
             background: none;
             border: none;
             color: var(--text-muted);
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             border-bottom: 2px solid transparent;
-            transition: all 0.2s;
+            white-space: nowrap;
         }
 
         .tab-btn.active {
@@ -172,31 +174,48 @@
             font-family: 'Courier New', Courier, monospace;
         }
 
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
         .action-btn {
             background-color: var(--accent-blue);
             color: white;
             border: none;
-            width: 100%;
+            flex: 1;
             padding: 14px;
             border-radius: 12px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
         }
 
-        .action-btn:active {
+        .save-btn {
+            background-color: var(--accent-green);
+            color: white;
+            border: none;
+            flex: 1;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .action-btn:active, .save-btn:active {
             opacity: 0.85;
         }
 
-        /* Списки авто и гаража */
-        .car-list {
+        /* Списки гаража и номеров */
+        .item-list {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        .car-item {
+        .list-item {
             background: var(--card-bg);
             border: 1px solid #2a2d34;
             border-radius: 12px;
@@ -206,14 +225,25 @@
             justify-content: space-between;
         }
 
-        .car-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .small-plate {
+            background: #fff;
+            color: #000;
+            border: 2px solid #000;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
         }
 
-        .car-icon {
-            font-size: 2.2rem;
+        .sell-btn {
+            background: var(--accent-red);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
         .buy-btn {
@@ -253,6 +283,7 @@
     <!-- МЕНЮ ВКЛАДОК -->
     <div class="nav-tabs">
         <button class="tab-btn active" id="tab-game" onclick="switchTab('game')">🎲 Рулетка</button>
+        <button class="tab-btn" id="tab-plates" onclick="switchTab('plates')">📋 Мои Номера</button>
         <button class="tab-btn" id="tab-garage" onclick="switchTab('garage')">🚗 Гараж</button>
         <button class="tab-btn" id="tab-shop" onclick="switchTab('shop')">🏪 Автосалон</button>
     </div>
@@ -271,38 +302,45 @@
 
                 <p id="spinReward" style="color: var(--accent-gold); font-weight: bold; min-height: 20px; font-size: 0.95rem;"></p>
 
-                <button class="action-btn" onclick="spinPlate()">Крутить номер ($100)</button>
+                <div class="btn-group">
+                    <button class="action-btn" onclick="spinPlate()">Крутить ($100)</button>
+                    <button class="save-btn" onclick="saveCurrentPlate()">Сохранить номер</button>
+                </div>
             </div>
+        </div>
+
+        <!-- ВКЛАДКА: МОИ НОМЕРА (ПРОДАЖА) -->
+        <div id="platesTab" class="tab-content">
+            <h3 style="margin: 0 0 5px 0;">Моя коллекция номеров</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0;">Вы можете продать любой номер за свою цену</p>
+            <div class="item-list" id="platesList"></div>
         </div>
 
         <!-- ВКЛАДКА: ГАРАЖ -->
         <div id="garageTab" class="tab-content">
             <h3 style="margin: 0 0 5px 0;">Мой гараж</h3>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0;">Выберите авто для прокрутки номеров</p>
-            <div class="car-list" id="garageList"></div>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0;">Выберите авто для игры</p>
+            <div class="item-list" id="garageList"></div>
         </div>
 
         <!-- ВКЛАДКА: АВТОСАЛОН -->
         <div id="shopTab" class="tab-content">
             <h3 style="margin: 0 0 5px 0;">Автосалон</h3>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0;">Покупайте новые машины за игровые деньги</p>
-            <div class="car-list" id="shopList"></div>
+            <div class="item-list" id="shopList"></div>
         </div>
 
     </div>
 
     <script>
-        // Инициализация Telegram WebApp
         const tg = window.Telegram?.WebApp;
         if (tg) {
             tg.ready();
             tg.expand();
         }
 
-        // Токен бота
         const BOT_TOKEN = "8977809186:AAF0fqobqVRQf8wbnwApirFl_dwSrHZvxPc";
 
-        // База данных машин
         const cars = [
             { id: 0, name: "ВАЗ 2107", icon: "🚗", price: 0 },
             { id: 1, name: "Toyota Camry", icon: "🚘", price: 5000 },
@@ -312,27 +350,29 @@
             { id: 5, name: "Bugatti Chiron", icon: "🏎️", price: 1000000 }
         ];
 
-        // Загрузка данных из памяти
+        // Загрузка сохранённых данных
         let balance = parseInt(localStorage.getItem('balance')) || 1000;
         let ownedCars = JSON.parse(localStorage.getItem('ownedCars')) || [0];
         let currentCarIndex = parseInt(localStorage.getItem('currentCarIndex')) || 0;
+        let myPlates = JSON.parse(localStorage.getItem('myPlates')) || [];
+        let lastGeneratedPlate = "777 AAA 01";
+        let lastEstimatedValue = 5000;
 
-        // Обновление интерфейса
         function updateUI() {
             document.getElementById('balanceDisplay').innerText = `💵 $${balance.toLocaleString()}`;
             document.getElementById('currentCarIcon').innerText = cars[currentCarIndex].icon;
             document.getElementById('currentCarName').innerText = cars[currentCarIndex].name;
             
-            // Сохранение состояния
             localStorage.setItem('balance', balance);
             localStorage.setItem('ownedCars', JSON.stringify(ownedCars));
             localStorage.setItem('currentCarIndex', currentCarIndex);
+            localStorage.setItem('myPlates', JSON.stringify(myPlates));
 
+            renderPlates();
             renderGarage();
             renderShop();
         }
 
-        // Переключение между вкладками
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -340,6 +380,9 @@
             if (tabName === 'game') {
                 document.getElementById('gameTab').classList.add('active');
                 document.getElementById('tab-game').classList.add('active');
+            } else if (tabName === 'plates') {
+                document.getElementById('platesTab').classList.add('active');
+                document.getElementById('tab-plates').classList.add('active');
             } else if (tabName === 'garage') {
                 document.getElementById('garageTab').classList.add('active');
                 document.getElementById('tab-garage').classList.add('active');
@@ -349,7 +392,6 @@
             }
         }
 
-        // Рулетка номеров
         function spinPlate() {
             if (balance < 100) {
                 alert("Недостаточно денег для прокрутки! Нужно $100");
@@ -366,25 +408,24 @@
             const regions = ["01", "02", "05", "13", "17", "777"];
             const region = regions[Math.floor(Math.random() * regions.length)];
 
-            const plate = `${numbers} ${randLetters} ${region}`;
-            document.getElementById("plateDisplay").innerText = plate;
+            lastGeneratedPlate = `${numbers} ${randLetters} ${region}`;
+            document.getElementById("plateDisplay").innerText = lastGeneratedPlate;
 
-            // Расчет награды
-            let reward = 50;
+            // Расчет оценочной стоимости
+            lastEstimatedValue = 50;
             let rewardText = "+ $50 (Обычный номер)";
 
             if (numbers === 777 || numbers === 111 || numbers === 999) {
-                reward = 5000;
-                rewardText = "🔥 КРУТОЙ БЛАТНОЙ НОМЕР! + $5,000";
+                lastEstimatedValue = 5000;
+                rewardText = "🔥 КРУТОЙ БЛАТНОЙ НОМЕР! Оценка: $5,000";
             } else if (numbers % 111 === 0) {
-                reward = 1500;
-                rewardText = "✨ ОДИНАКОВЫЕ ЦИФРЫ! + $1,500";
+                lastEstimatedValue = 1500;
+                rewardText = "✨ ОДИНАКОВЫЕ ЦИФРЫ! Оценка: $1,500";
             } else if (region === "777") {
-                reward = 800;
-                rewardText = "🌟 ЭЛИТНЫЙ РЕГИОН 777! + $800";
+                lastEstimatedValue = 800;
+                rewardText = "🌟 ЭЛИТНЫЙ РЕГИОН 777! Оценка: $800";
             }
 
-            balance += reward;
             document.getElementById("spinReward").innerText = rewardText;
 
             if (tg && tg.HapticFeedback) {
@@ -394,7 +435,62 @@
             updateUI();
         }
 
-        // Отрисовка гаража
+        // Сохранить номер в коллекцию
+        function saveCurrentPlate() {
+            if (myPlates.some(p => p.number === lastGeneratedPlate)) {
+                alert("Этот номер уже у вас в коллекции!");
+                return;
+            }
+            myPlates.push({
+                number: lastGeneratedPlate,
+                estimatedPrice: lastEstimatedValue
+            });
+            updateUI();
+            alert(`Номер ${lastGeneratedPlate} сохранён в вашу коллекцию!`);
+        }
+
+        // Отрисовка списка моих номеров
+        function renderPlates() {
+            const list = document.getElementById('platesList');
+            list.innerHTML = '';
+
+            if (myPlates.length === 0) {
+                list.innerHTML = '<p style="color:var(--text-muted); text-align:center;">У вас пока нет сохранённых номеров</p>';
+                return;
+            }
+
+            myPlates.forEach((item, index) => {
+                list.innerHTML += `
+                    <div class="list-item">
+                        <div class="small-plate">${item.number}</div>
+                        <div>
+                            <div style="font-size:0.8rem; color:var(--text-muted);">Оценка: $${item.estimatedPrice.toLocaleString()}</div>
+                        </div>
+                        <button class="sell-btn" onclick="sellPlate(${index})">Продать</button>
+                    </div>
+                `;
+            });
+        }
+
+        // Продажа номера за свою цену
+        function sellPlate(index) {
+            const item = myPlates[index];
+            const userPriceInput = prompt(`За какую цену вы хотите продать номер ${item.number}?`, item.estimatedPrice);
+
+            if (userPriceInput !== null) {
+                const sellPrice = parseInt(userPriceInput);
+                if (isNaN(sellPrice) || sellPrice <= 0) {
+                    alert("Пожалуйста, введите корректную сумму!");
+                    return;
+                }
+
+                balance += sellPrice;
+                myPlates.splice(index, 1);
+                updateUI();
+                alert(`Вы успешно продали номер ${item.number} за $${sellPrice.toLocaleString()}!`);
+            }
+        }
+
         function renderGarage() {
             const list = document.getElementById('garageList');
             list.innerHTML = '';
@@ -403,9 +499,9 @@
                 const car = cars[id];
                 const isCurrent = id === currentCarIndex;
                 list.innerHTML += `
-                    <div class="car-item">
-                        <div class="car-info">
-                            <span class="car-icon">${car.icon}</span>
+                    <div class="list-item">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span style="font-size:2rem;">${car.icon}</span>
                             <div>
                                 <div><strong>${car.name}</strong></div>
                                 <div style="font-size:0.8rem; color:var(--text-muted);">${isCurrent ? 'Выбран для игры' : 'В гараже'}</div>
@@ -417,7 +513,6 @@
             });
         }
 
-        // Отрисовка автосалона
         function renderShop() {
             const list = document.getElementById('shopList');
             list.innerHTML = '';
@@ -425,9 +520,9 @@
             cars.forEach(car => {
                 const isOwned = ownedCars.includes(car.id);
                 list.innerHTML += `
-                    <div class="car-item">
-                        <div class="car-info">
-                            <span class="car-icon">${car.icon}</span>
+                    <div class="list-item">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span style="font-size:2rem;">${car.icon}</span>
                             <div>
                                 <div><strong>${car.name}</strong></div>
                                 <div style="font-size:0.85rem; color:var(--accent-green); font-weight:bold;">$${car.price.toLocaleString()}</div>
@@ -439,14 +534,12 @@
             });
         }
 
-        // Выбор машины
         function selectCar(id) {
             currentCarIndex = id;
             updateUI();
             switchTab('game');
         }
 
-        // Покупка машины
         function buyCar(id) {
             const car = cars[id];
             if (balance < car.price) {
@@ -460,7 +553,6 @@
             alert(`Поздравляем! Вы приобрели ${car.name}!`);
         }
 
-        // Оплата через Telegram Stars (XTR)
         async function buyWithStars(title, description, amountStars) {
             if (!tg) {
                 alert("Пожалуйста, откройте игру через Telegram!");
@@ -475,7 +567,7 @@
                         title: title,
                         description: description,
                         payload: `user_donate_${Date.now()}`,
-                        provider_token: "", // Пусто для Telegram Stars
+                        provider_token: "",
                         currency: "XTR",
                         prices: [{ label: title, amount: amountStars }]
                     })
@@ -486,7 +578,7 @@
                 if (data.ok && data.result) {
                     tg.openInvoice(data.result, function(status) {
                         if (status === 'paid') {
-                            balance += 50000; // Бонус игроку
+                            balance += 50000;
                             updateUI();
                             tg.showAlert("Спасибо за поддержку! ⭐ Вам зачислено $50,000 в игре!");
                         }
@@ -500,7 +592,6 @@
             }
         }
 
-        // Запуск UI при старте
         updateUI();
     </script>
 </body>
