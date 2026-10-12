@@ -982,12 +982,26 @@
 
     function sellPlate(index) {
       const plate = state.ownedPlates[index];
-      const priceInput = prompt(`За сколько хотите продать номер ${plate.text}?`, plate.value);
+      let defaultPrice = plate.value;
+      
+      // Ограничение по максимальной цене для легендарных и супер-легендарных номеров
+      let isLegendary = (plate.rarity === 'purple' || plate.rarity === 'yellow');
+      if (isLegendary && defaultPrice > 5000) {
+        defaultPrice = 5000;
+      }
+
+      const priceInput = prompt(`За сколько хотите продать номер ${plate.text}?${isLegendary ? ' (Максимум для легендарных: $5,000)' : ''}`, defaultPrice);
 
       if (priceInput !== null) {
-        const sellPrice = parseInt(priceInput);
+        let sellPrice = parseInt(priceInput);
         if (isNaN(sellPrice) || sellPrice < 0) {
           alert("Введите корректную сумму!");
+          return;
+        }
+
+        // Проверяем ограничение для легендарных номеров
+        if (isLegendary && sellPrice > 5000) {
+          alert("Легендарные номера нельзя продать дороже чем за 5,000 монет!");
           return;
         }
 
