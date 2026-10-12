@@ -601,9 +601,42 @@
   </div>
 
   <script>
-    // AUDIO EFFECTS
-    const spinSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2005/2005-preview.mp3');
+    // AUDIO EFFECTS & DRUM TICK SOUND
     const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3');
+
+    function playSpinDrumSound() {
+      try {
+        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let totalSteps = 18;
+        let currentStep = 0;
+
+        function playTick() {
+          if (currentStep >= totalSteps) return;
+
+          let osc = audioCtx.createOscillator();
+          let gain = audioCtx.createGain();
+          
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(600 + Math.random() * 300, audioCtx.currentTime);
+          
+          gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.04);
+
+          currentStep++;
+          // Увеличиваем задержку с каждым шагом, создавая эффект замедления барабана
+          let delay = 35 + (currentStep * currentStep * 3.5);
+          setTimeout(playTick, delay);
+        }
+
+        playTick();
+      } catch(e) {}
+    }
 
     // GAME STATE
     let state = {
@@ -686,9 +719,8 @@
       state.isSpinning = true;
       updateHeader();
 
-      // Play spin sound
-      spinSound.currentTime = 0;
-      spinSound.play().catch(e => {});
+      // Запуск звука вращения барабана
+      playSpinDrumSound();
 
       const plateCard = document.getElementById('plateCard');
       const plateText = document.getElementById('plateText');
@@ -711,7 +743,7 @@
         dropTitle.style.color = result.color;
         dropVal.innerText = `+${result.value.toLocaleString()} 🪙`;
 
-        // Play win sound for rare/epic/legendary items
+        // Звук победы для редких и крутых выпадений
         if (result.rarity !== 'white' && result.rarity !== 'green') {
           winSound.currentTime = 0;
           winSound.play().catch(e => {});
