@@ -6,8 +6,6 @@
   <title>Крути номера</title>
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Supabase SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg-color: #12131C;
@@ -576,9 +574,6 @@
       <button class="nav-btn" onclick="switchTab('shop')">
         <span>🏬</span> Салон
       </button>
-      <button class="nav-btn" onclick="switchTab('leaderboard')">
-        <span>🏆</span> Топ
-      </button>
     </nav>
 
     <!-- SPIN SCREEN -->
@@ -646,14 +641,6 @@
       </div>
     </div>
 
-    <!-- LEADERBOARD SCREEN -->
-    <div id="leaderboardScreen" class="screen">
-      <h2 style="margin-bottom: 15px; text-align: center; color: var(--gold);">🏆 Таблица лидеров</h2>
-      <div id="leaderboardList" style="display: flex; flex-direction: column; gap: 8px;">
-        <p style="text-align: center; color: var(--text-sub);">Загрузка топа...</p>
-      </div>
-    </div>
-
     <!-- VICTORY MODAL -->
     <div id="victoryModal" class="modal-overlay">
       <div class="modal-card">
@@ -673,11 +660,6 @@
     }
 
     const BOT_TOKEN = "8977809186:AAF0fqobqVRQf8wbnwApirFl_dwSrHZvxPc";
-
-    // SUPABASE CONFIG
-    const SUPABASE_URL = 'https://krutim-nomera.supabase.co';
-    const SUPABASE_ANON_KEY = 'Sb_publishable_PfGeZMcgmZK5tSL8xD3M8g_b3CB6OtX';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // GAME STATE
     let state = {
@@ -714,66 +696,6 @@
 
     function saveState() {
       localStorage.setItem('kruti_nomera_state', JSON.stringify(state));
-      syncScoreToCloud();
-    }
-
-    // Отправка счета в Supabase (согласно колонкам: Telegramm_id, Имя, Счет, Обновлено_в)
-    async function syncScoreToCloud() {
-      const tgUser = tg?.initDataUnsafe?.user;
-      if (!tgUser) return;
-
-      try {
-        await supabase
-          .from('leaderboard')
-          .upsert({
-            Telegramm_id: String(tgUser.id),
-            Имя: tgUser.first_name || 'Игрок',
-            Счет: state.coins,
-            Обновлено_в: new Date()
-          }, { onConflict: 'Telegramm_id' });
-      } catch (err) {
-        console.error("Ошибка синхронизации счета:", err);
-      }
-    }
-
-    // Загрузка таблицы лидеров
-    async function loadLeaderboard() {
-      const listEl = document.getElementById('leaderboardList');
-      listEl.innerHTML = '<p style="text-align:center; color:var(--text-sub);">Загрузка топа...</p>';
-
-      try {
-        const { data, error } = await supabase
-          .from('leaderboard')
-          .select('Имя, Счет')
-          .order('Счет', { ascending: false })
-          .limit(10);
-
-        if (error) throw error;
-
-        if (!data || data.length === 0) {
-          listEl.innerHTML = '<p style="text-align:center; color:var(--text-sub);">Пока нет лидеров. Станьте первым!</p>';
-          return;
-        }
-
-        listEl.innerHTML = '';
-        data.forEach((player, index) => {
-          const item = document.createElement('div');
-          item.className = 'plate-item';
-          
-          let medal = `#${index + 1}`;
-          if (index === 0) medal = '🥇 1';
-          if (index === 1) medal = '🥈 2';
-          if (index === 2) medal = '🥉 3';
-
-          item.innerHTML = `
-            <span style="font-weight: bold;">${medal} ${player.Имя}</span>
-            <span style="color: var(--gold); font-weight: bold;">${player.Счет.toLocaleString()} 🪙</span>
-          `;
-          listEl.appendChild(item);
-        });
-      } catch (err) {
-        listEl.innerHTML = '<p style="text-align:center; color:var(--red);">Не удалось загрузить таблицу</p>';
-      }
     }
 
     function resetGame() {
@@ -1178,10 +1100,6 @@
         document.querySelectorAll('.nav-btn')[2].classList.add('active');
         document.getElementById('shopScreen').classList.add('active');
         try { renderShop(); } catch(e) { console.error(e); }
-      } else if (tab === 'leaderboard') {
-        document.querySelectorAll('.nav-btn')[3].classList.add('active');
-        document.getElementById('leaderboardScreen').classList.add('active');
-        try { loadLeaderboard(); } catch(e) { console.error(e); }
       }
     }
 
@@ -1199,7 +1117,6 @@
     window.onload = () => {
       initGarageCanvas();
       updateHeader();
-      syncScoreToCloud();
     };
   </script>
 </body>
