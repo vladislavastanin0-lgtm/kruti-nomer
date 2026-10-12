@@ -6,6 +6,8 @@
   <title>Крути номера</title>
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg-color: #12131C;
@@ -138,18 +140,18 @@
 
     .nav-btn {
       flex: 1;
-      padding: 12px 0;
+      padding: 10px 0;
       background: none;
       border: none;
       color: var(--text-sub);
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
     }
 
     .nav-btn.active {
@@ -572,7 +574,10 @@
         <span>🚗</span> Гараж
       </button>
       <button class="nav-btn" onclick="switchTab('shop')">
-        <span>🏬</span> Автосалон
+        <span>🏬</span> Салон
+      </button>
+      <button class="nav-btn" onclick="switchTab('leaderboard')">
+        <span>🏆</span> Топ
       </button>
     </nav>
 
@@ -641,6 +646,14 @@
       </div>
     </div>
 
+    <!-- LEADERBOARD SCREEN -->
+    <div id="leaderboardScreen" class="screen">
+      <h2 style="margin-bottom: 15px; text-align: center; color: var(--gold);">🏆 Таблица лидеров</h2>
+      <div id="leaderboardList" style="display: flex; flex-direction: column; gap: 8px;">
+        <p style="text-align: center; color: var(--text-sub);">Загрузка топа...</p>
+      </div>
+    </div>
+
     <!-- VICTORY MODAL -->
     <div id="victoryModal" class="modal-overlay">
       <div class="modal-card">
@@ -661,14 +674,19 @@
 
     const BOT_TOKEN = "8977809186:AAF0fqobqVRQf8wbnwApirFl_dwSrHZvxPc";
 
+    // SUPABASE CONFIG
+    const SUPABASE_URL = 'https://krutim-nomera.supabase.co';
+    const SUPABASE_ANON_KEY = 'Sb_publishable_PfGeZMcgmZK5tSL8xD3M8g_b3CB6OtX';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     // GAME STATE
     let state = {
       coins: 2000,
       spins: 0,
       luckLvl: 0,
-      ownedCars: [0], // Default car 0 (Жигули)
+      ownedCars: [0],
       selectedCarIdx: 0,
-      equippedPlates: {}, // carId -> plateObj
+      equippedPlates: {},
       ownedPlates: [],
       isSpinning: false
     };
@@ -696,9 +714,68 @@
 
     function saveState() {
       localStorage.setItem('kruti_nomera_state', JSON.stringify(state));
+      syncScoreToCloud();
     }
 
-    // Функция ручного сброса прогресса кнопкой
+    // Отправка счета в Supabase
+    async function syncScoreToCloud() {
+      const tgUser = tg?.initDataUnsafe?.user;
+      if (!tgUser) return;
+
+      try {
+        await supabase
+          .from('leaderboard')
+          .upsert({
+            telegram_id: String(tgUser.id),
+            name: tgUser.first_name || 'Игрок',
+            score: state.coins,
+            updated_at: new Date()
+          }, { onConflict: 'telegram_id' });
+      } catch (err) {
+        console.error("Ошибка синхронизации счета:", err);
+      }
+    }
+
+    // Загрузка таблицы лидеров
+    async function loadLeaderboard() {
+      const listEl = document.getElementById('leaderboardList');
+      listEl.innerHTML = '<p style="text-align:center; color:var(--text-sub);">Загрузка топа...</p>';
+
+      try {
+        const { data, error } = await supabase
+          .from('leaderboard')
+          .select('name, score')
+          .order('score', { ascending: false })
+          .limit(10);
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          listEl.innerHTML = '<p style="text-align:center; color:var(--text-sub);">Пока нет лидеров. Станьте первым!</p>';
+          return;
+        }
+
+        listEl.innerHTML = '';
+        data.forEach((player, index) => {
+          const item = document.createElement('div');
+          item.className = 'plate-item';
+          
+          let medal = `#${index + 1}`;
+          if (index === 0) medal = '🥇 1';
+          if (index === 1) medal = '🥈 2';
+          if (index === 2) medal = '🥉 3';
+
+          item.innerHTML = `
+            <span style="font-weight: bold;">${medal} ${player.name}</span>
+            <span style="color: var(--gold); font-weight: bold;">${player.score.toLocaleString()} 🪙</span>
+          `;
+          listEl.appendChild(item);
+        });
+      } catch (err) {
+        listEl.innerHTML = '<p style="text-align:center; color:var(--red);">Не удалось загрузить таблицу</p>';
+      }
+    }
+
     function resetGame() {
       if (confirm("Вы уверены, что хотите сбросить весь прогресс и начать заново?")) {
         localStorage.removeItem('kruti_nomera_state');
@@ -706,7 +783,6 @@
       }
     }
 
-    // Dynamic Spin Cost Logic
     function getSpinCost() {
       if (state.spins < 10) return 100;
       if (state.spins < 50) return 300;
@@ -714,12 +790,10 @@
       return 800;
     }
 
-    // Dynamic Luck Upgrade Cost Logic
     function getLuckCost() {
       return 1000 * Math.pow(2, state.luckLvl);
     }
 
-    // UI Updates
     function updateHeader() {
       document.getElementById('balanceVal').innerText = state.coins.toLocaleString();
       document.getElementById('spinsCount').innerText = state.spins;
@@ -740,7 +814,7 @@
       }
     }
 
-    // SPIN SYSTEM (Авто-продажа от 700 монет)
+    // SPIN SYSTEM
     function performSpin() {
       const cost = getSpinCost();
       if (state.coins < cost || state.isSpinning) return;
@@ -1096,6 +1170,10 @@
         document.querySelectorAll('.nav-btn')[2].classList.add('active');
         document.getElementById('shopScreen').classList.add('active');
         renderShop();
+      } else if (tab === 'leaderboard') {
+        document.querySelectorAll('.nav-btn')[3].classList.add('active');
+        document.getElementById('leaderboardScreen').classList.add('active');
+        loadLeaderboard();
       }
     }
 
@@ -1113,6 +1191,7 @@
     window.onload = () => {
       initGarageCanvas();
       updateHeader();
+      syncScoreToCloud();
     };
   </script>
 </body>
