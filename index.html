@@ -67,40 +67,6 @@
       gap: 6px;
     }
 
-    /* Profile mini in header */
-    .header-profile {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0,0,0,0.3);
-      padding: 3px 8px 3px 3px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.1);
-      cursor: pointer;
-    }
-
-    .header-avatar {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: var(--accent-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      font-weight: bold;
-    }
-
-    .header-username {
-      font-size: 0.8rem;
-      font-weight: 600;
-      max-width: 80px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
     .balance-box {
       display: flex;
       align-items: center;
@@ -119,6 +85,14 @@
       font-weight: 700;
       color: var(--gold);
       font-size: 0.9rem;
+    }
+
+    .spins-count-badge {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      background: rgba(255,255,255,0.05);
+      padding: 4px 6px;
+      border-radius: 12px;
     }
 
     .header-actions {
@@ -166,12 +140,12 @@
 
     .nav-btn {
       flex: 1;
-      padding: 8px 2px;
+      padding: 8px 4px;
       background: none;
       border: none;
       color: var(--text-sub);
       font-weight: 600;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
@@ -564,51 +538,14 @@
       margin-top: 2px;
     }
 
-    /* PROFILE SCREEN */
-    .profile-card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 20px;
+    /* PRESTIGE SECTION IN SHOP */
+    .prestige-card {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(59, 130, 246, 0.15));
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      border-radius: 12px;
+      padding: 15px;
       text-align: center;
-      border: 1px solid rgba(255,255,255,0.05);
-      margin-bottom: 15px;
-    }
-
-    .profile-avatar-big {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin: 0 auto 10px auto;
-      background: var(--accent-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      font-weight: bold;
-      border: 2px solid var(--gold);
-    }
-
-    .profile-input {
-      width: 100%;
-      padding: 10px;
-      background: rgba(0,0,0,0.4);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      color: white;
-      font-size: 0.95rem;
       margin-bottom: 12px;
-      text-align: center;
-    }
-
-    .file-input-label {
-      display: inline-block;
-      background: rgba(255,255,255,0.1);
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      margin-bottom: 15px;
     }
 
     /* MODAL */
@@ -677,20 +614,17 @@
 
   <div id="app">
     <div id="dealershipBanner" class="dealership-banner">
-      🏆 ПОЗДРАВЛЯЕМ! Вы выкупили весь автосалон! Ждите новых обновлений!
+      🏆 ПОЗДРАВЛЯЕМ! Вы выкупили весь автосалон! Доступен Престиж в салоне!
     </div>
 
     <header>
       <div class="header-left">
-        <div class="header-profile" onclick="switchTab('profile')">
-          <div id="headerAvatarContainer">
-            <div id="headerAvatarInitials" class="header-avatar">И</div>
-          </div>
-          <span id="headerUsername" class="header-username">Игрок</span>
-        </div>
         <div class="balance-box">
           <span class="coin-icon">🪙</span>
           <span id="balanceVal" class="balance-val">2,000</span>
+        </div>
+        <div class="spins-count-badge">
+          Спинов: <span id="spinsCount">0</span>
         </div>
       </div>
       <div class="header-actions">
@@ -714,9 +648,6 @@
       </button>
       <button class="nav-btn" onclick="switchTab('tasks')">
         <span>🏆</span> Задания
-      </button>
-      <button class="nav-btn" onclick="switchTab('profile')">
-        <span>👤</span> Профиль
       </button>
     </nav>
 
@@ -780,6 +711,13 @@
 
     <!-- SHOP SCREEN -->
     <div id="shopScreen" class="screen">
+      <!-- Prestige banner block -->
+      <div id="prestigeSection" class="prestige-card" style="display: none;">
+        <h3 style="color: var(--purple); margin-bottom: 4px;">✨ Уровень Престижа: <span id="prestigeLvl">0</span></h3>
+        <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 10px;">Множитель дохода от рулетки: +<span id="prestigeBonus">0</span>%</p>
+        <button id="prestigeBtn" class="main-btn" style="width: 100%; background: var(--purple); font-size: 0.9rem; padding: 10px;" onclick="triggerPrestige()">Сделать Престиж</button>
+      </div>
+
       <div id="shopList" class="shop-list">
         <!-- Dyn. generated -->
       </div>
@@ -824,29 +762,6 @@
             <div style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 8px;">Статус: <span id="legendaryTaskProg">Не выполнено</span></div>
             <button id="claimLegendaryTask" class="btn-small" style="width: 100%;" disabled onclick="claimTask('legendary')">Забрать: 200 000 🪙</button>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PROFILE SCREEN -->
-    <div id="profileScreen" class="screen">
-      <div class="profile-card">
-        <div id="profileAvatarBigContainer">
-          <div id="profileAvatarInitials" class="profile-avatar-big">И</div>
-        </div>
-        
-        <label class="file-input-label">
-          📁 Загрузить аватарку
-          <input type="file" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
-        </label>
-
-        <div style="text-align: left; font-size: 0.85rem; color: var(--text-sub); margin-bottom: 4px;">Ваш никнейм:</div>
-        <input type="text" id="usernameInput" class="profile-input" value="Игрок" oninput="updateUsername(this.value)" placeholder="Введите ник...">
-
-        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
-          <div style="font-size: 0.9rem; color: var(--gold); font-weight: bold; margin-bottom: 6px;">✨ Уровень Престижа: <span id="prestigeLvl">0</span></div>
-          <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 12px;">Множитель дохода от рулетки: +<span id="prestigeBonus">0</span>%</p>
-          <button id="prestigeBtn" class="main-btn" style="width: 100%; background: var(--purple); font-size: 0.95rem;" disabled onclick="triggerPrestige()">Сделать Престиж</button>
         </div>
       </div>
     </div>
@@ -916,8 +831,6 @@
       ownedPlates: [],
       specialCases: 0,
       hasLegendary: false,
-      username: tg?.initDataUnsafe?.user?.first_name || "Игрок",
-      avatarBase64: null,
       prestigeLvl: 0,
       daily: {
         lastWeek: 0,
@@ -997,63 +910,15 @@
       document.getElementById('luckBonus').innerText = (state.luckLvl * 0.1).toFixed(1);
       document.getElementById('luckCost').innerText = getLuckCost().toLocaleString();
 
-      document.getElementById('usernameInput').value = state.username;
-      document.getElementById('headerUsername').innerText = state.username;
-
-      // Render Avatar in header and profile
-      renderAvatars();
-
-      // Prestige UI
-      document.getElementById('prestigeLvl').innerText = state.prestigeLvl;
-      document.getElementById('prestigeBonus').innerText = (state.prestigeLvl * 15);
-      
-      const canPrestige = state.ownedCars.length === CARS_DATA.length;
-      document.getElementById('prestigeBtn').disabled = !canPrestige;
-
       const canSpin = state.coins >= getSpinCost() && !state.isSpinning;
       document.getElementById('spinBtn').disabled = !canSpin;
 
       const canUpgrade = state.coins >= getLuckCost();
       document.getElementById('upgradeLuckBtn').disabled = !canUpgrade;
 
-      if (canPrestige) {
+      if (state.ownedCars.length === CARS_DATA.length) {
         document.getElementById('dealershipBanner').style.display = 'block';
       }
-    }
-
-    function renderAvatars() {
-      const hCont = document.getElementById('headerAvatarContainer');
-      const pCont = document.getElementById('profileAvatarBigContainer');
-
-      const initial = state.username ? state.username.charAt(0).toUpperCase() : "И";
-
-      if (state.avatarBase64) {
-        hCont.innerHTML = `<img src="${state.avatarBase64}" class="header-avatar">`;
-        pCont.innerHTML = `<img src="${state.avatarBase64}" class="profile-avatar-big" style="border: 2px solid var(--gold);">`;
-      } else {
-        hCont.innerHTML = `<div class="header-avatar">${initial}</div>`;
-        pCont.innerHTML = `<div class="profile-avatar-big">${initial}</div>`;
-      }
-    }
-
-    function updateUsername(val) {
-      state.username = val || "Игрок";
-      saveState();
-      document.getElementById('headerUsername').innerText = state.username;
-      renderAvatars();
-    }
-
-    function handleAvatarUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        state.avatarBase64 = e.target.result;
-        saveState();
-        renderAvatars();
-      };
-      reader.readAsDataURL(file);
     }
 
     // PRESTIGE SYSTEM
@@ -1067,7 +932,7 @@
       state.ownedPlates = [];
       state.spins = 0;
       state.luckLvl = 0;
-      state.coins = 5000 * (state.prestigeLvl + 1); // Старт бонус с престижем
+      state.coins = 5000 * (state.prestigeLvl + 1);
 
       saveState();
       updateHeader();
@@ -1512,8 +1377,18 @@
 
     // SHOP SYSTEM
     function renderShop() {
+      const prestigeSection = document.getElementById('prestigeSection');
       const shopList = document.getElementById('shopList');
       if (!shopList) return;
+
+      if (state.ownedCars.length === CARS_DATA.length) {
+        prestigeSection.style.display = 'block';
+        document.getElementById('prestigeLvl').innerText = state.prestigeLvl;
+        document.getElementById('prestigeBonus').innerText = (state.prestigeLvl * 15);
+      } else {
+        prestigeSection.style.display = 'none';
+      }
+
       shopList.innerHTML = '';
 
       CARS_DATA.forEach(car => {
@@ -1547,7 +1422,7 @@
         if (carId === 9) {
           showModal("ЛЕГЕНДАРНАЯ ПОКУПКА!", "Вы приобрели флагманский Lamborghini Aventador SVJ!");
         } else if (state.ownedCars.length === CARS_DATA.length) {
-          showModal("🏆 ПОЗДРАВЛЯЕМ!", "Вы выкупили весь автосалон! Теперь вам доступен Престиж в профиле!");
+          showModal("🏆 ПОЗДРАВЛЯЕМ!", "Вы выкупили весь автосалон! В Салоне доступен Престиж!");
         }
       }
     }
@@ -1626,10 +1501,6 @@
         document.querySelectorAll('.nav-btn')[4].classList.add('active');
         document.getElementById('tasksScreen').classList.add('active');
         try { updateTasksUI(); } catch(e) { console.error(e); }
-      } else if (tab === 'profile') {
-        document.querySelectorAll('.nav-btn')[5].classList.add('active');
-        document.getElementById('profileScreen').classList.add('active');
-        try { updateHeader(); } catch(e) { console.error(e); }
       }
     }
 
@@ -1653,3 +1524,4 @@
   </script>
 </body>
 </html>
+э
