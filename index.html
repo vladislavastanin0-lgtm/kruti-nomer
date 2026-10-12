@@ -601,6 +601,10 @@
   </div>
 
   <script>
+    // AUDIO EFFECTS
+    const spinSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2005/2005-preview.mp3');
+    const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3');
+
     // GAME STATE
     let state = {
       coins: 2000,
@@ -682,6 +686,10 @@
       state.isSpinning = true;
       updateHeader();
 
+      // Play spin sound
+      spinSound.currentTime = 0;
+      spinSound.play().catch(e => {});
+
       const plateCard = document.getElementById('plateCard');
       const plateText = document.getElementById('plateText');
       const dropTitle = document.getElementById('dropTitle');
@@ -702,6 +710,12 @@
         dropTitle.innerText = result.rarityName;
         dropTitle.style.color = result.color;
         dropVal.innerText = `+${result.value.toLocaleString()} 🪙`;
+
+        // Play win sound for rare/epic/legendary items
+        if (result.rarity !== 'white' && result.rarity !== 'green') {
+          winSound.currentTime = 0;
+          winSound.play().catch(e => {});
+        }
 
         state.coins += result.value;
         state.ownedPlates.push(result);
