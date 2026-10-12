@@ -51,66 +51,81 @@
 
     /* Header */
     header {
-      padding: 12px 16px;
+      padding: 10px 12px;
       background: var(--card-bg);
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid rgba(255,255,255,0.05);
-      gap: 8px;
+      gap: 6px;
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .balance-box {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       background: rgba(0,0,0,0.3);
-      padding: 5px 10px;
+      padding: 4px 8px;
       border-radius: 20px;
       border: 1px solid rgba(255,215,0,0.2);
     }
 
     .balance-box .coin-icon {
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
 
     .balance-val {
       font-weight: 700;
       color: var(--gold);
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
 
     .spins-count-badge {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-sub);
       background: rgba(255,255,255,0.05);
-      padding: 4px 8px;
+      padding: 4px 6px;
       border-radius: 12px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
     }
 
     .donate-btn {
       background: linear-gradient(135deg, #f1c40f, #f39c12);
       color: #000;
       border: none;
-      padding: 6px 12px;
+      padding: 6px 10px;
       border-radius: 20px;
       font-weight: 700;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       cursor: pointer;
       box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3);
-      display: flex;
-      align-items: center;
-      gap: 4px;
       white-space: nowrap;
     }
 
-    .donate-btn:active {
+    .reset-btn {
+      background: rgba(231, 76, 60, 0.15);
+      color: var(--red);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .donate-btn:active, .reset-btn:active {
       transform: scale(0.95);
     }
 
@@ -541,9 +556,12 @@
           Спинов: <span id="spinsCount">0</span>
         </div>
       </div>
-      <button class="donate-btn" onclick="buyWithStars('Поддержка проекта 🏎️', 'Зачисление 50,000 монет в игре', 50)">
-        ⭐ 50 Stars
-      </button>
+      <div class="header-actions">
+        <button class="reset-btn" onclick="resetGame()">🔄 Сброс</button>
+        <button class="donate-btn" onclick="buyWithStars('Поддержка проекта 🏎️', 'Зачисление 50,000 монет в игре', 50)">
+          ⭐ 50 Stars
+        </button>
+      </div>
     </header>
 
     <nav>
@@ -643,10 +661,8 @@
 
     const BOT_TOKEN = "8977809186:AAF0fqobqVRQf8wbnwApirFl_dwSrHZvxPc";
 
-    // ПРИНУДИТЕЛЬНЫЙ СБРОС (Ключ версии v3_forced_reset)
-    const CURRENT_VERSION = "v3_forced_reset";
+    // GAME STATE
     let state = {
-      version: CURRENT_VERSION,
       coins: 2000,
       spins: 0,
       luckLvl: 0,
@@ -670,25 +686,24 @@
       { id: 9, name: "Lamborghini Aventador SVJ", price: 10000000, type: "Gas", color: "#E74C3C" }
     ];
 
-    // Загрузка состояния с проверкой версии
+    // Load State
     const saved = localStorage.getItem('kruti_nomera_state');
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
-        if (parsed.version === CURRENT_VERSION) {
-          state = { ...state, ...parsed };
-        } else {
-          saveState(); // Сбросить все старые данные в 2000 монет
-        }
-      } catch(e){
-        saveState();
-      }
-    } else {
-      saveState();
+        state = { ...state, ...JSON.parse(saved) };
+      } catch(e){}
     }
 
     function saveState() {
       localStorage.setItem('kruti_nomera_state', JSON.stringify(state));
+    }
+
+    // Функция ручного сброса прогресса кнопкой
+    function resetGame() {
+      if (confirm("Вы уверены, что хотите сбросить весь прогресс и начать заново?")) {
+        localStorage.removeItem('kruti_nomera_state');
+        location.reload();
+      }
     }
 
     // Dynamic Spin Cost Logic
