@@ -1,1061 +1,224 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Крути номера</title>
-  <style>
-    :root {
-      --bg-color: #12131C;
-      --card-bg: #1C1E2D;
-      --accent-color: #3B82F6;
-      --accent-hover: #2563EB;
-      --text-main: #FFFFFF;
-      --text-sub: #A0AEC0;
-      --gold: #FFD700;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Крути Номера — Автомобильная игра</title>
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #121316;
+            --card-bg: #1c1e24;
+            --accent-gold: #f39c12;
+            --accent-blue: #3498db;
+            --text-color: #ffffff;
+            --text-muted: #a0a0a0;
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      user-select: none;
-    }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            user-select: none;
+        }
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+        .header {
+            width: 100%;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2a2d34;
+        }
 
-    #app {
-      width: 100%;
-      max-width: 480px;
-      height: 100vh;
-      max-height: 900px;
-      background: #181A26;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      overflow: hidden;
-    }
+        .brand-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-    /* Header */
-    header {
-      padding: 15px 20px;
-      background: var(--card-bg);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
+        .donate-btn {
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            color: #000;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-    .balance-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0,0,0,0.3);
-      padding: 6px 14px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,215,0,0.2);
-    }
+        .donate-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 2px 5px rgba(243, 156, 18, 0.2);
+        }
 
-    .balance-box .coin-icon {
-      font-size: 1.2rem;
-    }
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            flex-grow: 1;
+        }
 
-    .balance-val {
-      font-weight: 700;
-      color: var(--gold);
-      font-size: 1.1rem;
-    }
+        .game-card {
+            background-color: var(--card-bg);
+            width: 100%;
+            border-radius: 16px;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            border: 1px solid #2a2d34;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
 
-    .spins-count-badge {
-      font-size: 0.85rem;
-      color: var(--text-sub);
-      background: rgba(255,255,255,0.05);
-      padding: 4px 10px;
-      border-radius: 12px;
-    }
+        .number-plate {
+            background: #ffffff;
+            color: #000000;
+            border: 3px solid #000000;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin: 20px 0;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+            font-family: 'Courier New', Courier, monospace;
+        }
 
-    /* Tabs Nav */
-    nav {
-      display: flex;
-      background: var(--card-bg);
-      border-bottom: 2px solid rgba(255,255,255,0.05);
-    }
+        .action-btn {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
 
-    .nav-btn {
-      flex: 1;
-      padding: 12px 0;
-      background: none;
-      border: none;
-      color: var(--text-sub);
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .nav-btn.active {
-      color: var(--accent-color);
-      border-bottom: 2px solid var(--accent-color);
-      background: rgba(59, 130, 246, 0.05);
-    }
-
-    /* Content Screens */
-    .screen {
-      flex: 1;
-      display: none;
-      flex-direction: column;
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    .screen.active {
-      display: flex;
-    }
-
-    /* SPIN SCREEN */
-    .plate-display-area {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      position: relative;
-    }
-
-    .plate-card {
-      width: 320px;
-      height: 80px;
-      background: #FFFFFF;
-      border: 4px solid #000;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      padding: 0 12px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-      position: relative;
-      transition: transform 0.1s, box-shadow 0.3s;
-    }
-
-    .plate-flag-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      border-right: 2px solid #000;
-      padding-right: 10px;
-      margin-right: 12px;
-      height: 80%;
-      justify-content: center;
-    }
-
-    .flag-kz {
-      width: 24px;
-      height: 14px;
-      background: #00AFCA;
-      position: relative;
-      border-radius: 1px;
-    }
-
-    .flag-kz::after {
-      content: '☀️';
-      font-size: 8px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .country-code {
-      font-size: 11px;
-      font-weight: bold;
-      color: #000;
-      margin-top: 2px;
-    }
-
-    .plate-number-text {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 2.2rem;
-      font-weight: 900;
-      color: #000;
-      letter-spacing: 4px;
-      flex: 1;
-      text-align: center;
-    }
-
-    /* Rarity Glow Effects */
-    .plate-card.rarity-white { border-color: #E2E8F0; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
-    .plate-card.rarity-green { border-color: #22C55E; box-shadow: 0 0 25px rgba(34,197,94,0.5); }
-    .plate-card.rarity-blue { border-color: #3B82F6; box-shadow: 0 0 25px rgba(59,130,246,0.5); }
-    .plate-card.rarity-purple { border-color: #A855F7; box-shadow: 0 0 30px rgba(168,85,247,0.6); }
-    .plate-card.rarity-yellow { border-color: #EAB308; box-shadow: 0 0 40px rgba(234,179,8,0.8); animation: pulseGlow 1.5s infinite alternate; }
-
-    @keyframes pulseGlow {
-      from { box-shadow: 0 0 20px rgba(234,179,8,0.6); }
-      to { box-shadow: 0 0 45px rgba(234,179,8,1); }
-    }
-
-    .drop-info {
-      text-align: center;
-      min-height: 50px;
-    }
-
-    .drop-rarity-title {
-      font-weight: 700;
-      font-size: 1.2rem;
-      margin-bottom: 4px;
-    }
-
-    .drop-value {
-      color: var(--gold);
-      font-weight: bold;
-    }
-
-    .spin-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
-    .main-btn {
-      background: var(--accent-color);
-      color: white;
-      border: none;
-      padding: 16px;
-      border-radius: 14px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(59,130,246,0.4);
-      transition: all 0.2s;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .main-btn:hover:not(:disabled) {
-      background: var(--accent-hover);
-      transform: translateY(-2px);
-    }
-
-    .main-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    /* LUCK UPGRADE SECTION */
-    .luck-box {
-      background: var(--card-bg);
-      padding: 15px;
-      border-radius: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .luck-info h4 {
-      font-size: 0.95rem;
-      margin-bottom: 2px;
-    }
-
-    .luck-info p {
-      font-size: 0.8rem;
-      color: var(--text-sub);
-    }
-
-    .btn-small {
-      background: rgba(255,215,0,0.15);
-      color: var(--gold);
-      border: 1px solid rgba(255,215,0,0.3);
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .btn-small:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-
-    /* GARAGE SCREEN */
-    .garage-carousel {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      border: 1px solid rgba(255,255,255,0.05);
-      margin-bottom: 20px;
-    }
-
-    .car-canvas-container {
-      width: 100%;
-      height: 200px;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    canvas#carCanvas {
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, #2a2d42 0%, #181a26 100%);
-      border-radius: 12px;
-      cursor: grab;
-    }
-
-    canvas#carCanvas:active {
-      cursor: grabbing;
-    }
-
-    .carousel-nav-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 5;
-    }
-
-    .carousel-nav-btn.prev { left: 10px; }
-    .carousel-nav-btn.next { right: 10px; }
-
-    .car-details {
-      text-align: center;
-      margin-top: 10px;
-      width: 100%;
-    }
-
-    .car-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
-
-    .car-type-badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      padding: 2px 8px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.1);
-      margin-top: 4px;
-    }
-
-    .equipped-plate-info {
-      margin-top: 10px;
-      font-size: 0.85rem;
-      color: var(--text-sub);
-    }
-
-    .inventory-title {
-      font-size: 1rem;
-      margin-bottom: 10px;
-      color: var(--text-sub);
-    }
-
-    .plates-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .plate-item {
-      background: var(--card-bg);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .plate-item.equipped {
-      border-color: var(--accent-color);
-      background: rgba(59, 130, 246, 0.1);
-    }
-
-    .plate-item-mini {
-      font-family: monospace;
-      font-weight: bold;
-      font-size: 0.95rem;
-      padding: 4px 8px;
-      background: #FFF;
-      color: #000;
-      border-radius: 4px;
-      border: 1px solid #000;
-    }
-
-    /* SHOP SCREEN */
-    .shop-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .car-shop-item {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .car-shop-info h4 {
-      font-size: 1rem;
-    }
-
-    .car-shop-info p {
-      font-size: 0.85rem;
-      color: var(--gold);
-      font-weight: bold;
-      margin-top: 2px;
-    }
-
-    /* MODAL */
-    .modal-overlay {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.85);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      z-index: 100;
-    }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal-card {
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 25px;
-      text-align: center;
-      max-width: 360px;
-      width: 100%;
-      border: 1px solid rgba(255,215,0,0.3);
-      box-shadow: 0 0 30px rgba(255,215,0,0.2);
-    }
-
-    .modal-card h2 {
-      color: var(--gold);
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-    }
-
-    .modal-card p {
-      color: var(--text-sub);
-      font-size: 0.95rem;
-      line-height: 1.4;
-      margin-bottom: 20px;
-    }
-
-    .dealership-banner {
-      background: linear-gradient(45deg, #FFD700, #FFA500);
-      color: #000;
-      font-weight: 800;
-      text-align: center;
-      padding: 10px;
-      font-size: 0.85rem;
-      display: none;
-    }
-  </style>
+        .action-btn:active {
+            opacity: 0.85;
+        }
+    </style>
 </head>
 <body>
 
-  <div id="app">
-    <div id="dealershipBanner" class="dealership-banner">
-      🏆 ПОЗДРАВЛЯЕМ! Вы выкупили весь автосалон! Ждите новых обновлений!
-    </div>
-
-    <header>
-      <div class="balance-box">
-        <span class="coin-icon">🪙</span>
-        <span id="balanceVal" class="balance-val">2,000</span>
-      </div>
-      <div class="spins-count-badge">
-        Спинов: <span id="spinsCount">0</span>
-      </div>
-    </header>
-
-    <nav>
-      <button class="nav-btn active" onclick="switchTab('spin')">
-        <span>🎲</span> Рулетка
-      </button>
-      <button class="nav-btn" onclick="switchTab('garage')">
-        <span>🚗</span> Гараж
-      </button>
-      <button class="nav-btn" onclick="switchTab('shop')">
-        <span>🏬</span> Автосалон
-      </button>
-    </nav>
-
-    <!-- SPIN SCREEN -->
-    <div id="spinScreen" class="screen active">
-      <div class="plate-display-area">
-        <div id="plateCard" class="plate-card rarity-white">
-          <div class="plate-flag-section">
-            <div class="flag-kz"></div>
-            <div class="country-code">KZ</div>
-          </div>
-          <div id="plateText" class="plate-number-text">777 AAA</div>
-        </div>
-
-        <div class="drop-info">
-          <div id="dropTitle" class="drop-rarity-title" style="color: #A0AEC0;">Испытай удачу!</div>
-          <div id="dropVal" class="drop-value"></div>
-        </div>
-      </div>
-
-      <div class="spin-actions">
-        <button id="spinBtn" class="main-btn" onclick="performSpin()">
-          <span>Крутить</span>
-          <span id="spinCostBadge">(100 🪙)</span>
+    <div class="header">
+        <div class="brand-title">🏎️ Крути Номера</div>
+        <button class="donate-btn" onclick="buyWithStars('Донат разработчику 🏎️', 'Поддержка проекта Крути Номера', 50)">
+            ⭐ 50 Stars
         </button>
+    </div>
 
-        <div class="luck-box">
-          <div class="luck-info">
-            <h4>Прокачка Удачи (Ур. <span id="luckLvl">0</span>)</h4>
-            <p>Шанс супер-номеров: +<span id="luckBonus">0.0</span>%</p>
-          </div>
-          <button id="upgradeLuckBtn" class="btn-small" onclick="upgradeLuck()">
-            Улучшить (<span id="luckCost">1 000</span> 🪙)
-          </button>
+    <div class="container">
+        <div class="game-card">
+            <h2 style="margin-top:0;">Испытай удачу!</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Выбей редкий блатный номер для своего авто</p>
+
+            <div class="number-plate" id="plateDisplay">777 AAA 01</div>
+
+            <button class="action-btn" onclick="spinPlate()">Крутить номер</button>
         </div>
-      </div>
     </div>
 
-    <!-- GARAGE SCREEN -->
-    <div id="garageScreen" class="screen">
-      <div class="garage-carousel">
-        <button class="carousel-nav-btn prev" onclick="prevCar()">◀</button>
-        <button class="carousel-nav-btn next" onclick="nextCar()">▶</button>
-        
-        <div class="car-canvas-container">
-          <canvas id="carCanvas" width="380" height="200"></canvas>
-        </div>
-
-        <div class="car-details">
-          <div id="carTitle" class="car-title">Жигули (2106)</div>
-          <div id="carType" class="car-type-badge">Бензиновый</div>
-          <div id="equippedPlateInfo" class="equipped-plate-info">Номер: Не установлен</div>
-        </div>
-      </div>
-
-      <div class="inventory-title">Ваша коллекция номеров:</div>
-      <div id="platesGrid" class="plates-grid">
-        <!-- Dyn. generated -->
-      </div>
-    </div>
-
-    <!-- SHOP SCREEN -->
-    <div id="shopScreen" class="screen">
-      <div id="shopList" class="shop-list">
-        <!-- Dyn. generated -->
-      </div>
-    </div>
-
-    <!-- VICTORY MODAL -->
-    <div id="victoryModal" class="modal-overlay">
-      <div class="modal-card">
-        <h2 id="modalTitle">ПОЗДРАВЛЯЕМ!</h2>
-        <p id="modalDesc"></p>
-        <button class="main-btn" style="width: 100%" onclick="closeModal()">Отлично!</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // AUDIO EFFECTS & DRUM TICK SOUND
-    const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3');
-
-    function playSpinDrumSound() {
-      try {
-        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let totalSteps = 18;
-        let currentStep = 0;
-
-        function playTick() {
-          if (currentStep >= totalSteps) return;
-
-          let osc = audioCtx.createOscillator();
-          let gain = audioCtx.createGain();
-          
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(600 + Math.random() * 300, audioCtx.currentTime);
-          
-          gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
-
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-
-          osc.start();
-          osc.stop(audioCtx.currentTime + 0.04);
-
-          currentStep++;
-          // Увеличиваем задержку с каждым шагом, создавая эффект замедления барабана
-          let delay = 35 + (currentStep * currentStep * 3.5);
-          setTimeout(playTick, delay);
+    <script>
+        // Инициализация Telegram WebApp
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
         }
 
-        playTick();
-      } catch(e) {}
-    }
+        // ТОКЕН БОТА С ПРАВИЛЬНЫМ СИНТАКСИСОМ
+        const BOT_TOKEN = "8977809186:AAF0fqobqVRQf8wbnwApirFl_dwSrHZvxPc";
 
-    // GAME STATE
-    let state = {
-      coins: 2000,
-      spins: 0,
-      luckLvl: 0,
-      ownedCars: [0], // Default car 0 (Жигули)
-      selectedCarIdx: 0,
-      equippedPlates: {}, // carId -> plateObj
-      ownedPlates: [],
-      isSpinning: false
-    };
+        // Функция оплаты через Telegram Stars (XTR)
+        async function buyWithStars(title, description, amountStars) {
+            if (!tg) {
+                alert("Пожалуйста, откройте игру внутри Telegram!");
+                return;
+            }
 
-    const CARS_DATA = [
-      { id: 0, name: "Жигули (2106)", price: 5000, type: "Gas", color: "#C0392B" },
-      { id: 1, name: "ВАЗ 2115", price: 15000, type: "Gas", color: "#7F8C8D" },
-      { id: 2, name: "Toyota Camry 70", price: 50000, type: "Gas", color: "#2C3E50" },
-      { id: 3, name: "BMW M5 F90", price: 150000, type: "Gas", color: "#111111" },
-      { id: 4, name: "Mercedes G63 AMG", price: 350000, type: "Gas", color: "#000000" },
-      { id: 5, name: "Porsche 911 GT3", price: 750000, type: "Gas", color: "#F39C12" },
-      { id: 6, name: "Tank 300", price: 1500000, type: "Gas", color: "#27AE60" },
-      { id: 7, name: "Tank 500", price: 3000000, type: "Gas", color: "#BDC3C7" },
-      { id: 8, name: "Xiaomi SU7", price: 5000000, type: "Electric", color: "#16A085" },
-      { id: 9, name: "Lamborghini Aventador SVJ", price: 10000000, type: "Gas", color: "#E74C3C" }
-    ];
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/createInvoiceLink`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: title,
+                        description: description,
+                        payload: `user_donate_${Date.now()}`,
+                        provider_token: "", // Для Stars обязательно оставляем ПУСТЫМ
+                        currency: "XTR",     // Код Telegram Stars
+                        prices: [
+                            { label: title, amount: amountStars }
+                        ]
+                    })
+                });
 
-    // Load State
-    const saved = localStorage.getItem('kruti_nomera_state');
-    if (saved) {
-      try {
-        state = { ...state, ...JSON.parse(saved) };
-      } catch(e){}
-    }
+                const data = await response.json();
 
-    function saveState() {
-      localStorage.setItem('kruti_nomera_state', JSON.stringify(state));
-    }
-
-    // Dynamic Spin Cost Logic
-    function getSpinCost() {
-      if (state.spins < 10) return 100;
-      if (state.spins < 50) return 300;
-      if (state.spins < 100) return 600;
-      return 800;
-    }
-
-    // Dynamic Luck Upgrade Cost Logic (Doubles every level)
-    function getLuckCost() {
-      return 1000 * Math.pow(2, state.luckLvl);
-    }
-
-    // UI Updates
-    function updateHeader() {
-      document.getElementById('balanceVal').innerText = state.coins.toLocaleString();
-      document.getElementById('spinsCount').innerText = state.spins;
-      document.getElementById('spinCostBadge').innerText = `(${getSpinCost()} 🪙)`;
-      
-      document.getElementById('luckLvl').innerText = state.luckLvl;
-      document.getElementById('luckBonus').innerText = (state.luckLvl * 0.1).toFixed(1);
-      document.getElementById('luckCost').innerText = getLuckCost().toLocaleString();
-
-      const canSpin = state.coins >= getSpinCost() && !state.isSpinning;
-      document.getElementById('spinBtn').disabled = !canSpin;
-
-      const canUpgrade = state.coins >= getLuckCost();
-      document.getElementById('upgradeLuckBtn').disabled = !canUpgrade;
-
-      if (state.ownedCars.length === CARS_DATA.length) {
-        document.getElementById('dealershipBanner').style.display = 'block';
-      }
-    }
-
-    // SPIN SYSTEM
-    function performSpin() {
-      const cost = getSpinCost();
-      if (state.coins < cost || state.isSpinning) return;
-
-      state.coins -= cost;
-      state.spins++;
-      state.isSpinning = true;
-      updateHeader();
-
-      // Запуск звука вращения барабана
-      playSpinDrumSound();
-
-      const plateCard = document.getElementById('plateCard');
-      const plateText = document.getElementById('plateText');
-      const dropTitle = document.getElementById('dropTitle');
-      const dropVal = document.getElementById('dropVal');
-
-      let rollTime = 1200;
-      let interval = setInterval(() => {
-        plateText.innerText = generateRandomPlateText();
-      }, 60);
-
-      setTimeout(() => {
-        clearInterval(interval);
-        const result = rollPlateResult();
-        
-        plateText.innerText = result.text;
-        plateCard.className = `plate-card rarity-${result.rarity}`;
-        
-        dropTitle.innerText = result.rarityName;
-        dropTitle.style.color = result.color;
-        dropVal.innerText = `+${result.value.toLocaleString()} 🪙`;
-
-        // Звук победы для редких и крутых выпадений
-        if (result.rarity !== 'white' && result.rarity !== 'green') {
-          winSound.currentTime = 0;
-          winSound.play().catch(e => {});
+                if (data.ok && data.result) {
+                    // Открываем нативное окно оплаты Telegram Stars
+                    tg.openInvoice(data.result, function(status) {
+                        if (status === 'paid') {
+                            tg.showAlert("Спасибо за поддержку! Звёзды успешно зачислены! ⭐");
+                        } else if (status === 'failed') {
+                            tg.showAlert("Не удалось завершить оплату.");
+                        }
+                    });
+                } else {
+                    alert("Ошибка создания счета: " + (data.description || "Неизвестная ошибка"));
+                }
+            } catch (err) {
+                console.error("Ошибка сети:", err);
+                alert("Не удалось связаться с сервером Telegram.");
+            }
         }
 
-        state.coins += result.value;
-        state.ownedPlates.push(result);
-        state.isSpinning = false;
-        
-        saveState();
-        updateHeader();
-        renderGarage();
-      }, rollTime);
-    }
+        // Простая функция прокрутки номеров
+        function spinPlate() {
+            const letters = "ABEKMHOPCTYX";
+            const numbers = Math.floor(100 + Math.random() * 900);
+            const randLetters = letters[Math.floor(Math.random() * letters.length)] +
+                                letters[Math.floor(Math.random() * letters.length)] +
+                                letters[Math.floor(Math.random() * letters.length)];
+            const regions = ["01", "02", "05", "13", "17"];
+            const region = regions[Math.floor(Math.random() * regions.length)];
 
-    function generateRandomPlateText() {
-      const nums = Math.floor(100 + Math.random() * 900);
-      const letters = String.fromCharCode(65 + Math.floor(Math.random()*26)) +
-                      String.fromCharCode(65 + Math.floor(Math.random()*26)) +
-                      String.fromCharCode(65 + Math.floor(Math.random()*26));
-      return `${nums} ${letters}`;
-    }
+            document.getElementById("plateDisplay").innerText = `${numbers} ${randLetters} ${region}`;
 
-    function rollPlateResult() {
-      let rarity = 'white';
-      let rarityName = 'Обычный номер';
-      let color = '#A0AEC0';
-      let val = 100;
-
-      // Phase calculation
-      let maxVal = 1000;
-      if (state.spins <= 10) maxVal = 500;
-
-      // Hard luck threshold for legendaries (requires luck level >= 3)
-      let canDropLegendary = state.luckLvl >= 3;
-      let luckMult = 1 + (state.luckLvl * 0.1);
-
-      let rand = Math.random() * 100;
-
-      if (canDropLegendary && rand < (0.1 * luckMult)) {
-        rarity = 'yellow';
-        rarityName = '🔥 СУПЕР-ЛЕГЕНДАРНЫЙ 🔥';
-        color = '#EAB308';
-        val = 50000 + Math.floor(Math.random() * 50000);
-      } else if (canDropLegendary && rand < (1.0 * luckMult)) {
-        rarity = 'purple';
-        rarityName = '✨ Легендарный ✨';
-        color = '#A855F7';
-        val = 10000 + Math.floor(Math.random() * 15000);
-      } else if (rand < 10) {
-        rarity = 'blue';
-        rarityName = 'Редкий номер';
-        color = '#3B82F6';
-        val = Math.min(maxVal, 800 + Math.floor(Math.random() * 500));
-      } else if (rand < 40) {
-        rarity = 'green';
-        rarityName = 'Необычный номер';
-        color = '#22C55E';
-        val = Math.min(maxVal, 400 + Math.floor(Math.random() * 400));
-      } else {
-        rarity = 'white';
-        rarityName = 'Обычный номер';
-        color = '#E2E8F0';
-        val = Math.min(maxVal, 100 + Math.floor(Math.random() * 300));
-      }
-
-      return {
-        id: Date.now() + Math.random(),
-        text: generateRandomPlateText(),
-        rarity, rarityName, color, value: val
-      };
-    }
-
-    function upgradeLuck() {
-      const cost = getLuckCost();
-      if (state.coins >= cost) {
-        state.coins -= cost;
-        state.luckLvl++;
-        saveState();
-        updateHeader();
-      }
-    }
-
-    // GARAGE & CAR CANVAS DRAWING
-    let carAngle = 0; // Inspection rotation
-    let isDragging = false;
-    let startX = 0;
-
-    function initGarageCanvas() {
-      const canvas = document.getElementById('carCanvas');
-      canvas.addEventListener('mousedown', (e) => { isDragging = true; startX = e.clientX; });
-      window.addEventListener('mouseup', () => { isDragging = false; });
-      window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        let dx = e.clientX - startX;
-        carAngle += dx * 0.01;
-        startX = e.clientX;
-        drawGarageCar();
-      });
-
-      // Touch events
-      canvas.addEventListener('touchstart', (e) => { isDragging = true; startX = e.touches[0].clientX; });
-      window.addEventListener('touchend', () => { isDragging = false; });
-      window.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        let dx = e.touches[0].clientX - startX;
-        carAngle += dx * 0.01;
-        startX = e.touches[0].clientX;
-        drawGarageCar();
-      });
-    }
-
-    function drawGarageCar() {
-      const canvas = document.getElementById('carCanvas');
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (state.ownedCars.length === 0) return;
-
-      const carData = CARS_DATA[state.ownedCars[state.selectedCarIdx]];
-      const equippedPlate = state.equippedPlates[carData.id];
-
-      ctx.save();
-      ctx.translate(canvas.width / 2, canvas.height / 2 + 20);
-
-      // Simple 3D perspective projection based on angle
-      let cos = Math.cos(carAngle);
-      let sin = Math.sin(carAngle);
-
-      // Car shadow
-      ctx.fillStyle = "rgba(0,0,0,0.4)";
-      ctx.beginPath();
-      ctx.ellipse(0, 45, 120 * Math.abs(cos) + 60, 20, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Procedural Car Body
-      ctx.fillStyle = carData.color;
-      ctx.strokeStyle = "#000";
-      ctx.lineWidth = 3;
-
-      // Draw Main Chassis Shape
-      ctx.beginPath();
-      let width = 160 * Math.abs(cos) + 40;
-      let height = 50;
-      ctx.roundRect(-width/2, -height/2, width, height, 10);
-      ctx.fill();
-      ctx.stroke();
-
-      // Cabin / Roof
-      ctx.fillStyle = "#111";
-      ctx.beginPath();
-      ctx.roundRect(-width/3, -height/2 - 30, width/1.5, 35, 5);
-      ctx.fill();
-      ctx.stroke();
-
-      // Wheels
-      ctx.fillStyle = "#222";
-      ctx.beginPath();
-      ctx.arc(-width/3, 25, 18, 0, Math.PI * 2);
-      ctx.arc(width/3, 25, 18, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-
-      // Draw License Plate Mounted
-      if (equippedPlate) {
-        ctx.fillStyle = "#FFF";
-        ctx.strokeStyle = "#000";
-        ctx.lineWidth = 1;
-        
-        let plateW = 60 * Math.abs(cos) + 20;
-        let plateH = 16;
-        ctx.fillRect(-plateW/2, 10, plateW, plateH);
-        ctx.strokeRect(-plateW/2, 10, plateW, plateH);
-
-        ctx.fillStyle = "#000";
-        ctx.font = "bold 9px monospace";
-        ctx.textAlign = "center";
-        ctx.fillText(equippedPlate.text, 0, 22);
-      }
-
-      ctx.restore();
-    }
-
-    function renderGarage() {
-      if (state.ownedCars.length === 0) return;
-
-      const carId = state.ownedCars[state.selectedCarIdx];
-      const carData = CARS_DATA[carId];
-      const equippedPlate = state.equippedPlates[carId];
-
-      document.getElementById('carTitle').innerText = carData.name;
-      document.getElementById('carType').innerText = carData.type === 'Electric' ? '⚡ Электрокар' : '⛽ Бензиновый';
-      document.getElementById('equippedPlateInfo').innerText = equippedPlate 
-        ? `Номер: ${equippedPlate.text}` 
-        : "Номер: Не установлен";
-
-      drawGarageCar();
-
-      // Render plates inventory
-      const grid = document.getElementById('platesGrid');
-      grid.innerHTML = '';
-
-      state.ownedPlates.forEach((plate) => {
-        const item = document.createElement('div');
-        const isEquipped = equippedPlate && equippedPlate.id === plate.id;
-        item.className = `plate-item ${isEquipped ? 'equipped' : ''}`;
-        
-        item.innerHTML = `
-          <div class="plate-item-mini">${plate.text}</div>
-          <div style="font-size:0.75rem; color:${plate.color}">${plate.rarityName}</div>
-        `;
-
-        item.onclick = () => {
-          state.equippedPlates[carId] = plate;
-          saveState();
-          renderGarage();
-        };
-
-        grid.appendChild(item);
-      });
-    }
-
-    function prevCar() {
-      if (state.selectedCarIdx > 0) {
-        state.selectedCarIdx--;
-        renderGarage();
-      }
-    }
-
-    function nextCar() {
-      if (state.selectedCarIdx < state.ownedCars.length - 1) {
-        state.selectedCarIdx++;
-        renderGarage();
-      }
-    }
-
-    // SHOP SYSTEM
-    function renderShop() {
-      const shopList = document.getElementById('shopList');
-      shopList.innerHTML = '';
-
-      CARS_DATA.forEach(car => {
-        const isOwned = state.ownedCars.includes(car.id);
-        const item = document.createElement('div');
-        item.className = 'car-shop-item';
-
-        item.innerHTML = `
-          <div class="car-shop-info">
-            <h4>${car.name}</h4>
-            <p>${car.price.toLocaleString()} 🪙</p>
-          </div>
-          <button class="btn-small" ${isOwned || state.coins < car.price ? 'disabled' : ''} onclick="buyCar(${car.id})">
-            ${isOwned ? 'Куплено' : 'Купить'}
-          </button>
-        `;
-
-        shopList.appendChild(item);
-      });
-    }
-
-    function buyCar(carId) {
-      const car = CARS_DATA[carId];
-      if (state.coins >= car.price && !state.ownedCars.includes(carId)) {
-        state.coins -= car.price;
-        state.ownedCars.push(carId);
-        saveState();
-        updateHeader();
-        renderShop();
-
-        // Victory Modals
-        if (carId === 9) { // Lamborghini Aventador SVJ
-          showModal("ЛЕГЕНДАРНАЯ ПОКУПКА!", "Вы приобрели флагманский Lamborghini Aventador SVJ! Мощность и стиль теперь в вашем гараже (разгон до 200 км/ч)!");
-        } else if (state.ownedCars.length === CARS_DATA.length) {
-          showModal("🏆 ПОЗДРАВЛЯЕМ!", "Вы выкупили весь автосалон! Ждите новых обновлений!");
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
         }
-      }
-    }
-
-    // TAB NAVIGATION
-    function switchTab(tab) {
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-
-      if (tab === 'spin') {
-        document.querySelectorAll('.nav-btn')[0].classList.add('active');
-        document.getElementById('spinScreen').classList.add('active');
-      } else if (tab === 'garage') {
-        document.querySelectorAll('.nav-btn')[1].classList.add('active');
-        document.getElementById('garageScreen').classList.add('active');
-        renderGarage();
-      } else if (tab === 'shop') {
-        document.querySelectorAll('.nav-btn')[2].classList.add('active');
-        document.getElementById('shopScreen').classList.add('active');
-        renderShop();
-      }
-    }
-
-    function showModal(title, desc) {
-      document.getElementById('modalTitle').innerText = title;
-      document.getElementById('modalDesc').innerText = desc;
-      document.getElementById('victoryModal').classList.add('active');
-    }
-
-    function closeModal() {
-      document.getElementById('victoryModal').classList.remove('active');
-    }
-
-    // INIT
-    window.onload = () => {
-      initGarageCanvas();
-      updateHeader();
-    };
-  </script>
+    </script>
 </body>
 </html>
