@@ -643,8 +643,10 @@
 
     const BOT_TOKEN = "8977809186:AAF0fqobqVRQf8wbnwApirFl_dwSrHZvxPc";
 
-    // GAME STATE
+    // GAME STATE (СБРОС СДЕЛАН АВТОМАТИЧЕСКИ ЧЕРЕЗ ВЕРСИЮ СОХРАНЕНИЯ)
+    const CURRENT_VERSION = "v2_reset";
     let state = {
+      version: CURRENT_VERSION,
       coins: 2000,
       spins: 0,
       luckLvl: 0,
@@ -668,12 +670,20 @@
       { id: 9, name: "Lamborghini Aventador SVJ", price: 10000000, type: "Gas", color: "#E74C3C" }
     ];
 
-    // Load State
+    // Load State с проверкой версии (если версия старая — игра сбрасывается к 2000)
     const saved = localStorage.getItem('kruti_nomera_state');
     if (saved) {
       try {
-        state = { ...state, ...JSON.parse(saved) };
+        const parsed = JSON.parse(saved);
+        if (parsed.version === CURRENT_VERSION) {
+          state = { ...state, ...parsed };
+        } else {
+          // Версия изменилась -> полный сброс к дефолту
+          saveState();
+        }
       } catch(e){}
+    } else {
+      saveState();
     }
 
     function saveState() {
@@ -714,7 +724,7 @@
       }
     }
 
-    // SPIN SYSTEM (С автоматическим начислением от 700 монет)
+    // SPIN SYSTEM (Авто-продажа от 700 монет)
     function performSpin() {
       const cost = getSpinCost();
       if (state.coins < cost || state.isSpinning) return;
@@ -767,7 +777,6 @@
       let rarity = 'white';
       let rarityName = 'Обычный номер';
       let color = '#A0AEC0';
-      // Минимум 700 монет для каждого сгенерированного номера
       let val = 700 + Math.floor(Math.random() * 300);
 
       let canDropLegendary = state.luckLvl >= 3;
@@ -779,12 +788,12 @@
         rarity = 'yellow';
         rarityName = '🔥 СУПЕР-ЛЕГЕНДАРНЫЙ 🔥';
         color = '#EAB308';
-        val = 5000; // Максимум 5000 для легендарных
+        val = 5000;
       } else if (canDropLegendary && rand < (1.0 * luckMult)) {
         rarity = 'purple';
         rarityName = '✨ Легендарный ✨';
         color = '#A855F7';
-        val = 3000 + Math.floor(Math.random() * 2000); // До 5000
+        val = 3000 + Math.floor(Math.random() * 2000);
       } else if (rand < 10) {
         rarity = 'blue';
         rarityName = 'Редкий номер';
@@ -799,7 +808,7 @@
         rarity = 'white';
         rarityName = 'Обычный номер';
         color = '#E2E8F0';
-        val = 700 + Math.floor(Math.random() * 300); // Базовый минимум 700
+        val = 700 + Math.floor(Math.random() * 300);
       }
 
       return {
