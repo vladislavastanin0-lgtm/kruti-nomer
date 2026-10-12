@@ -953,7 +953,79 @@
       isSpinning: false
     };
 
-    const BOT_NAMES = ["Арман", "Данияр", "Максат", "Айдос", "Ержан", "Тимур", "Алихан", "Нурсултан"];
+    const BOT_NAMES = ["Арман", "Данияр", "Максат", "Айдос", "Ержан", "Тимур", "Алихан", "Нурсултан", "Баха", "Руслан", "Серик"];
+
+    // ADVANCED PERSONALITY DIALOGUES
+    const BOT_PERSONALITIES = [
+      {
+        type: 'kind', // Добрый
+        greetings: ["Доброго дня!", "Приветствую!", "Салам алейкум!", "Здорово!"],
+        offers: [
+          "Видел номер {plate}. Отличный вариант! Заберу за {price} 🪙 прямо сейчас?",
+          "Понравился твой номер {plate}. Готов дать за него {price} 🪙, согласен?",
+          "Слушай, присмотрел ваш номер {plate}. За {price} 🪙 отдашь?"
+        ],
+        accepts: [
+          "Замечательно! Спасибо за приятную сделку, удачи!",
+          "Отлично, перевел монеты! Хорошего дня 👍",
+          "По рукам! Номер супер, спасибо!"
+        ],
+        counterAccepts: [
+          "Ну ладно, цена справедливая. Забираю!",
+          "Хорошо, уступил немного — и на том спасибо. Забираю!",
+          "Идет, договорились!"
+        ],
+        refusals: [
+          "Эх, жаль. Но ничего страшного, удачной продажи!",
+          "Понял тебя. Поищу тогда другие варианты, удачи!"
+        ]
+      },
+      {
+        type: 'rude', // Злой / Дерзкий
+        greetings: ["Эй", "Слышь", "Че за цена?", "Привет."],
+        offers: [
+          "Че за космический ценник на {plate}? Отдам максимум {price} 🪙 и по рукам.",
+          "Ты откуда такие цены берешь? За {plate} максимум {price} 🪙 дам.",
+          "Слушай, спустись на землю. {price} 🪙 за {plate} — моя крайняя цена."
+        ],
+        accepts: [
+          "Ну вот, давно бы так. Монеты у тебя.",
+          "Так то лучше. Сделка закрыта.",
+          "Ладно, забираю."
+        ],
+        counterAccepts: [
+          "Ладно, хрен с тобой, давай за эту цену.",
+          "Ишь какой торгаш. Пойдет, забираю."
+        ],
+        refusals: [
+          "Да ну тебя, жмотись дальше со своим номером!",
+          "Хах, ну и сиди с ним весь год! Я пасс.",
+          "За такую цену он нафиг никому не нужен!"
+        ]
+      },
+      {
+        type: 'business', // Деловой / Молчаливый
+        greetings: ["Привет.", "Здравствуйте.", "На связи."],
+        offers: [
+          "Номер {plate}. Предлагаю {price} 🪙. Быстрый расчет.",
+          "Интересует {plate}. За {price} 🪙 отдаешь?",
+          "Куплю {plate} за {price} 🪙."
+        ],
+        accepts: [
+          "Принято. Монеты отправлены.",
+          "Сделка совершена. Спасибо.",
+          "Расчет окончен."
+        ],
+        counterAccepts: [
+          "Согласен на компромисс. Забираю.",
+          "Цена устроит. По рукам."
+        ],
+        refusals: [
+          "Не устраивает. Отмена.",
+          "Без скидки не интересно. Всего доброго."
+        ]
+      }
+    ];
 
     const CARS_DATA = [
       { id: 0, name: "Жигули (2106)", price: 5000, type: "Gas", color: "#C0392B" },
@@ -967,6 +1039,10 @@
       { id: 8, name: "Xiaomi SU7", price: 5000000, type: "Electric", color: "#16A085" },
       { id: 9, name: "Lamborghini Aventador SVJ", price: 10000000, type: "Gas", color: "#E74C3C" }
     ];
+
+    function getRandomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
 
     function getWeekNumber(d) {
       d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -1163,14 +1239,14 @@
       }
     }
 
-    // MARKET & CHAT SYSTEM WITH PRICE LIMITS
+    // MARKET & CHAT SYSTEM
     function getMaxPriceForPlate(plate) {
       switch (plate.rarity) {
-        case 'white': return 200;      // Обычные: до 200
-        case 'green': return 500;      // Редкие: до 500
-        case 'blue': return 1000;      // Супер-редкие: до 1 000
-        case 'purple': return 5000;    // Эпические: до 5 000
-        case 'yellow': return 40000;   // Супер-легендарные: до 40 000
+        case 'white': return 200;
+        case 'green': return 500;
+        case 'blue': return 1000;
+        case 'purple': return 5000;
+        case 'yellow': return 40000;
         default: return 200;
       }
     }
@@ -1228,14 +1304,16 @@
         return;
       }
 
-      const botName = BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)];
-      const offerPrice = Math.round(askPrice * (0.75 + Math.random() * 0.1));
+      const botName = getRandomItem(BOT_NAMES);
+      const personality = getRandomItem(BOT_PERSONALITIES);
+      const offerPrice = Math.round(askPrice * (0.7 + Math.random() * 0.15));
 
       state.activeSale = {
         plateIdx: idx,
         plate: plate,
         askPrice: askPrice,
         botName: botName,
+        personality: personality,
         botOfferPrice: offerPrice,
         chatHistory: [
           { author: "Система", text: `Номер ${plate.text} выставлен на продажу за ${askPrice.toLocaleString()} 🪙.` }
@@ -1250,14 +1328,21 @@
       setTimeout(() => {
         if (!state.activeSale) return;
         state.activeSale.stage = 'chatting';
+        
+        let greeting = getRandomItem(personality.greetings);
+        let offerTemplate = getRandomItem(personality.offers);
+        let offerText = offerTemplate.replace('{plate}', plate.text).replace('{price}', offerPrice.toLocaleString());
+
+        let fullMsg = Math.random() < 0.6 ? `${greeting} ${offerText}` : offerText;
+
         state.activeSale.chatHistory.push({
           author: botName,
-          text: `Салам! Слушай, видел твое объявление на номер ${plate.text}. Как дела вообще? Отдашь за ${offerPrice.toLocaleString()} 🪙?`
+          text: fullMsg
         });
         document.getElementById('marketBadge').style.display = 'block';
         saveState();
         renderMarketChat();
-      }, 3000);
+      }, 2500);
     }
 
     function renderMarketChat() {
@@ -1300,7 +1385,7 @@
         btnCounter.className = 'main-btn';
         btnCounter.style.padding = '8px';
         btnCounter.style.fontSize = '0.85rem';
-        btnCounter.innerText = `Сторговаться на среднюю цену (${Math.round((state.activeSale.askPrice + state.activeSale.botOfferPrice)/2).toLocaleString()} 🪙)`;
+        btnCounter.innerText = `Сторговаться (${Math.round((state.activeSale.askPrice + state.activeSale.botOfferPrice)/2).toLocaleString()} 🪙)`;
         btnCounter.onclick = () => handleChatResponse('counter');
 
         const btnFirm = document.createElement('button');
@@ -1333,10 +1418,11 @@
       if (!state.activeSale) return;
 
       const sale = state.activeSale;
+      const pers = sale.personality;
 
       if (type === 'accept') {
         sale.chatHistory.push({ author: 'Вы', text: `Пойдет, забирай за ${sale.botOfferPrice.toLocaleString()} 🪙!` });
-        sale.chatHistory.push({ author: sale.botName, text: `Отлично! Монеты перевел, спасибо за сделку 👍` });
+        sale.chatHistory.push({ author: sale.botName, text: getRandomItem(pers.accepts) });
         
         state.coins += sale.botOfferPrice;
         state.ownedPlates.splice(sale.plateIdx, 1);
@@ -1344,28 +1430,32 @@
 
       } else if (type === 'counter') {
         const midPrice = Math.round((sale.askPrice + sale.botOfferPrice) / 2);
-        sale.chatHistory.push({ author: 'Вы', text: `Давай ни тебе, ни мне — за ${midPrice.toLocaleString()} 🪙 отдадам.` });
+        sale.chatHistory.push({ author: 'Вы', text: `Давай компромисс — отдадам за ${midPrice.toLocaleString()} 🪙.` });
         
-        if (Math.random() < 0.8) {
-          sale.chatHistory.push({ author: sale.botName, text: `Эх, ладно, договорились! Забираю за ${midPrice.toLocaleString()} 🪙.` });
+        let successChance = pers.type === 'kind' ? 0.85 : pers.type === 'rude' ? 0.4 : 0.65;
+
+        if (Math.random() < successChance) {
+          sale.chatHistory.push({ author: sale.botName, text: getRandomItem(pers.counterAccepts) });
           state.coins += midPrice;
           state.ownedPlates.splice(sale.plateIdx, 1);
           sale.stage = 'done';
         } else {
-          sale.chatHistory.push({ author: sale.botName, text: `Не, братан, слишком дорого для меня. Извини, пасс.` });
+          sale.chatHistory.push({ author: sale.botName, text: getRandomItem(pers.refusals) });
           sale.stage = 'done';
         }
 
       } else if (type === 'firm') {
-        sale.chatHistory.push({ author: 'Вы', text: `Не, скидки не будет. Цена окончательная — ${sale.askPrice.toLocaleString()} 🪙.` });
+        sale.chatHistory.push({ author: 'Вы', text: `Скидки не будет. Цена окончательная — ${sale.askPrice.toLocaleString()} 🪙.` });
         
-        if (Math.random() < 0.5) {
-          sale.chatHistory.push({ author: sale.botName, text: `Ладно, уж больно номер хорош. По рукам за ${sale.askPrice.toLocaleString()} 🪙!` });
+        let successChance = pers.type === 'kind' ? 0.5 : pers.type === 'rude' ? 0.2 : 0.4;
+
+        if (Math.random() < successChance) {
+          sale.chatHistory.push({ author: sale.botName, text: getRandomItem(pers.accepts) });
           state.coins += sale.askPrice;
           state.ownedPlates.splice(sale.plateIdx, 1);
           sale.stage = 'done';
         } else {
-          sale.chatHistory.push({ author: sale.botName, text: `Ну как знаешь. Если передумаешь — пиши!` });
+          sale.chatHistory.push({ author: sale.botName, text: getRandomItem(pers.refusals) });
           sale.stage = 'done';
         }
       }
