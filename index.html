@@ -17,6 +17,7 @@
       --gold: #FFD700;
       --red: #E74C3C;
       --purple: #A855F7;
+      --green: #22C55E;
     }
 
     * {
@@ -145,7 +146,7 @@
       border: none;
       color: var(--text-sub);
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
@@ -153,12 +154,24 @@
       align-items: center;
       gap: 2px;
       white-space: nowrap;
+      position: relative;
     }
 
     .nav-btn.active {
       color: var(--accent-color);
       border-bottom: 2px solid var(--accent-color);
       background: rgba(59, 130, 246, 0.05);
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--red);
+      border-radius: 50%;
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      display: none;
     }
 
     /* Content Screens */
@@ -538,7 +551,6 @@
       margin-top: 2px;
     }
 
-    /* PRESTIGE SECTION IN SHOP */
     .prestige-card {
       background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(59, 130, 246, 0.15));
       border: 1px solid rgba(168, 85, 247, 0.4);
@@ -546,6 +558,54 @@
       padding: 15px;
       text-align: center;
       margin-bottom: 12px;
+    }
+
+    /* MESSENGER & MARKET SCREEN */
+    .chat-box {
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+      height: 280px;
+      padding: 10px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .chat-msg {
+      max-width: 80%;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      line-height: 1.3;
+    }
+
+    .chat-msg.bot {
+      background: var(--card-bg);
+      align-self: flex-start;
+      border-bottom-left-radius: 2px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .chat-msg.user {
+      background: var(--accent-color);
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+    }
+
+    .chat-msg .author {
+      font-size: 0.7rem;
+      color: var(--gold);
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+
+    .chat-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     /* MODAL */
@@ -646,6 +706,10 @@
       <button class="nav-btn" onclick="switchTab('cases')">
         <span>📦</span> Кейсы
       </button>
+      <button class="nav-btn" onclick="switchTab('market')">
+        <span>💬</span> Рынок
+        <div id="marketBadge" class="badge-dot"></div>
+      </button>
       <button class="nav-btn" onclick="switchTab('tasks')">
         <span>🏆</span> Задания
       </button>
@@ -711,7 +775,6 @@
 
     <!-- SHOP SCREEN -->
     <div id="shopScreen" class="screen">
-      <!-- Prestige banner block -->
       <div id="prestigeSection" class="prestige-card" style="display: none;">
         <h3 style="color: var(--purple); margin-bottom: 4px;">✨ Уровень Престижа: <span id="prestigeLvl">0</span></h3>
         <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 10px;">Множитель дохода от рулетки: +<span id="prestigeBonus">0</span>%</p>
@@ -744,6 +807,34 @@
       </div>
     </div>
 
+    <!-- CHAT & MARKET SCREEN -->
+    <div id="marketScreen" class="screen">
+      <div class="section-card">
+        <h3>💬 Рынок и Переговоры</h3>
+        <p>Выставляйте свои номера на продажу. Покупатели свяжутся с вами в чате!</p>
+        
+        <div id="sellSection" style="margin-bottom: 12px;">
+          <button id="sellPlateBtn" class="main-btn" style="width:100%; padding:10px; font-size:0.9rem;" onclick="openSellModal()">🏷️ Выставить номер на продажу</button>
+        </div>
+
+        <div id="activeOfferBanner" style="display:none; background:rgba(255,215,0,0.1); border:1px solid var(--gold); border-radius:10px; padding:10px; margin-bottom:10px;">
+          <div style="font-size:0.8rem; color:var(--gold); font-weight:bold;">Продается номер: <span id="sellingPlateText">---</span></div>
+          <div style="font-size:0.75rem; color:var(--text-sub);">Ваша цена: <span id="sellingPlatePrice">0</span> 🪙</div>
+        </div>
+
+        <div id="chatBox" class="chat-box">
+          <div class="chat-msg bot">
+            <div class="author">Система</div>
+            Здравствуйте! Здесь будут отображаться сообщения от покупателей, интересующихся вашими номерами.
+          </div>
+        </div>
+
+        <div id="chatActions" class="chat-actions">
+          <!-- Dynamic Action Buttons for Negotiation -->
+        </div>
+      </div>
+    </div>
+
     <!-- TASKS & ACHIEVEMENTS SCREEN -->
     <div id="tasksScreen" class="screen">
       <div class="section-card">
@@ -763,6 +854,23 @@
             <button id="claimLegendaryTask" class="btn-small" style="width: 100%;" disabled onclick="claimTask('legendary')">Забрать: 200 000 🪙</button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- SELL MODAL -->
+    <div id="sellModal" class="modal-overlay">
+      <div class="modal-card">
+        <h2>Выставить на продажу</h2>
+        <p>Выберите номер из инвентаря и укажите желаемую цену:</p>
+        
+        <select id="plateToSellSelect" style="width:100%; padding:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; margin-bottom:12px; font-size:0.9rem;">
+          <!-- Dyn generated -->
+        </select>
+
+        <input type="number" id="sellPriceInput" placeholder="Цена в монетах (🪙)" style="width:100%; padding:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; margin-bottom:15px; font-size:0.9rem; text-align:center;">
+
+        <button class="main-btn" style="width: 100%; padding:10px; margin-bottom:8px;" onclick="confirmStartSelling()">Выставить на Рынок</button>
+        <button class="btn-small" style="width: 100%;" onclick="closeSellModal()">Отмена</button>
       </div>
     </div>
 
@@ -832,6 +940,7 @@
       specialCases: 0,
       hasLegendary: false,
       prestigeLvl: 0,
+      activeSale: null, // { plate, askPrice, botName, botOfferPrice, chatHistory: [], stage }
       daily: {
         lastWeek: 0,
         claimedDays: 0,
@@ -843,6 +952,8 @@
       },
       isSpinning: false
     };
+
+    const BOT_NAMES = ["Арман", "Данияр", "Максат", "Айдос", "Ержан", "Тимур", "Алихан", "Нурсултан"];
 
     const CARS_DATA = [
       { id: 0, name: "Жигули (2106)", price: 5000, type: "Gas", color: "#C0392B" },
@@ -1033,7 +1144,6 @@
         baseVal = 700 + Math.floor(Math.random() * 300);
       }
 
-      // Apply Prestige Multiplier (+15% per level)
       let prestigeMult = 1 + (state.prestigeLvl * 0.15);
       let finalVal = Math.round(baseVal * prestigeMult);
 
@@ -1052,6 +1162,194 @@
         saveState();
         updateHeader();
       }
+    }
+
+    // MARKET & CHAT SYSTEM
+    function openSellModal() {
+      if (state.ownedPlates.length === 0) {
+        alert("У вас нет сохраненных номеров для продажи!");
+        return;
+      }
+
+      const select = document.getElementById('plateToSellSelect');
+      select.innerHTML = '';
+
+      state.ownedPlates.forEach((plate, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.innerText = `${plate.text} (${plate.rarityName})`;
+        select.appendChild(opt);
+      });
+
+      document.getElementById('sellModal').classList.add('active');
+    }
+
+    function closeSellModal() {
+      document.getElementById('sellModal').classList.remove('active');
+    }
+
+    function confirmStartSelling() {
+      const select = document.getElementById('plateToSellSelect');
+      const priceInput = document.getElementById('sellPriceInput');
+      const idx = parseInt(select.value);
+      const askPrice = parseInt(priceInput.value);
+
+      if (isNaN(askPrice) || askPrice <= 0) {
+        alert("Пожалуйста, укажите корректную цену!");
+        return;
+      }
+
+      const plate = state.ownedPlates[idx];
+      const botName = BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)];
+      
+      // Calculate offer price (bot offers ~75-85% of asked price)
+      const offerPrice = Math.round(askPrice * (0.75 + Math.random() * 0.1));
+
+      state.activeSale = {
+        plateIdx: idx,
+        plate: plate,
+        askPrice: askPrice,
+        botName: botName,
+        botOfferPrice: offerPrice,
+        chatHistory: [
+          { author: "Система", text: `Номер ${plate.text} выставлен на продажу за ${askPrice.toLocaleString()} 🪙.` }
+        ],
+        stage: 'waiting' // waiting, chatting, done
+      };
+
+      closeSellModal();
+      saveState();
+      renderMarketChat();
+
+      // Trigger bot contact after 3 seconds
+      setTimeout(() => {
+        if (!state.activeSale) return;
+        state.activeSale.stage = 'chatting';
+        state.activeSale.chatHistory.push({
+          author: botName,
+          text: `Салам! Слушай, видел твое объявление на номер ${plate.text}. Как дела вообще? Отдашь за ${offerPrice.toLocaleString()} 🪙?`
+        });
+        document.getElementById('marketBadge').style.display = 'block';
+        saveState();
+        renderMarketChat();
+      }, 3000);
+    }
+
+    function renderMarketChat() {
+      const activeBanner = document.getElementById('activeOfferBanner');
+      const chatBox = document.getElementById('chatBox');
+      const actions = document.getElementById('chatActions');
+
+      if (!state.activeSale) {
+        activeBanner.style.display = 'none';
+        chatBox.innerHTML = '<div class="chat-msg bot"><div class="author">Система</div>Здравствуйте! Вы пока не выставили ни один номер на продажу. Нажмите кнопку выше!</div>';
+        actions.innerHTML = '';
+        return;
+      }
+
+      activeBanner.style.display = 'block';
+      document.getElementById('sellingPlateText').innerText = state.activeSale.plate.text;
+      document.getElementById('sellingPlatePrice').innerText = state.activeSale.askPrice.toLocaleString();
+
+      chatBox.innerHTML = '';
+      state.activeSale.chatHistory.forEach(msg => {
+        const div = document.createElement('div');
+        const isUser = msg.author === 'Вы';
+        div.className = `chat-msg ${isUser ? 'user' : 'bot'}`;
+        div.innerHTML = `<div class="author">${msg.author}</div>${msg.text}`;
+        chatBox.appendChild(div);
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Render negotiation action buttons
+      actions.innerHTML = '';
+      if (state.activeSale.stage === 'chatting') {
+        const btnAccept = document.createElement('button');
+        btnAccept.className = 'main-btn';
+        btnAccept.style.padding = '8px';
+        btnAccept.style.fontSize = '0.85rem';
+        btnAccept.style.background = 'var(--green)';
+        btnAccept.innerText = `Согласиться (${state.activeSale.botOfferPrice.toLocaleString()} 🪙)`;
+        btnAccept.onclick = () => handleChatResponse('accept');
+
+        const btnCounter = document.createElement('button');
+        btnCounter.className = 'main-btn';
+        btnCounter.style.padding = '8px';
+        btnCounter.style.fontSize = '0.85rem';
+        btnCounter.innerText = `Сторговаться на 중간-цену (${Math.round((state.activeSale.askPrice + state.activeSale.botOfferPrice)/2).toLocaleString()} 🪙)`;
+        btnCounter.onclick = () => handleChatResponse('counter');
+
+        const btnFirm = document.createElement('button');
+        btnFirm.className = 'main-btn';
+        btnFirm.style.padding = '8px';
+        btnFirm.style.fontSize = '0.85rem';
+        btnFirm.style.background = 'var(--purple)';
+        btnFirm.innerText = `Без скидки! (${state.activeSale.askPrice.toLocaleString()} 🪙)`;
+        btnFirm.onclick = () => handleChatResponse('firm');
+
+        actions.appendChild(btnAccept);
+        actions.appendChild(btnCounter);
+        actions.appendChild(btnFirm);
+      } else if (state.activeSale.stage === 'done') {
+        const btnClear = document.createElement('button');
+        btnClear.className = 'main-btn';
+        btnClear.style.padding = '8px';
+        btnClear.style.fontSize = '0.85rem';
+        btnClear.innerText = 'Завершить диалог';
+        btnClear.onclick = () => {
+          state.activeSale = null;
+          saveState();
+          renderMarketChat();
+        };
+        actions.appendChild(btnClear);
+      }
+    }
+
+    function handleChatResponse(type) {
+      if (!state.activeSale) return;
+
+      const sale = state.activeSale;
+
+      if (type === 'accept') {
+        sale.chatHistory.push({ author: 'Вы', text: `Пойдет, забирай за ${sale.botOfferPrice.toLocaleString()} 🪙!` });
+        sale.chatHistory.push({ author: sale.botName, text: `Отлично! Монеты перевел, спасибо за сделку 👍` });
+        
+        state.coins += sale.botOfferPrice;
+        state.ownedPlates.splice(sale.plateIdx, 1);
+        sale.stage = 'done';
+
+      } else if (type === 'counter') {
+        const midPrice = Math.round((sale.askPrice + sale.botOfferPrice) / 2);
+        sale.chatHistory.push({ author: 'Вы', text: `Давай ни тебе, ни мне — за ${midPrice.toLocaleString()} 🪙 отдадам.` });
+        
+        if (Math.random() < 0.8) { // 80% success
+          sale.chatHistory.push({ author: sale.botName, text: `Эх, ладно, договорились! Забираю за ${midPrice.toLocaleString()} 🪙.` });
+          state.coins += midPrice;
+          state.ownedPlates.splice(sale.plateIdx, 1);
+          sale.stage = 'done';
+        } else {
+          sale.chatHistory.push({ author: sale.botName, text: `Не, братан, слишком дорого для меня. Извини, пасс.` });
+          sale.stage = 'done';
+        }
+
+      } else if (type === 'firm') {
+        sale.chatHistory.push({ author: 'Вы', text: `Не, скидки не будет. Цена окончательная — ${sale.askPrice.toLocaleString()} 🪙.` });
+        
+        if (Math.random() < 0.5) { // 50% success
+          sale.chatHistory.push({ author: sale.botName, text: `Ладно, уж больно номер хорош. По рукам за ${sale.askPrice.toLocaleString()} 🪙!` });
+          state.coins += sale.askPrice;
+          state.ownedPlates.splice(sale.plateIdx, 1);
+          sale.stage = 'done';
+        } else {
+          sale.chatHistory.push({ author: sale.botName, text: `Ну как знаешь. Если передумаешь — пиши!` });
+          sale.stage = 'done';
+        }
+      }
+
+      saveState();
+      updateHeader();
+      renderMarketChat();
+      renderGarage();
     }
 
     // DAILY REWARDS SYSTEM (7 Days)
@@ -1497,8 +1795,13 @@
         document.querySelectorAll('.nav-btn')[3].classList.add('active');
         document.getElementById('casesScreen').classList.add('active');
         try { renderDailyRewards(); } catch(e) { console.error(e); }
-      } else if (tab === 'tasks') {
+      } else if (tab === 'market') {
         document.querySelectorAll('.nav-btn')[4].classList.add('active');
+        document.getElementById('marketScreen').classList.add('active');
+        document.getElementById('marketBadge').style.display = 'none';
+        try { renderMarketChat(); } catch(e) { console.error(e); }
+      } else if (tab === 'tasks') {
+        document.querySelectorAll('.nav-btn')[5].classList.add('active');
         document.getElementById('tasksScreen').classList.add('active');
         try { updateTasksUI(); } catch(e) { console.error(e); }
       }
@@ -1520,8 +1823,8 @@
       updateHeader();
       renderDailyRewards();
       updateTasksUI();
+      renderMarketChat();
     };
   </script>
 </body>
 </html>
-э
