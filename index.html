@@ -445,22 +445,6 @@
       border: 1px solid #000;
     }
 
-    .plate-actions {
-      display: flex;
-      gap: 6px;
-    }
-
-    .sell-btn {
-      background: var(--red);
-      color: white;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
-
     /* SHOP SCREEN */
     .shop-list {
       display: flex;
@@ -626,7 +610,7 @@
         </div>
       </div>
 
-      <div class="inventory-title">Ваша коллекция номеров:</div>
+      <div class="inventory-title">Ваша коллекция номеров (нажмите, чтобы надеть):</div>
       <div id="platesGrid" class="plates-grid">
         <!-- Dyn. generated -->
       </div>
@@ -730,7 +714,7 @@
       }
     }
 
-    // SPIN SYSTEM
+    // SPIN SYSTEM (С автоматическим начислением от 700 монет)
     function performSpin() {
       const cost = getSpinCost();
       if (state.coins < cost || state.isSpinning) return;
@@ -759,7 +743,7 @@
         
         dropTitle.innerText = result.rarityName;
         dropTitle.style.color = result.color;
-        dropVal.innerText = `+${result.value.toLocaleString()} 🪙`;
+        dropVal.innerText = `+${result.value.toLocaleString()} 🪙 (Авто-продажа)`;
 
         state.coins += result.value;
         state.ownedPlates.push(result);
@@ -783,10 +767,8 @@
       let rarity = 'white';
       let rarityName = 'Обычный номер';
       let color = '#A0AEC0';
-      let val = 100;
-
-      let maxVal = 1000;
-      if (state.spins <= 10) maxVal = 500;
+      // Минимум 700 монет для каждого сгенерированного номера
+      let val = 700 + Math.floor(Math.random() * 300);
 
       let canDropLegendary = state.luckLvl >= 3;
       let luckMult = 1 + (state.luckLvl * 0.1);
@@ -797,27 +779,27 @@
         rarity = 'yellow';
         rarityName = '🔥 СУПЕР-ЛЕГЕНДАРНЫЙ 🔥';
         color = '#EAB308';
-        val = 50000 + Math.floor(Math.random() * 50000);
+        val = 5000; // Максимум 5000 для легендарных
       } else if (canDropLegendary && rand < (1.0 * luckMult)) {
         rarity = 'purple';
         rarityName = '✨ Легендарный ✨';
         color = '#A855F7';
-        val = 10000 + Math.floor(Math.random() * 15000);
+        val = 3000 + Math.floor(Math.random() * 2000); // До 5000
       } else if (rand < 10) {
         rarity = 'blue';
         rarityName = 'Редкий номер';
         color = '#3B82F6';
-        val = Math.min(maxVal, 800 + Math.floor(Math.random() * 500));
+        val = 1500 + Math.floor(Math.random() * 1000);
       } else if (rand < 40) {
         rarity = 'green';
         rarityName = 'Необычный номер';
         color = '#22C55E';
-        val = Math.min(maxVal, 400 + Math.floor(Math.random() * 400));
+        val = 1000 + Math.floor(Math.random() * 500);
       } else {
         rarity = 'white';
         rarityName = 'Обычный номер';
         color = '#E2E8F0';
-        val = Math.min(maxVal, 100 + Math.floor(Math.random() * 300));
+        val = 700 + Math.floor(Math.random() * 300); // Базовый минимум 700
       }
 
       return {
@@ -964,9 +946,6 @@
               <div style="font-size:0.7rem; color:var(--text-sub);">${isEquipped ? 'На авто ✓' : 'Нажмите, чтобы надеть'}</div>
             </div>
           </div>
-          <div class="plate-actions">
-            <button class="sell-btn" onclick="sellPlate(${index})">Продать</button>
-          </div>
         `;
 
         grid.appendChild(item);
@@ -978,46 +957,6 @@
       state.equippedPlates[carId] = state.ownedPlates[index];
       saveState();
       renderGarage();
-    }
-
-    function sellPlate(index) {
-      const plate = state.ownedPlates[index];
-      let defaultPrice = plate.value;
-      
-      // Ограничение по максимальной цене для легендарных и супер-легендарных номеров
-      let isLegendary = (plate.rarity === 'purple' || plate.rarity === 'yellow');
-      if (isLegendary && defaultPrice > 5000) {
-        defaultPrice = 5000;
-      }
-
-      const priceInput = prompt(`За сколько хотите продать номер ${plate.text}?${isLegendary ? ' (Максимум для легендарных: $5,000)' : ''}`, defaultPrice);
-
-      if (priceInput !== null) {
-        let sellPrice = parseInt(priceInput);
-        if (isNaN(sellPrice) || sellPrice < 0) {
-          alert("Введите корректную сумму!");
-          return;
-        }
-
-        // Проверяем ограничение для легендарных номеров
-        if (isLegendary && sellPrice > 5000) {
-          alert("Легендарные номера нельзя продать дороже чем за 5,000 монет!");
-          return;
-        }
-
-        // Если проданный номер был надет на авто, снимаем его
-        const carId = state.ownedCars[state.selectedCarIdx];
-        if (state.equippedPlates[carId] && state.equippedPlates[carId].id === plate.id) {
-          delete state.equippedPlates[carId];
-        }
-
-        state.coins += sellPrice;
-        state.ownedPlates.splice(index, 1);
-        saveState();
-        updateHeader();
-        renderGarage();
-        alert(`Вы успешно продали номер ${plate.text} за $${sellPrice.toLocaleString()}!`);
-      }
     }
 
     function prevCar() {
@@ -1153,3 +1092,4 @@
   </script>
 </body>
 </html>
+
