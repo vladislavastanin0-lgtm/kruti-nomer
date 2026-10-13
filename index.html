@@ -318,6 +318,22 @@
     .car-shop-info h4 { font-size: 0.9rem; }
     .car-shop-info p { font-size: 0.75rem; color: var(--gold); font-weight: bold; margin-top: 2px; }
 
+    /* AUCTION CONTAINER */
+    .auction-container {
+      background: linear-gradient(135deg, #1e1b4b, #311042);
+      border: 1px solid rgba(168,85,247,0.4);
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .auction-timer { font-size: 1.3rem; font-weight: bold; color: var(--gold); margin: 6px 0; }
+    .bids-history-box {
+      background: rgba(0,0,0,0.4); border-radius: 8px; padding: 6px;
+      max-height: 100px; overflow-y: auto; font-size: 0.75rem;
+      display: flex; flex-direction: column; gap: 4px; margin: 8px 0; text-align: left;
+    }
+
     /* PASS SYSTEM UI */
     .pass-header {
       background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(59,130,246,0.15));
@@ -381,11 +397,12 @@
       </div>
     </header>
 
-    <!-- Navigation Menu (Без Аукциона) -->
+    <!-- Navigation Menu -->
     <nav>
       <button class="nav-btn active" onclick="switchTab('spin')"><span>🎲</span>Рулетка</button>
       <button class="nav-btn" onclick="switchTab('garage')"><span>🚗</span>Гараж</button>
       <button class="nav-btn" onclick="switchTab('craft')"><span>🔨</span>Крафт</button>
+      <button class="nav-btn" onclick="switchTab('auction')"><span>📦</span>Аукцион</button>
       <button class="nav-btn" onclick="switchTab('pass')"><span>🎟️</span>Пасс</button>
       <button class="nav-btn" onclick="switchTab('shop')"><span>🏬</span>Салон</button>
       <button class="nav-btn" onclick="switchTab('cases')"><span>🎁</span>Бонусы</button>
@@ -475,6 +492,37 @@
       </div>
 
       <div id="craftInventoryGrid" class="plates-grid"></div>
+    </div>
+
+    <!-- AUCTION SCREEN -->
+    <div id="auctionScreen" class="screen">
+      <div class="auction-container">
+        <h3 style="color:var(--gold);">📦 СЕКРЕТНЫЙ АВТО-АУКЦИОН</h3>
+        <p style="font-size:0.75rem; color:var(--text-sub); margin-top:2px;">Контейнер региона <b id="auctionCountryText">KZ</b>!</p>
+
+        <div class="auction-timer" id="auctionTimer">--:--</div>
+
+        <div id="auctionStatusBox">
+          <div style="font-size:0.8rem;">Текущая ставка: <b id="highestBidVal" style="color:var(--gold);">50 000 🪙</b></div>
+          <div style="font-size:0.75rem; color:var(--text-sub);">Лидер: <span id="highestBidderName" style="color:white; font-weight:bold;">Никто</span></div>
+        </div>
+
+        <div class="bids-history-box" id="bidsHistoryBox">
+          <div><span style="color:var(--text-sub);">Аукцион проходит каждые 20 минут каждого часа!</span></div>
+        </div>
+
+        <button id="placeBidBtn" class="main-btn" style="width:100%; padding:10px;" disabled onclick="placeAuctionBid()">Перебить ставку (+20 000 🪙)</button>
+      </div>
+
+      <div class="section-card">
+        <h3>ℹ️ Что внутри контейнера?</h3>
+        <p style="font-size:0.75rem; line-height:1.4;">
+          • 🏎️ Эксклюзивный гиперкар <b>Bugatti Chiron</b><br>
+          • 📦 <b>Особый кейс</b> (Bugatti или 2M монет)<br>
+          • 👑 <b>Супер-легендарный номер</b> выбранного региона<br>
+          • 🪙 200 000 монет
+        </p>
+      </div>
     </div>
 
     <!-- DRIVE PASS SCREEN -->
@@ -634,6 +682,7 @@
       regularCases: 0,
       country: 'kz',
       pass: { level: 1, xp: 0, isPremium: false, claimedFree: [], claimedPremium: [] },
+      auction: { highestBid: 50000, highestBidder: 'Никто', isActive: false },
       isSpinning: false
     };
 
@@ -698,6 +747,8 @@
     function updateCountryUI() {
       const flagEl = document.getElementById('flagIcon');
       const codeEl = document.getElementById('countryCodeText');
+      const auctionC = document.getElementById('auctionCountryText');
+      if (auctionC) auctionC.innerText = state.country.toUpperCase();
 
       if (state.country === 'kz') {
         flagEl.style.background = '#00AFCA'; flagEl.innerHTML = ''; codeEl.innerText = 'KZ';
@@ -923,7 +974,7 @@
       saveState();
     }
 
-    // SPIN
+    // SPIN (Ровно +5 XP за спин!)
     function performSpin() {
       if (state.coins < 100 || state.isSpinning) return;
       state.coins -= 100;
@@ -949,6 +1000,53 @@
     function upgradeLuck() {
       const cost = 1000 * Math.pow(2, state.luckLvl);
       if (state.coins >= cost) { state.coins -= cost; state.luckLvl++; saveState(); updateHeader(); }
+    }
+
+    // AUCTION TIMER & SCHEDULE
+    function checkScheduledAuction() {
+      const now = new Date();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+      const currentCycleMin = minutes % 20;
+      const remMin = 19 - currentCycleMin;
+      const remSec = 59 - seconds;
+
+      const timerEl = document.getElementById('auctionTimer');
+      const btnEl = document.getElementById('placeBidBtn');
+
+      if (currentCycleMin < 2) {
+        state.auction.isActive = true;
+        let activeRemSec = (1 - currentCycleMin) * 60 + remSec;
+        if (timerEl) timerEl.innerText = `ИДЕТ АУКЦИОН! (00:${activeRemSec.toString().padStart(2, '0')})`;
+        if (btnEl) btnEl.disabled = false;
+      } else {
+        if (state.auction.isActive) { state.auction.isActive = false; finishAuction(); }
+        if (timerEl) timerEl.innerText = `До аукциона: ${remMin.toString().padStart(2, '0')}:${remSec.toString().padStart(2, '0')}`;
+        if (btnEl) btnEl.disabled = true;
+      }
+    }
+    setInterval(checkScheduledAuction, 1000);
+
+    function placeAuctionBid() {
+      if (!state.auction.isActive) return;
+      let nextBid = state.auction.highestBid + 20000;
+      if (state.coins < nextBid) { alert("Недостаточно монет!"); return; }
+      state.coins -= nextBid;
+      state.auction.highestBid = nextBid;
+      state.auction.highestBidder = "Вы";
+      document.getElementById('highestBidVal').innerText = `${nextBid.toLocaleString()} 🪙`;
+      document.getElementById('highestBidderName').innerText = "Вы";
+      saveState(); updateHeader();
+    }
+
+    function finishAuction() {
+      if (state.auction.highestBidder === "Вы") {
+        state.coins += 200000;
+        alert("Вы выиграли аукцион и забрали 200 000 монет!");
+      }
+      state.auction.highestBid = 50000;
+      state.auction.highestBidder = 'Никто';
+      saveState(); updateHeader();
     }
 
     // DONATE STARS
@@ -983,7 +1081,7 @@
     function switchTab(tab) {
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      const tabs = ['spin','garage','craft','pass','shop','cases','club','market','tasks'];
+      const tabs = ['spin','garage','craft','auction','pass','shop','cases','club','market','tasks'];
       const idx = tabs.indexOf(tab);
       if (idx !== -1) {
         document.querySelectorAll('.nav-btn')[idx].classList.add('active');
