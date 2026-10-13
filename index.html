@@ -381,7 +381,7 @@
       </div>
     </header>
 
-    <!-- Navigation Menu -->
+    <!-- Navigation Menu (Без Аукциона) -->
     <nav>
       <button class="nav-btn active" onclick="switchTab('spin')"><span>🎲</span>Рулетка</button>
       <button class="nav-btn" onclick="switchTab('garage')"><span>🚗</span>Гараж</button>
@@ -923,7 +923,7 @@
       saveState();
     }
 
-    // SPIN (Ровно 5 XP за спин)
+    // SPIN
     function performSpin() {
       if (state.coins < 100 || state.isSpinning) return;
       state.coins -= 100;
