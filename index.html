@@ -53,7 +53,7 @@
 
     /* Header */
     header {
-      padding: 10px 12px;
+      padding: 8px 10px;
       background: var(--card-bg);
       display: flex;
       justify-content: space-between;
@@ -78,18 +78,14 @@
       border: 1px solid rgba(255,215,0,0.2);
     }
 
-    .balance-box .coin-icon {
-      font-size: 1rem;
-    }
-
     .balance-val {
       font-weight: 700;
       color: var(--gold);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     .spins-count-badge {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--text-sub);
       background: rgba(255,255,255,0.05);
       padding: 4px 6px;
@@ -98,7 +94,7 @@
 
     .header-actions {
       display: flex;
-      gap: 6px;
+      gap: 4px;
       align-items: center;
     }
 
@@ -106,48 +102,51 @@
       background: linear-gradient(135deg, #f1c40f, #f39c12);
       color: #000;
       border: none;
-      padding: 6px 10px;
-      border-radius: 20px;
+      padding: 5px 10px;
+      border-radius: 16px;
       font-weight: 700;
       font-size: 0.75rem;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3);
-      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
     }
 
     .reset-btn {
       background: rgba(231, 76, 60, 0.15);
       color: var(--red);
       border: 1px solid rgba(231, 76, 60, 0.3);
-      padding: 6px 10px;
-      border-radius: 20px;
+      padding: 5px 8px;
+      border-radius: 16px;
       font-weight: 700;
       font-size: 0.75rem;
       cursor: pointer;
-      white-space: nowrap;
     }
 
     .country-select {
       background: rgba(0,0,0,0.4);
       color: white;
       border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 12px;
+      border-radius: 10px;
       padding: 4px 6px;
       font-size: 0.75rem;
       outline: none;
     }
 
-    /* Tabs Nav */
+    /* Compact Menu Nav Bar */
     nav {
       display: flex;
       background: var(--card-bg);
       border-bottom: 2px solid rgba(255,255,255,0.05);
       overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    nav::-webkit-scrollbar {
+      display: none;
     }
 
     .nav-btn {
-      flex: 1;
-      padding: 8px 4px;
+      flex: 0 0 auto;
+      padding: 8px 10px;
       background: none;
       border: none;
       color: var(--text-sub);
@@ -166,18 +165,7 @@
     .nav-btn.active {
       color: var(--accent-color);
       border-bottom: 2px solid var(--accent-color);
-      background: rgba(59, 130, 246, 0.05);
-    }
-
-    .badge-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--red);
-      border-radius: 50%;
-      position: absolute;
-      top: 4px;
-      right: 8px;
-      display: none;
+      background: rgba(59, 130, 246, 0.08);
     }
 
     /* Content Screens */
@@ -185,7 +173,7 @@
       flex: 1;
       display: none;
       flex-direction: column;
-      padding: 15px;
+      padding: 12px;
       overflow-y: auto;
     }
 
@@ -200,22 +188,21 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 20px;
+      gap: 15px;
       position: relative;
     }
 
     .plate-card {
-      width: 320px;
-      height: 80px;
+      width: 300px;
+      height: 75px;
       background: #FFFFFF;
       border: 4px solid #000;
       border-radius: 8px;
       display: flex;
       align-items: center;
-      padding: 0 12px;
+      padding: 0 10px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.4);
       position: relative;
-      transition: transform 0.1s, box-shadow 0.3s;
     }
 
     .plate-flag-section {
@@ -223,24 +210,22 @@
       flex-direction: column;
       align-items: center;
       border-right: 2px solid #000;
-      padding-right: 10px;
-      margin-right: 12px;
+      padding-right: 8px;
+      margin-right: 10px;
       height: 80%;
       justify-content: center;
-      min-width: 40px;
+      min-width: 36px;
     }
 
     .flag-icon {
-      width: 24px;
-      height: 14px;
+      width: 22px;
+      height: 13px;
       position: relative;
       border-radius: 1px;
-      background-size: cover;
-      background-position: center;
     }
 
     .country-code {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: bold;
       color: #000;
       margin-top: 2px;
@@ -248,7 +233,7 @@
 
     .plate-number-text {
       font-family: 'Courier New', Courier, monospace;
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 900;
       color: #000;
       letter-spacing: 2px;
@@ -256,7 +241,7 @@
       text-align: center;
     }
 
-    /* Rarity Glow Effects */
+    /* Rarity Glows */
     .plate-card.rarity-white { border-color: #E2E8F0; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
     .plate-card.rarity-green { border-color: #22C55E; box-shadow: 0 0 25px rgba(34,197,94,0.5); }
     .plate-card.rarity-blue { border-color: #3B82F6; box-shadow: 0 0 25px rgba(59,130,246,0.5); }
@@ -268,555 +253,152 @@
       to { box-shadow: 0 0 45px rgba(234,179,8,1); }
     }
 
-    .drop-info {
-      text-align: center;
-      min-height: 50px;
-    }
-
-    .drop-rarity-title {
-      font-weight: 700;
-      font-size: 1.2rem;
-      margin-bottom: 4px;
-    }
-
-    .drop-value {
-      color: var(--gold);
-      font-weight: bold;
-    }
-
-    .spin-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 100%;
-      margin-bottom: 10px;
-    }
+    .drop-info { text-align: center; min-height: 45px; }
+    .drop-rarity-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 2px; }
+    .drop-value { color: var(--gold); font-weight: bold; font-size: 0.9rem; }
 
     .main-btn {
       background: var(--accent-color);
       color: white;
       border: none;
-      padding: 14px;
-      border-radius: 14px;
-      font-size: 1.05rem;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(59,130,246,0.4);
-      transition: all 0.2s;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
-    .main-btn:hover:not(:disabled) {
-      background: var(--accent-hover);
-      transform: translateY(-2px);
-    }
+    .main-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 
-    .main-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    /* LUCK UPGRADE SECTION */
+    /* LUCK UPGRADE */
     .luck-box {
       background: var(--card-bg);
-      padding: 12px 15px;
-      border-radius: 14px;
+      padding: 10px 12px;
+      border-radius: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .luck-info h4 {
-      font-size: 0.9rem;
-      margin-bottom: 2px;
-    }
-
-    .luck-info p {
-      font-size: 0.75rem;
-      color: var(--text-sub);
+      margin-top: 10px;
     }
 
     .btn-small {
       background: rgba(255,215,0,0.15);
       color: var(--gold);
       border: 1px solid rgba(255,215,0,0.3);
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-size: 0.8rem;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
       font-weight: 700;
       cursor: pointer;
     }
 
-    .btn-small:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-
-    /* GARAGE SCREEN */
+    /* GARAGE */
     .garage-carousel {
       background: var(--card-bg);
-      border-radius: 16px;
-      padding: 15px;
+      border-radius: 14px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
       border: 1px solid rgba(255,255,255,0.05);
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
-    .car-canvas-container {
-      width: 100%;
-      height: 180px;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    canvas#carCanvas {
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, #2a2d42 0%, #181a26 100%);
-      border-radius: 12px;
-      cursor: grab;
-    }
-
-    canvas#carCanvas:active {
-      cursor: grabbing;
-    }
+    .car-canvas-container { width: 100%; height: 160px; display: flex; justify-content: center; align-items: center; }
+    canvas#carCanvas { width: 100%; height: 100%; background: radial-gradient(circle, #2a2d42 0%, #181a26 100%); border-radius: 10px; }
 
     .carousel-nav-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 5;
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(0,0,0,0.5); color: white; border: none;
+      width: 32px; height: 32px; border-radius: 50%; font-weight: bold; cursor: pointer; z-index: 5;
     }
+    .carousel-nav-btn.prev { left: 8px; }
+    .carousel-nav-btn.next { right: 8px; }
 
-    .carousel-nav-btn.prev { left: 10px; }
-    .carousel-nav-btn.next { right: 10px; }
-
-    .car-details {
-      text-align: center;
-      margin-top: 10px;
-      width: 100%;
-    }
-
-    .car-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-
-    .car-type-badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      padding: 2px 8px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.1);
-      margin-top: 4px;
-    }
-
-    .equipped-plate-info {
-      margin-top: 8px;
-      font-size: 0.8rem;
-      color: var(--text-sub);
-    }
-
-    .inventory-title {
-      font-size: 0.95rem;
-      margin-bottom: 8px;
-      color: var(--text-sub);
-    }
-
-    .plates-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
+    .plates-grid { display: flex; flex-direction: column; gap: 8px; }
     .plate-item {
-      background: var(--card-bg);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+      background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between;
     }
+    .plate-item-mini { font-family: monospace; font-weight: bold; font-size: 0.85rem; padding: 3px 6px; background: #FFF; color: #000; border-radius: 4px; }
 
-    .plate-item.equipped {
-      border-color: var(--accent-color);
-      background: rgba(59, 130, 246, 0.1);
-    }
-
-    .plate-item-mini {
-      font-family: monospace;
-      font-weight: bold;
-      font-size: 0.9rem;
-      padding: 4px 8px;
-      background: #FFF;
-      color: #000;
-      border-radius: 4px;
-      border: 1px solid #000;
-    }
-
-    /* SECTION CARDS */
+    /* SECTION CARD */
     .section-card {
-      background: var(--card-bg);
-      border-radius: 14px;
-      padding: 15px;
-      margin-bottom: 12px;
-      border: 1px solid rgba(255,255,255,0.05);
+      background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05);
     }
-
-    .section-card h3 {
-      font-size: 1rem;
-      color: var(--gold);
-      margin-bottom: 6px;
-    }
-
-    .section-card p {
-      font-size: 0.85rem;
-      color: var(--text-sub);
-      margin-bottom: 12px;
-    }
-
-    .daily-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .day-box {
-      background: rgba(0,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 8px 4px;
-      text-align: center;
-      font-size: 0.75rem;
-    }
-
-    .day-box.claimed {
-      opacity: 0.4;
-      border-color: #22C55E;
-    }
-
-    .day-box.active-day {
-      border-color: var(--gold);
-      background: rgba(255,215,0,0.1);
-    }
-
-    /* PASS SYSTEM UI */
-    .pass-header {
-      background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(59,130,246,0.15));
-      border: 1px solid rgba(255,215,0,0.3);
-      border-radius: 14px;
-      padding: 15px;
-      margin-bottom: 12px;
-    }
-
-    .progress-bar-bg {
-      width: 100%;
-      height: 12px;
-      background: rgba(0,0,0,0.4);
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 8px 0;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #3B82F6, #FFD700);
-      width: 0%;
-      transition: width 0.3s;
-    }
-
-    .pass-level-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(0,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 10px;
-      margin-bottom: 8px;
-    }
-
-    .pass-level-badge {
-      width: 36px;
-      height: 36px;
-      background: var(--accent-color);
-      color: white;
-      font-weight: bold;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 0.85rem;
-      flex-shrink: 0;
-    }
-
-    .pass-rewards-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      flex: 1;
-    }
-
-    .pass-reward-box {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(255,255,255,0.03);
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-    }
-
-    .pass-reward-box.premium {
-      border: 1px solid rgba(255,215,0,0.3);
-      background: rgba(255,215,0,0.05);
-    }
-
-    /* CRAFT SYSTEM UI */
-    .craft-slots {
-      display: flex;
-      justify-content: space-around;
-      gap: 8px;
-      margin: 15px 0;
-    }
-
-    .craft-slot {
-      width: 80px;
-      height: 50px;
-      border: 2px dashed rgba(255,255,255,0.2);
-      border-radius: 8px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 0.75rem;
-      color: var(--text-sub);
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .craft-slot.filled {
-      border-style: solid;
-      border-color: var(--accent-color);
-      background: rgba(59,130,246,0.1);
-      color: white;
-      font-weight: bold;
-      font-family: monospace;
-    }
-
-    /* SHOP SCREEN */
-    .shop-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .car-shop-item {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .car-shop-info h4 {
-      font-size: 0.95rem;
-    }
-
-    .car-shop-info p {
-      font-size: 0.8rem;
-      color: var(--gold);
-      font-weight: bold;
-      margin-top: 2px;
-    }
-
-    .prestige-card {
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(59, 130, 246, 0.15));
-      border: 1px solid rgba(168, 85, 247, 0.4);
-      border-radius: 12px;
-      padding: 15px;
-      text-align: center;
-      margin-bottom: 12px;
-    }
+    .section-card h3 { font-size: 0.95rem; color: var(--gold); margin-bottom: 4px; }
+    .section-card p { font-size: 0.8rem; color: var(--text-sub); margin-bottom: 10px; }
 
     /* AUCTION CONTAINER STYLES */
     .auction-container {
       background: linear-gradient(135deg, #1e1b4b, #311042);
       border: 1px solid rgba(168,85,247,0.4);
-      border-radius: 16px;
-      padding: 15px;
+      border-radius: 14px;
+      padding: 12px;
       text-align: center;
-      margin-bottom: 12px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .auction-timer {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: var(--gold);
-      margin: 8px 0;
-    }
-
-    .bids-history-box {
-      background: rgba(0,0,0,0.4);
-      border-radius: 10px;
-      padding: 8px;
-      max-height: 120px;
-      overflow-y: auto;
-      font-size: 0.8rem;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin: 10px 0;
-      text-align: left;
-    }
-
-    /* MESSENGER & MARKET SCREEN */
-    .chat-box {
-      background: rgba(0,0,0,0.3);
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.05);
-      height: 280px;
-      padding: 10px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
       margin-bottom: 10px;
     }
 
-    .chat-msg {
-      max-width: 80%;
-      padding: 8px 12px;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      line-height: 1.3;
+    .auction-timer { font-size: 1.3rem; font-weight: bold; color: var(--gold); margin: 6px 0; }
+
+    .bids-history-box {
+      background: rgba(0,0,0,0.4); border-radius: 8px; padding: 6px;
+      max-height: 100px; overflow-y: auto; font-size: 0.75rem;
+      display: flex; flex-direction: column; gap: 4px; margin: 8px 0; text-align: left;
     }
 
-    .chat-msg.bot {
-      background: var(--card-bg);
-      align-self: flex-start;
-      border-bottom-left-radius: 2px;
-      border: 1px solid rgba(255,255,255,0.08);
+    /* PASS SYSTEM UI */
+    .pass-header {
+      background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(59,130,246,0.15));
+      border: 1px solid rgba(255,215,0,0.3); border-radius: 12px; padding: 12px; margin-bottom: 10px;
     }
+    .progress-bar-bg { width: 100%; height: 10px; background: rgba(0,0,0,0.4); border-radius: 8px; overflow: hidden; margin: 6px 0; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3B82F6, #FFD700); width: 0%; transition: width 0.3s; }
 
-    .chat-msg.user {
-      background: var(--accent-color);
-      align-self: flex-end;
-      border-bottom-right-radius: 2px;
+    .pass-level-row {
+      display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px; margin-bottom: 6px;
     }
+    .pass-level-badge { width: 30px; height: 30px; background: var(--accent-color); color: white; font-weight: bold; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; flex-shrink: 0; }
+    .pass-rewards-grid { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+    .pass-reward-box { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 3px 6px; border-radius: 4px; font-size: 0.7rem; }
 
-    .chat-msg .author {
-      font-size: 0.7rem;
-      color: var(--gold);
-      font-weight: bold;
-      margin-bottom: 2px;
-    }
-
-    .chat-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+    /* CRAFT UI */
+    .craft-slots { display: flex; justify-content: space-around; gap: 6px; margin: 10px 0; }
+    .craft-slot { width: 75px; height: 45px; border: 2px dashed rgba(255,255,255,0.2); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 0.7rem; color: var(--text-sub); cursor: pointer; text-align: center; }
+    .craft-slot.filled { border-style: solid; border-color: var(--accent-color); background: rgba(59,130,246,0.1); color: white; font-weight: bold; font-family: monospace; }
 
     /* MODAL */
     .modal-overlay {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.85);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      z-index: 100;
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; padding: 15px; z-index: 100;
     }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
+    .modal-overlay.active { display: flex; }
     .modal-card {
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 25px;
-      text-align: center;
-      max-width: 360px;
-      width: 100%;
-      border: 1px solid rgba(255,215,0,0.3);
-      box-shadow: 0 0 30px rgba(255,215,0,0.2);
+      background: var(--card-bg); border-radius: 16px; padding: 20px; text-align: center; max-width: 340px; width: 100%; border: 1px solid rgba(255,215,0,0.3);
     }
-
-    .modal-card h2 {
-      color: var(--gold);
-      font-size: 1.4rem;
-      margin-bottom: 10px;
-    }
-
-    .modal-card p {
-      color: var(--text-sub);
-      font-size: 0.9rem;
-      line-height: 1.4;
-      margin-bottom: 20px;
-    }
-
-    .dealership-banner {
-      background: linear-gradient(45deg, #FFD700, #FFA500);
-      color: #000;
-      font-weight: 800;
-      text-align: center;
-      padding: 8px;
-      font-size: 0.8rem;
-      display: none;
-    }
+    .modal-card h2 { color: var(--gold); font-size: 1.2rem; margin-bottom: 8px; }
+    .modal-card p { color: var(--text-sub); font-size: 0.85rem; line-height: 1.3; margin-bottom: 15px; }
 
     .stars-item {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,215,0,0.2);
-      border-radius: 12px;
-      padding: 10px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,215,0,0.2); border-radius: 10px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;
     }
   </style>
 </head>
 <body>
 
   <div id="app">
-    <div id="dealershipBanner" class="dealership-banner">
-      🏆 ПОЗДРАВЛЯЕМ! Вы выкупили весь автосалон! Доступен Престиж в салоне!
-    </div>
-
     <header>
       <div class="header-left">
         <div class="balance-box">
-          <span class="coin-icon">🪙</span>
+          <span style="font-size:0.9rem;">🪙</span>
           <span id="balanceVal" class="balance-val">2,000</span>
         </div>
         <div class="spins-count-badge">
@@ -825,47 +407,27 @@
       </div>
       <div class="header-actions">
         <select id="countrySelect" class="country-select" onchange="changeCountry()">
-          <option value="kz">🇰🇿 KZ</option>
-          <option value="ru">🇷🇺 RU</option>
-          <option value="ua">🇺🇦 UA</option>
+          <option value="kz">🇰🇿</option>
+          <option value="ru">🇷🇺</option>
+          <option value="ua">🇺🇦</option>
         </select>
         <button class="reset-btn" onclick="resetGame()">🔄</button>
-        <button class="donate-btn" onclick="openStarsModal()">⭐</button>
+        <button class="donate-btn" onclick="openStarsModal()">⭐ Донат</button>
       </div>
     </header>
 
+    <!-- Navigation Menu -->
     <nav>
-      <button class="nav-btn active" onclick="switchTab('spin')">
-        <span>🎲</span> Рулетка
-      </button>
-      <button class="nav-btn" onclick="switchTab('garage')">
-        <span>🚗</span> Гараж
-      </button>
-      <button class="nav-btn" onclick="switchTab('craft')">
-        <span>🔨</span> Крафт
-      </button>
-      <button class="nav-btn" onclick="switchTab('auction')">
-        <span>📦</span> Аукцион
-      </button>
-      <button class="nav-btn" onclick="switchTab('pass')">
-        <span>🎟️</span> Пасс
-      </button>
-      <button class="nav-btn" onclick="switchTab('shop')">
-        <span>🏬</span> Салон
-      </button>
-      <button class="nav-btn" onclick="switchTab('cases')">
-        <span>🎁</span> Бонусы
-      </button>
-      <button class="nav-btn" onclick="switchTab('club')">
-        <span>🛡️</span> Клуб
-      </button>
-      <button class="nav-btn" onclick="switchTab('market')">
-        <span>💬</span> Рынок
-        <div id="marketBadge" class="badge-dot"></div>
-      </button>
-      <button class="nav-btn" onclick="switchTab('tasks')">
-        <span>🏆</span> Задания
-      </button>
+      <button class="nav-btn active" onclick="switchTab('spin')"><span>🎲</span>Рулетка</button>
+      <button class="nav-btn" onclick="switchTab('garage')"><span>🚗</span>Гараж</button>
+      <button class="nav-btn" onclick="switchTab('craft')"><span>🔨</span>Крафт</button>
+      <button class="nav-btn" onclick="switchTab('auction')"><span>📦</span>Аукцион</button>
+      <button class="nav-btn" onclick="switchTab('pass')"><span>🎟️</span>Пасс</button>
+      <button class="nav-btn" onclick="switchTab('shop')"><span>🏬</span>Салон</button>
+      <button class="nav-btn" onclick="switchTab('cases')"><span>🎁</span>Бонусы</button>
+      <button class="nav-btn" onclick="switchTab('club')"><span>🛡️</span>Клуб</button>
+      <button class="nav-btn" onclick="switchTab('market')"><span>💬</span>Рынок</button>
+      <button class="nav-btn" onclick="switchTab('tasks')"><span>🏆</span>Задания</button>
     </nav>
 
     <!-- SPIN SCREEN -->
@@ -885,16 +447,16 @@
         </div>
       </div>
 
-      <div class="spin-actions">
+      <div style="display:flex; flex-direction:column; gap:8px; width:100%;">
         <button id="spinBtn" class="main-btn" onclick="performSpin()">
           <span>Крутить</span>
           <span id="spinCostBadge">(100 🪙)</span>
         </button>
 
         <div class="luck-box">
-          <div class="luck-info">
-            <h4>Прокачка Удачи (Ур. <span id="luckLvl">0</span>)</h4>
-            <p>Шанс супер-номеров: +<span id="luckBonus">0.0</span>%</p>
+          <div>
+            <h4 style="font-size:0.85rem;">Прокачка Удачи (Ур. <span id="luckLvl">0</span>)</h4>
+            <p style="font-size:0.7rem; color:var(--text-sub);">Шанс супер-номеров: +<span id="luckBonus">0.0</span>%</p>
           </div>
           <button id="upgradeLuckBtn" class="btn-small" onclick="upgradeLuck()">
             Улучшить (<span id="luckCost">1 000</span> 🪙)
@@ -910,80 +472,74 @@
         <button class="carousel-nav-btn next" onclick="nextCar()">▶</button>
         
         <div class="car-canvas-container">
-          <canvas id="carCanvas" width="380" height="180"></canvas>
+          <canvas id="carCanvas" width="360" height="160"></canvas>
         </div>
 
-        <div class="car-details">
-          <div id="carTitle" class="car-title">Жигули (2106)</div>
-          <div id="carType" class="car-type-badge">Бензиновый</div>
-          <div id="equippedPlateInfo" class="equipped-plate-info">Номер: Не установлен</div>
-          <div id="carSellSection" style="margin-top: 8px;">
-            <!-- Dyn car sell button -->
-          </div>
+        <div style="text-align:center; width:100%;">
+          <div id="carTitle" style="font-weight:bold; font-size:1rem;">Жигули (2106)</div>
+          <div id="carType" style="font-size:0.7rem; color:var(--text-sub);">Бензиновый</div>
+          <div id="equippedPlateInfo" style="font-size:0.75rem; margin-top:2px;">Номер: Не установлен</div>
+          <div id="carSellSection" style="margin-top: 6px;"></div>
         </div>
       </div>
 
-      <div class="inventory-title">Ваша коллекция номеров (нажмите, чтобы надеть):</div>
-      <div id="platesGrid" class="plates-grid">
-        <!-- Dyn. generated -->
-      </div>
+      <div style="font-size:0.85rem; color:var(--text-sub); margin-bottom:6px;">Коллекция номеров:</div>
+      <div id="platesGrid" class="plates-grid"></div>
     </div>
 
     <!-- CRAFT SCREEN -->
     <div id="craftScreen" class="screen">
       <div class="section-card">
-        <h3>🔨 Мастерская крафта номеров</h3>
-        <p>Скрещивайте 3 одинаковых по редкости номера, чтобы попытать удачу получить номер следующей категории!</p>
+        <h3>🔨 Мастерская крафта</h3>
+        <p>Скрещивайте 3 номера одинаковой категории, чтобы выбить категорию выше!</p>
         
-        <label style="font-size:0.8rem; color:var(--text-sub);">Тип крафта:</label>
-        <select id="craftTypeSelect" style="width:100%; padding:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; margin:6px 0 12px 0;" onchange="updateCraftSlotsUI()">
-          <option value="white">3 Обычных ➔ Редкий (Шанс: 70%)</option>
-          <option value="green">3 Редких ➔ Супер-редкий (Шанс: 60%)</option>
-          <option value="blue">3 Супер-редких ➔ Эпический (Шанс: 40%)</option>
-          <option value="purple">3 Эпических ➔ Легендарный (Шанс: 20%)</option>
-          <option value="yellow">3 Легендарных ➔ СУПЕР-ЛЕГЕНДАРНЫЙ (Шанс: 5%)</option>
+        <select id="craftTypeSelect" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:8px; font-size:0.8rem;" onchange="updateCraftSlotsUI()">
+          <option value="white">3 Обычных ➔ Редкий (70%)</option>
+          <option value="green">3 Редких ➔ Супер-редкий (60%)</option>
+          <option value="blue">3 Супер-редких ➔ Эпический (40%)</option>
+          <option value="purple">3 Эпических ➔ Легендарный (20%)</option>
+          <option value="yellow">3 Легендарных ➔ СУПЕР-ЛЕГЕНДАРНЫЙ (5%)</option>
         </select>
 
         <div class="craft-slots">
-          <div id="craftSlot0" class="craft-slot" onclick="clearCraftSlot(0)">Слот 1<br>(Пусто)</div>
-          <div id="craftSlot1" class="craft-slot" onclick="clearCraftSlot(1)">Слот 2<br>(Пусто)</div>
-          <div id="craftSlot2" class="craft-slot" onclick="clearCraftSlot(2)">Слот 3<br>(Пусто)</div>
+          <div id="craftSlot0" class="craft-slot" onclick="clearCraftSlot(0)">Слот 1</div>
+          <div id="craftSlot1" class="craft-slot" onclick="clearCraftSlot(1)">Слот 2</div>
+          <div id="craftSlot2" class="craft-slot" onclick="clearCraftSlot(2)">Слот 3</div>
         </div>
 
-        <button id="startCraftBtn" class="main-btn" style="width:100%; padding:12px;" disabled onclick="performCraft()">Скрафтить (Риск 100%)</button>
+        <button id="startCraftBtn" class="main-btn" style="width:100%; padding:10px;" disabled onclick="performCraft()">Скрафтить</button>
       </div>
 
-      <div class="inventory-title">Выберите подходящие номера для слотов:</div>
-      <div id="craftInventoryGrid" class="plates-grid">
-        <!-- Dyn generated -->
-      </div>
+      <div id="craftInventoryGrid" class="plates-grid"></div>
     </div>
 
     <!-- AUCTION SCREEN -->
     <div id="auctionScreen" class="screen">
       <div class="auction-container">
-        <h3 style="color:var(--gold);">🏷️ СЕКРЕТНЫЙ АВТО-АУКЦИОН</h3>
-        <p style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;">Торги за секретный контейнер региона <b id="auctionCountryText">KZ</b>!</p>
+        <h3 style="color:var(--gold);">📦 СЕКРЕТНЫЙ АВТО-АУКЦИОН</h3>
+        <p style="font-size:0.75rem; color:var(--text-sub); margin-top:2px;">Контейнер региона <b id="auctionCountryText">KZ</b>!</p>
 
-        <div class="auction-timer" id="auctionTimer">00:15</div>
+        <div class="auction-timer" id="auctionTimer">--:--</div>
 
-        <div style="font-size:0.85rem; margin-bottom:6px;">Текущая ставка: <b id="highestBidVal" style="color:var(--gold);">50 000 🪙</b></div>
-        <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:10px;">Лидер: <span id="highestBidderName" style="color:white; font-weight:bold;">Никто</span></div>
-
-        <div class="bids-history-box" id="bidsHistoryBox">
-          <div><span style="color:var(--text-sub);">Система:</span> Торги начались! Стартовая цена 50 000 🪙</div>
+        <div id="auctionStatusBox">
+          <div style="font-size:0.8rem;">Текущая ставка: <b id="highestBidVal" style="color:var(--gold);">50 000 🪙</b></div>
+          <div style="font-size:0.75rem; color:var(--text-sub);">Лидер: <span id="highestBidderName" style="color:white; font-weight:bold;">Никто</span></div>
         </div>
 
-        <button id="placeBidBtn" class="main-btn" style="width:100%; padding:12px;" onclick="placeAuctionBid()">Перебить ставку (+20 000 🪙)</button>
+        <div class="bids-history-box" id="bidsHistoryBox">
+          <div><span style="color:var(--text-sub);">Аукцион открывается каждые 20 минут часа!</span></div>
+        </div>
+
+        <button id="placeBidBtn" class="main-btn" style="width:100%; padding:10px;" disabled onclick="placeAuctionBid()">Перебить ставку (+20 000 🪙)</button>
       </div>
 
       <div class="section-card">
-        <h3>ℹ️ Что внутри секретного контейнера?</h3>
-        <p style="font-size:0.8rem; line-height:1.4;">
-          • 🏎️ Эксклюзивный гиперкар <b>Bugatti Chiron</b> (Сверх-редко!)<br>
+        <h3>ℹ️ Что внутри контейнера?</h3>
+        <p style="font-size:0.75rem; line-height:1.4;">
+          • 🏎️ Эксклюзивный гиперкар <b>Bugatti Chiron</b><br>
           • 📦 <b>Особый кейс</b> (Внутри Bugatti или 2M монет)<br>
           • 👑 <b>Супер-легендарный номер</b> выбранного региона<br>
-          • 🪙 Крупные денежные призы
+          • 🪙 200 000 монет
         </p>
       </div>
     </div>
@@ -992,65 +548,45 @@
     <div id="passScreen" class="screen">
       <div class="pass-header">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <h3 style="color:var(--gold);">🏆 Блатной Пасс (Сезон 1)</h3>
-          <span style="font-weight:bold; font-size:0.85rem;" id="passLvlBadge">Ур. 1</span>
+          <h3 style="color:var(--gold); font-size:0.95rem;">🏆 Блатной Пасс (Сезон 1)</h3>
+          <span style="font-weight:bold; font-size:0.8rem;" id="passLvlBadge">Ур. 1</span>
         </div>
-        <p style="font-size:0.75rem; color:var(--text-sub); margin-top:2px;">Крутите номера (+5 XP за спин) или выполняйте задания!</p>
         
         <div class="progress-bar-bg">
           <div id="passProgressBar" class="progress-bar-fill"></div>
         </div>
-        <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-sub); align-items:center;">
+        <div style="display:flex; justify-content:space-between; font-size:0.75rem; align-items:center;">
           <span id="passXpText">XP: 0 / 50</span>
           <button id="buyPremiumPassBtn" class="btn-small" onclick="buyPremiumPass()">Открыть Premium (⭐ 10)</button>
         </div>
       </div>
 
-      <div id="passLevelsList">
-        <!-- Dyn generated 30 levels -->
-      </div>
+      <div id="passLevelsList"></div>
     </div>
 
     <!-- SHOP SCREEN -->
     <div id="shopScreen" class="screen">
-      <div id="prestigeSection" class="prestige-card" style="display: none;">
-        <h3 style="color: var(--purple); margin-bottom: 4px;">✨ Уровень Престижа: <span id="prestigeLvl">0</span></h3>
-        <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 10px;">Множитель дохода от рулетки: +<span id="prestigeBonus">0</span>%</p>
-        <button id="prestigeBtn" class="main-btn" style="width: 100%; background: var(--purple); font-size: 0.9rem; padding: 10px;" onclick="triggerPrestige()">Сделать Престиж</button>
-      </div>
-
-      <div id="shopList" class="shop-list">
-        <!-- Dyn. generated -->
-      </div>
+      <div id="shopList" style="display:flex; flex-direction:column; gap:8px;"></div>
     </div>
 
     <!-- CASES & DAILY SCREEN -->
     <div id="casesScreen" class="screen">
       <div class="section-card">
         <h3>🎁 Ежедневные бонусы</h3>
-        <p>Заходите каждый день! Сетка наград обновляется автоматически каждую неделю.</p>
-        <div id="dailyGrid" class="daily-grid">
-          <!-- Dyn generated -->
-        </div>
-        <button id="claimDailyBtn" class="main-btn" style="width: 100%; padding: 10px; font-size: 0.95rem;" onclick="claimDailyReward()">Забрать бонус дня</button>
+        <div id="dailyGrid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:8px;"></div>
+        <button id="claimDailyBtn" class="main-btn" style="width:100%; padding:8px; font-size:0.85rem;" onclick="claimDailyReward()">Забрать бонус дня</button>
       </div>
 
       <div class="section-card">
         <h3>📦 Особый кейс</h3>
-        <p>Содержит 2 000 000 монет или редчайший гиперкар Bugatti Chiron!</p>
-        <div style="font-size: 0.85rem; color: var(--gold); margin-bottom: 10px;">
-          Доступно кейсов: <span id="specialCasesCount" style="font-weight: bold;">0</span>
-        </div>
-        <button id="openSpecialCaseBtn" class="main-btn" style="width: 100%; padding: 12px;" onclick="openSpecialCase()">Открыть особый кейс</button>
+        <p>Содержит 2 000 000 монет или Bugatti Chiron!</p>
+        <button id="openSpecialCaseBtn" class="main-btn" style="width:100%; padding:10px;" onclick="openSpecialCase()">Открыть особый кейс (<span id="specialCasesCount">0</span>)</button>
       </div>
 
       <div class="section-card">
         <h3>📦 Обычный кейс</h3>
-        <p>Содержит от 10 000 монет до эксклюзивной Toyota Camry 70!</p>
-        <div style="font-size: 0.85rem; color: var(--gold); margin-bottom: 10px;">
-          Доступно кейсов: <span id="regularCasesCount" style="font-weight: bold;">0</span>
-        </div>
-        <button id="openRegularCaseBtn" class="main-btn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #22c55e, #3b82f6);" onclick="openRegularCase()">Открыть обычный кейс</button>
+        <p>Содержит от 10 000 монет до Toyota Camry 70!</p>
+        <button id="openRegularCaseBtn" class="main-btn" style="width:100%; padding:10px; background:linear-gradient(135deg, #22c55e, #3b82f6);" onclick="openRegularCase()">Открыть обычный кейс (<span id="regularCasesCount">0</span>)</button>
       </div>
     </div>
 
@@ -1058,144 +594,78 @@
     <div id="clubScreen" class="screen">
       <div id="noClubCard" class="section-card">
         <h3>🛡️ Создать автоклуб</h3>
-        <p>Стоимость создания: <b style="color: var(--gold);">1 000 🪙</b>. Название не должно содержать маты!</p>
-        <input type="text" id="clubNameInput" placeholder="Название клуба" style="width:100%; padding:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; margin-bottom:12px; font-size:0.9rem;">
-        <button class="main-btn" style="width: 100%; padding:10px; font-size:0.95rem;" onclick="createClub()">Создать клуб за 1 000 🪙</button>
+        <input type="text" id="clubNameInput" placeholder="Название клуба" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:8px; font-size:0.85rem;">
+        <button class="main-btn" style="width:100%; padding:8px; font-size:0.85rem;" onclick="createClub()">Создать за 1 000 🪙</button>
       </div>
 
-      <div id="hasClubContainer" style="display: none;">
-        <div class="section-card" style="border-color: rgba(59, 130, 246, 0.4);">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 id="clubTitle" style="margin: 0; font-size: 1.1rem; color: var(--accent-color);">Клуб: ---</h3>
-            <button class="btn-small" style="background: rgba(231,76,60,0.2); color: var(--red); border-color: rgba(231,76,60,0.4);" onclick="leaveClub()">Покинуть</button>
-          </div>
-          <p style="margin-top: 6px; font-size: 0.8rem; color: var(--text-sub);">Вы состояте в автоклубе. Выполняйте ежедневные задачи!</p>
-        </div>
-
+      <div id="hasClubContainer" style="display:none;">
         <div class="section-card">
-          <h3>📅 Ежедневные задачи клуба</h3>
-          <p>Обновляются каждый день. Выполняйте цели, чтобы сгенерировать награду!</p>
-          
-          <div id="clubTasksList" style="display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
-            <!-- Dynamic tasks -->
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 id="clubTitle" style="color:var(--accent-color);">Клуб: ---</h3>
+            <button class="btn-small" style="background:rgba(231,76,60,0.2); color:var(--red);" onclick="leaveClub()">Покинуть</button>
           </div>
-        </div>
-
-        <div class="section-card">
-          <h3>📦 Редкий клубный кейс</h3>
-          <p>Может содержать <b style="color:var(--gold);">50 000 🪙</b> или эксклюзивную <b style="color:var(--purple);">BMW M5 F90</b>! Доступен не чаще 1 раза в неделю.</p>
-          <div style="font-size:0.85rem; color:var(--gold); margin-bottom:10px;">
-            Доступно клубных кейсов: <span id="rareClubCasesCount" style="font-weight:bold;">0</span>
-          </div>
-          <button id="openRareClubCaseBtn" class="main-btn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #a855f7, #3b82f6);" onclick="openRareClubCase()">Открыть клубный кейс</button>
         </div>
       </div>
     </div>
 
-    <!-- CHAT & MARKET SCREEN -->
+    <!-- MARKET SCREEN -->
     <div id="marketScreen" class="screen">
       <div class="section-card">
-        <h3>💬 Рынок и Переговоры</h3>
-        <p>Выставляйте свои номера на продажу. Покупатели свяжутся с вами в чате!</p>
-        
-        <div id="sellSection" style="margin-bottom: 12px;">
-          <button id="sellPlateBtn" class="main-btn" style="width:100%; padding:10px; font-size:0.9rem;" onclick="openSellModal()">🏷️ Выставить номер на продажу</button>
-        </div>
-
-        <div id="activeOfferBanner" style="display:none; background:rgba(255,215,0,0.1); border:1px solid var(--gold); border-radius:10px; padding:10px; margin-bottom:10px;">
-          <div style="font-size:0.8rem; color:var(--gold); font-weight:bold;">Продается номер: <span id="sellingPlateText">---</span></div>
-          <div style="font-size:0.75rem; color:var(--text-sub);">Ваша цена: <span id="sellingPlatePrice">0</span> 🪙</div>
-        </div>
-
-        <div id="chatBox" class="chat-box">
-          <div class="chat-msg bot">
-            <div class="author">Система</div>
-            Здравствуйте! Здесь будут отображаться сообщения от покупателей, интересующихся вашими номерами.
-          </div>
-        </div>
-
-        <div id="chatActions" class="chat-actions">
-          <!-- Dynamic Action Buttons for Negotiation -->
-        </div>
+        <h3>💬 Авторынок номеров</h3>
+        <button id="sellPlateBtn" class="main-btn" style="width:100%; padding:8px; font-size:0.85rem;" onclick="openSellModal()">🏷️ Выставить номер на продажу</button>
       </div>
     </div>
 
-    <!-- TASKS & ACHIEVEMENTS SCREEN -->
+    <!-- TASKS SCREEN -->
     <div id="tasksScreen" class="screen">
       <div class="section-card">
-        <h3>🏆 Достижения и Задания</h3>
-        <p>Выполняйте условия, чтобы получать опыт Пасса и ценные награды!</p>
-        
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
-            <div style="font-weight: bold; font-size: 0.9rem; margin-bottom: 4px;">🎯 Сделай 50 спинов</div>
-            <div style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 8px;">Прогресс: <span id="spinTaskPassProg">0</span> / 50</div>
-            <button id="claimSpinPassTask" class="btn-small" style="width: 100%;" disabled onclick="claimPassTask(50, 150)">Забрать: +150 XP Пасса</button>
-          </div>
-
-          <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
-            <div style="font-weight: bold; font-size: 0.9rem; margin-bottom: 4px;">🎯 Сделай 500 спинов</div>
-            <div style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 8px;">Прогресс: <span id="spinTaskProg">0</span> / 500</div>
-            <button id="claimSpinTask" class="btn-small" style="width: 100%;" disabled onclick="claimTask('spins')">Забрать: 1 Особый кейс</button>
-          </div>
-
-          <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
-            <div style="font-weight: bold; font-size: 0.9rem; margin-bottom: 4px;">✨ Выбей легендарный номер</div>
-            <div style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 8px;">Статус: <span id="legendaryTaskProg">Не выполнено</span></div>
-            <button id="claimLegendaryTask" class="btn-small" style="width: 100%;" disabled onclick="claimTask('legendary')">Забрать: 200 000 🪙</button>
-          </div>
-        </div>
+        <h3>🏆 Задания</h3>
+        <p>Выполняйте задания для прокачки Пасса!</p>
       </div>
     </div>
 
     <!-- SELL MODAL -->
     <div id="sellModal" class="modal-overlay">
       <div class="modal-card">
-        <h2>Выставить на продажу</h2>
-        <p id="sellLimitHint" style="font-size: 0.8rem; color: var(--gold); margin-bottom: 10px;">Лимит цены зависит от редкости номера</p>
-        
-        <select id="plateToSellSelect" style="width:100%; padding:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; margin-bottom:12px; font-size:0.9rem;" onchange="updateSellLimitHint()">
-          <!-- Dyn generated -->
-        </select>
-
-        <input type="number" id="sellPriceInput" placeholder="Цена в монетах (🪙)" style="width:100%; padding:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; margin-bottom:15px; font-size:0.9rem; text-align:center;">
-
-        <button class="main-btn" style="width: 100%; padding:10px; margin-bottom:8px;" onclick="confirmStartSelling()">Выставить на Рынок</button>
-        <button class="btn-small" style="width: 100%;" onclick="closeSellModal()">Отмена</button>
+        <h2>Продажа номера</h2>
+        <select id="plateToSellSelect" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:8px;"></select>
+        <input type="number" id="sellPriceInput" placeholder="Цена в монетах" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:12px; text-align:center;">
+        <button class="main-btn" style="width:100%; padding:8px; margin-bottom:6px;" onclick="confirmStartSelling()">Выставить</button>
+        <button class="btn-small" style="width:100%;" onclick="closeSellModal()">Отмена</button>
       </div>
     </div>
 
-    <!-- STARS MODAL -->
+    <!-- STARS DONATE MODAL -->
     <div id="starsModal" class="modal-overlay">
-      <div class="modal-card" style="max-width: 380px;">
+      <div class="modal-card">
         <h2>Магазин Telegram Stars ⭐</h2>
-        <p style="margin-bottom: 12px;">Выберите пакет монет для мгновенного зачисления:</p>
+        <p>Выберите пакет монет:</p>
         
         <div class="stars-item">
-          <div style="text-align: left;">
-            <div style="font-weight: bold; color: var(--gold);">1 000 000 🪙</div>
-            <div style="font-size: 0.75rem; color: var(--text-sub);">Стартовый пакет</div>
+          <div style="text-align:left;">
+            <div style="font-weight:bold; color:var(--gold);">1 000 000 🪙</div>
+            <div style="font-size:0.7rem; color:var(--text-sub);">Стартовый пакет</div>
           </div>
-          <button class="btn-small" onclick="buyWithStars('1 000 000 монет', 'Зачисление 1 000 000 монет в игре', 10, 1000000)">⭐ 10</button>
+          <button class="btn-small" onclick="buyWithStars('1 000 000 монет', 'Пакет монет', 10, 1000000)">⭐ 10</button>
         </div>
 
         <div class="stars-item">
-          <div style="text-align: left;">
-            <div style="font-weight: bold; color: var(--gold);">5 000 000 🪙</div>
-            <div style="font-size: 0.75rem; color: var(--text-sub);">Выгодный пакет</div>
+          <div style="text-align:left;">
+            <div style="font-weight:bold; color:var(--gold);">5 000 000 🪙</div>
+            <div style="font-size:0.7rem; color:var(--text-sub);">Выгодный пакет</div>
           </div>
-          <button class="btn-small" onclick="buyWithStars('5 000 000 монет', 'Зачисление 5 000 000 монет в игре', 20, 5000000)">⭐ 20</button>
+          <button class="btn-small" onclick="buyWithStars('5 000 000 монет', 'Пакет монет', 20, 5000000)">⭐ 20</button>
         </div>
 
-        <div class="stars-item" style="margin-bottom: 15px;">
-          <div style="text-align: left;">
-            <div style="font-weight: bold; color: var(--gold);">10 000 000 🪙</div>
-            <div style="font-size: 0.75rem; color: var(--text-sub);">Элитный пакет</div>
+        <div class="stars-item" style="margin-bottom:12px;">
+          <div style="text-align:left;">
+            <div style="font-weight:bold; color:var(--gold);">10 000 000 🪙</div>
+            <div style="font-size:0.7rem; color:var(--text-sub);">Элитный пакет</div>
           </div>
-          <button class="btn-small" onclick="buyWithStars('10 000 000 монет', 'Зачисление 10 000 000 монет в игре', 50, 10000000)">⭐ 50</button>
+          <button class="btn-small" onclick="buyWithStars('10 000 000 монет', 'Пакет монет', 50, 10000000)">⭐ 50</button>
         </div>
 
-        <button class="main-btn" style="width: 100%; padding: 10px; font-size: 0.95rem;" onclick="closeStarsModal()">Закрыть</button>
+        <button class="btn-small" style="width:100%;" onclick="closeStarsModal()">Закрыть</button>
       </div>
     </div>
 
@@ -1203,12 +673,10 @@
     <div id="bugattiSellModal" class="modal-overlay">
       <div class="modal-card">
         <h2>Продажа Bugatti Chiron</h2>
-        <p style="font-size: 0.8rem; color: var(--gold); margin-bottom: 10px;">Максимальная цена продажи: не более 5 000 000 🪙!</p>
-        
-        <input type="number" id="bugattiPriceInput" placeholder="Цена (до 5 000 000 🪙)" style="width:100%; padding:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; margin-bottom:15px; font-size:0.9rem; text-align:center;">
-
-        <button class="main-btn" style="width: 100%; padding:10px; margin-bottom:8px;" onclick="confirmSellBugatti()">Продать гиперкар</button>
-        <button class="btn-small" style="width: 100%;" onclick="closeBugattiSellModal()">Отмена</button>
+        <p style="font-size:0.75rem; color:var(--gold); margin-bottom:8px;">Макс. цена: до 5 000 000 🪙!</p>
+        <input type="number" id="bugattiPriceInput" placeholder="Цена (до 5M)" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:10px; text-align:center;">
+        <button class="main-btn" style="width:100%; padding:8px; margin-bottom:6px;" onclick="confirmSellBugatti()">Продать</button>
+        <button class="btn-small" style="width:100%;" onclick="closeBugattiSellModal()">Отмена</button>
       </div>
     </div>
 
@@ -1217,90 +685,17 @@
       <div class="modal-card">
         <h2 id="modalTitle">ПОЗДРАВЛЯЕМ!</h2>
         <p id="modalDesc"></p>
-        <button class="main-btn" style="width: 100%" onclick="closeModal()">Отлично!</button>
+        <button class="main-btn" style="width:100%;" onclick="closeModal()">Отлично!</button>
       </div>
     </div>
   </div>
 
   <script>
-    // AUDIO SYNTHESIZER SYSTEM
-    class SoundEffects {
-      constructor() { this.ctx = null; }
-      init() {
-        if (!this.ctx) {
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          if (AudioContext) this.ctx = new AudioContext();
-        }
-        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
-      }
-      playClick() {
-        this.init(); if (!this.ctx) return;
-        const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
-        osc.type = 'sine'; osc.frequency.setValueAtTime(800, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(400, this.ctx.currentTime + 0.04);
-        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.04);
-        osc.connect(gain); gain.connect(this.ctx.destination);
-        osc.start(); osc.stop(this.ctx.currentTime + 0.04);
-      }
-      playSpinTick() {
-        this.init(); if (!this.ctx) return;
-        const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
-        osc.type = 'triangle'; osc.frequency.setValueAtTime(300 + Math.random() * 150, this.ctx.currentTime);
-        gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.03);
-        osc.connect(gain); gain.connect(this.ctx.destination);
-        osc.start(); osc.stop(this.ctx.currentTime + 0.03);
-      }
-      playCoins() {
-        this.init(); if (!this.ctx) return;
-        const now = this.ctx.currentTime;
-        [987.77, 1318.51].forEach((freq, idx) => {
-          const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
-          osc.type = 'sine'; osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-          gain.gain.setValueAtTime(0.2, now + idx * 0.08);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.2);
-          osc.connect(gain); gain.connect(this.ctx.destination);
-          osc.start(now + idx * 0.08); osc.stop(now + idx * 0.08 + 0.2);
-        });
-      }
-      playWin(rarity) {
-        this.init(); if (!this.ctx) return;
-        const now = this.ctx.currentTime;
-        let notes = [523.25, 659.25, 783.99]; let duration = 0.3;
-        if (rarity === 'purple') { notes = [523.25, 659.25, 783.99, 1046.50]; duration = 0.5; }
-        else if (rarity === 'yellow') { notes = [523.25, 659.25, 783.99, 987.77, 1046.50, 1318.51]; duration = 0.8; }
-        notes.forEach((freq, idx) => {
-          const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
-          osc.type = rarity === 'yellow' ? 'triangle' : 'sine';
-          osc.frequency.setValueAtTime(freq, now + idx * 0.09);
-          gain.gain.setValueAtTime(0.25, now + idx * 0.09);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.09 + duration);
-          osc.connect(gain); gain.connect(this.ctx.destination);
-          osc.start(now + idx * 0.09); osc.stop(now + idx * 0.09 + duration);
-        });
-      }
-      playDeal() {
-        this.init(); if (!this.ctx) return;
-        const now = this.ctx.currentTime;
-        [440, 554.37, 659.25, 880].forEach((freq, idx) => {
-          const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
-          osc.type = 'sine'; osc.frequency.setValueAtTime(freq, now + idx * 0.06);
-          gain.gain.setValueAtTime(0.18, now + idx * 0.06);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.06 + 0.25);
-          osc.connect(gain); gain.connect(this.ctx.destination);
-          osc.start(now + idx * 0.06); osc.stop(now + idx * 0.06 + 0.25);
-        });
-      }
-    }
-
-    const soundFX = new SoundEffects();
     const tg = window.Telegram?.WebApp;
     if (tg) { tg.ready(); tg.expand(); }
 
     const BOT_TOKEN = "8977809186:AAF0fqobqVRQf8wbnwApirFl_dwSrHZvxPc";
 
-    // GAME STATE
     let state = {
       coins: 2000,
       spins: 0,
@@ -1311,20 +706,15 @@
       ownedPlates: [],
       specialCases: 0,
       regularCases: 0,
-      hasLegendary: false,
       prestigeLvl: 0,
       country: 'kz',
-      activeSale: null,
-      daily: { lastWeek: 0, claimedDays: 0, lastClaimDate: null },
-      club: { name: null, rareCases: 0, lastCaseWeek: null, lastTaskDayDate: null, dailySpinsProgress: 0, completedTasks: [] },
+      daily: { claimedDays: 0, lastClaimDate: null },
+      club: { name: null, rareCases: 0 },
       pass: { level: 1, xp: 0, isPremium: false, claimedFree: [], claimedPremium: [] },
       craftSlots: [null, null, null],
-      tasks: { spin50PassClaimed: false, spinsClaimed: false, legendaryClaimed: false },
-      auction: { timer: 15, highestBid: 50000, highestBidder: 'Никто', isEnded: false },
+      auction: { highestBid: 50000, highestBidder: 'Никто', isActive: false, warned: false },
       isSpinning: false
     };
-
-    const BOT_NAMES = ["Арман", "Данияр", "Максат", "Айдос", "Ержан", "Тимур", "Алихан", "Нурсултан", "Баха", "Руслан", "Серик"];
 
     const CARS_DATA = [
       { id: 0, name: "Жигули (2106)", price: 5000, type: "Gas", color: "#C0392B" },
@@ -1340,53 +730,31 @@
       { id: 10, name: "Bugatti Chiron", price: 0, type: "Exclusive", color: "#003366" }
     ];
 
-    function getRandomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
     const saved = localStorage.getItem('kruti_nomera_state');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        state = { ...state, ...parsed, club: { ...state.club, ...(parsed.club || {}) }, daily: { ...state.daily, ...(parsed.daily || {}) }, pass: { ...state.pass, ...(parsed.pass || {}) }, tasks: { ...state.tasks, ...(parsed.tasks || {}) } };
+        state = { ...state, ...parsed };
       } catch(e){}
     }
 
     function saveState() { localStorage.setItem('kruti_nomera_state', JSON.stringify(state)); }
 
     function resetGame() {
-      soundFX.playClick();
       if (confirm("Сбросить весь прогресс?")) { localStorage.removeItem('kruti_nomera_state'); location.reload(); }
     }
-
-    function getSpinCost() {
-      if (state.spins < 10) return 100;
-      if (state.spins < 50) return 300;
-      if (state.spins < 100) return 600;
-      return 800;
-    }
-
-    function getLuckCost() { return 1000 * Math.pow(2, state.luckLvl); }
 
     function updateHeader() {
       document.getElementById('balanceVal').innerText = state.coins.toLocaleString();
       document.getElementById('spinsCount').innerText = state.spins;
-      document.getElementById('spinCostBadge').innerText = `(${getSpinCost()} 🪙)`;
       document.getElementById('countrySelect').value = state.country || 'kz';
-
       document.getElementById('luckLvl').innerText = state.luckLvl;
       document.getElementById('luckBonus').innerText = (state.luckLvl * 0.1).toFixed(1);
-      document.getElementById('luckCost').innerText = getLuckCost().toLocaleString();
-
-      document.getElementById('spinBtn').disabled = (state.coins < getSpinCost()) || state.isSpinning;
-      document.getElementById('upgradeLuckBtn').disabled = state.coins < getLuckCost();
-
-      if (state.ownedCars.length === CARS_DATA.length) {
-        document.getElementById('dealershipBanner').style.display = 'block';
-      }
+      document.getElementById('luckCost').innerText = (1000 * Math.pow(2, state.luckLvl)).toLocaleString();
       updateCountryUI();
     }
 
     function changeCountry() {
-      soundFX.playClick();
       state.country = document.getElementById('countrySelect').value;
       saveState();
       updateCountryUI();
@@ -1400,667 +768,152 @@
       if (auctionC) auctionC.innerText = state.country.toUpperCase();
 
       if (state.country === 'kz') {
-        flagEl.style.background = '#00AFCA';
-        flagEl.innerHTML = '<span style="font-size:7px; position:absolute; top:2px; left:7px;">☀️</span>';
-        codeEl.innerText = 'KZ';
+        flagEl.style.background = '#00AFCA'; flagEl.innerHTML = '☀️'; codeEl.innerText = 'KZ';
       } else if (state.country === 'ru') {
-        flagEl.style.background = 'linear-gradient(to bottom, #fff 33%, #0039a6 33%, #0039a6 66%, #d52b1e 66%)';
-        flagEl.innerHTML = '';
-        codeEl.innerText = 'RU';
+        flagEl.style.background = 'linear-gradient(to bottom, #fff 33%, #0039a6 33%, #0039a6 66%, #d52b1e 66%)'; flagEl.innerHTML = ''; codeEl.innerText = 'RU';
       } else if (state.country === 'ua') {
-        flagEl.style.background = 'linear-gradient(to bottom, #0057b7 50%, #ffd700 50%)';
-        flagEl.innerHTML = '';
-        codeEl.innerText = 'UA';
+        flagEl.style.background = 'linear-gradient(to bottom, #0057b7 50%, #ffd700 50%)'; flagEl.innerHTML = ''; codeEl.innerText = 'UA';
       }
     }
 
-    function generateRandomPlateText() {
-      const c = state.country || 'kz';
-      if (c === 'kz') {
-        const nums = Math.floor(100 + Math.random() * 900);
-        const letters = String.fromCharCode(65 + Math.floor(Math.random()*26)) + String.fromCharCode(65 + Math.floor(Math.random()*26)) + String.fromCharCode(65 + Math.floor(Math.random()*26));
-        const reg = Math.floor(1 + Math.random() * 17).toString().padStart(2, '0');
-        return `${nums} ${letters} ${reg}`;
-      } else if (c === 'ru') {
-        const letters = ["А","В","Е","К","М","Н","О","Р","С","Т","У","Х"];
-        const l1 = getRandomItem(letters); const l2 = getRandomItem(letters); const l3 = getRandomItem(letters);
-        const nums = Math.floor(100 + Math.random() * 900);
-        const reg = getRandomItem(["777", "999", "199", "77", "16", "102"]);
-        return `${l1} ${nums} ${l2}${l3} ${reg}`;
-      } else if (c === 'ua') {
-        const reg1 = getRandomItem(["AA", "KA", "BC", "AE", "AH", "BX"]);
-        const nums = Math.floor(1000 + Math.random() * 9000);
-        const reg2 = getRandomItem(["AA", "BB", "CC", "II", "TT"]);
-        return `${reg1} ${nums} ${reg2}`;
+    // 20-MINUTE SCHEDULED AUCTION TIMER
+    function checkScheduledAuction() {
+      const now = new Date();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+
+      const currentCycleMin = minutes % 20; // 0..19 min
+      const remMin = 19 - currentCycleMin;
+      const remSec = 59 - seconds;
+
+      const timerEl = document.getElementById('auctionTimer');
+      const btnEl = document.getElementById('placeBidBtn');
+
+      // Warning at 15m (5 mins before start)
+      if (currentCycleMin === 15 && seconds === 0 && !state.auction.warned) {
+        state.auction.warned = true;
+        showModal("🔔 ВНИМАНИЕ!", "До начала Секретного Аукциона осталось 5 минут! Приготовьте свои монеты!");
       }
-    }
 
-    function generateSuperLegendaryPlateText() {
-      const c = state.country || 'kz';
-      if (c === 'kz') return "777 AAA 02";
-      if (c === 'ru') return "А 777 АА 777";
-      if (c === 'ua') return "АА 7777 АА";
-    }
+      // Active Auction window: 0 to 2 minutes of the cycle
+      if (currentCycleMin < 2) {
+        state.auction.isActive = true;
+        state.auction.warned = false;
 
-    // AUCTION SYSTEM
-    let auctionInterval = null;
-    function initAuctionTimer() {
-      if (auctionInterval) clearInterval(auctionInterval);
-      auctionInterval = setInterval(() => {
-        if (state.auction.timer > 0) {
-          state.auction.timer--;
-          document.getElementById('auctionTimer').innerText = `00:${state.auction.timer.toString().padStart(2, '0')}`;
-          
-          if (Math.random() < 0.25 && state.auction.timer > 2) {
-            let bot = getRandomItem(BOT_NAMES);
-            state.auction.highestBid += 20000;
-            state.auction.highestBidder = bot;
-            
-            const box = document.getElementById('bidsHistoryBox');
-            if (box) {
-              box.innerHTML += `<div><b>${bot}</b> перебил ставку: ${state.auction.highestBid.toLocaleString()} 🪙</div>`;
-              box.scrollTop = box.scrollHeight;
-            }
-            soundFX.playSpinTick();
-          }
+        let activeRemSec = (1 - currentCycleMin) * 60 + remSec;
+        if (timerEl) timerEl.innerText = `ИДЕТ АУКЦИОН! (00:${activeRemSec.toString().padStart(2, '0')})`;
+        if (btnEl) btnEl.disabled = false;
+
+        // Bot bids simulation during active phase
+        if (Math.random() < 0.2) {
+          state.auction.highestBid += 20000;
+          state.auction.highestBidder = ["Арман", "Данияр", "Максат", "Баха", "Тимур"][Math.floor(Math.random()*5)];
           document.getElementById('highestBidVal').innerText = `${state.auction.highestBid.toLocaleString()} 🪙`;
           document.getElementById('highestBidderName').innerText = state.auction.highestBidder;
-        } else if (!state.auction.isEnded) {
-          state.auction.isEnded = true;
+        }
+      } else {
+        // Countdown to next auction
+        if (state.auction.isActive) {
+          state.auction.isActive = false;
           finishAuction();
         }
-      }, 1000);
+        if (timerEl) timerEl.innerText = `До аукциона: ${remMin.toString().padStart(2, '0')}:${remSec.toString().padStart(2, '0')}`;
+        if (btnEl) btnEl.disabled = true;
+      }
     }
 
+    setInterval(checkScheduledAuction, 1000);
+
     function placeAuctionBid() {
-      soundFX.playClick();
-      if (state.auction.isEnded) return;
+      if (!state.auction.isActive) return;
       let nextBid = state.auction.highestBid + 20000;
-      if (state.coins < nextBid) {
-        alert("У вас недостаточно монет для повышения ставки!");
-        return;
-      }
+      if (state.coins < nextBid) { alert("У вас недостаточно монет!"); return; }
+      state.coins -= nextBid;
       state.auction.highestBid = nextBid;
       state.auction.highestBidder = "Вы";
-      state.auction.timer = Math.max(state.auction.timer, 5);
-
-      const box = document.getElementById('bidsHistoryBox');
-      if (box) {
-        box.innerHTML += `<div style="color:var(--gold);"><b>Вы</b> перебили ставку: ${nextBid.toLocaleString()} 🪙</div>`;
-        box.scrollTop = box.scrollHeight;
-      }
-      soundFX.playCoins();
+      document.getElementById('highestBidVal').innerText = `${nextBid.toLocaleString()} 🪙`;
+      document.getElementById('highestBidderName').innerText = "Вы";
+      saveState();
+      updateHeader();
     }
 
     function finishAuction() {
       if (state.auction.highestBidder === "Вы") {
-        state.coins -= state.auction.highestBid;
-        soundFX.playWin('yellow');
-
         let rand = Math.random();
         if (rand < 0.05 && !state.ownedCars.includes(10)) {
           state.ownedCars.push(10);
-          showModal("АУКЦИОН ВЫИГРАН!", "🎉 ФАНТАСТИКА! В секретном контейнере оказался редчайший гиперкар Bugatti Chiron!");
-        } else if (rand < 0.2) {
+          showModal("АУКЦИОН ВЫИГРАН!", "🎉 В контейнере оказался Bugatti Chiron!");
+        } else if (rand < 0.25) {
           state.specialCases++;
-          showModal("АУКЦИОН ВЫИГРАН!", "📦 Вы выиграли 1 Особый кейс!");
-        } else if (rand < 0.6) {
-          const plateText = generateSuperLegendaryPlateText();
-          const superPlate = {
-            id: Date.now(),
-            text: plateText,
-            rarity: 'yellow',
-            rarityName: '🔥 СУПЕР-ЛЕГЕНДАРНЫЙ 🔥',
-            color: '#EAB308',
-            value: 10000
-          };
-          state.ownedPlates.push(superPlate);
-          showModal("АУКЦИОН ВЫИГРАН!", `👑 В контейнере находился Супер-легендарный номер ${plateText}!`);
+          showModal("АУКЦИОН ВЫИГРАН!", "📦 Вы получили 1 Особый кейс!");
         } else {
           state.coins += 200000;
-          showModal("АУКЦИОН ВЫИГРАН!", "💰 В контейнере находился денежный приз: 200 000 монет!");
+          showModal("АУКЦИОН ВЫИГРАН!", "💰 Вы выиграли 200 000 монет!");
         }
       } else {
-        showModal("АУКЦИОН ЗАВЕРШЕН", `Победитель аукциона — ${state.auction.highestBidder} со ставкой ${state.auction.highestBid.toLocaleString()} 🪙.`);
+        showModal("АУКЦИОН ЗАВЕРШЕН", `Победитель: ${state.auction.highestBidder}`);
       }
-
-      setTimeout(() => {
-        state.auction = { timer: 15, highestBid: 50000, highestBidder: 'Никто', isEnded: false };
-        const box = document.getElementById('bidsHistoryBox');
-        if (box) box.innerHTML = '<div><span style="color:var(--text-sub);">Система:</span> Торги начались! Стартовая цена 50 000 🪙</div>';
-        initAuctionTimer();
-      }, 5000);
-
+      state.auction.highestBid = 50000;
+      state.auction.highestBidder = 'Никто';
       saveState();
       updateHeader();
-      renderGarage();
     }
 
-    // CAR SELLING
-    function renderCarSellButton() {
-      const container = document.getElementById('carSellSection');
-      if (!container) return;
-      container.innerHTML = '';
+    // DONATE VIA TELEGRAM STARS
+    function openStarsModal() { document.getElementById('starsModal').classList.add('active'); }
+    function closeStarsModal() { document.getElementById('starsModal').classList.remove('active'); }
 
-      if (state.ownedCars.length === 0) return;
-      const carId = state.ownedCars[state.selectedCarIdx];
-      const car = CARS_DATA[carId];
-
-      if (carId === 0) return;
-
-      if (carId === 10) {
-        container.innerHTML = `<button class="btn-small" style="background:rgba(168,85,247,0.2); color:var(--purple); border-color:var(--purple); width:100%;" onclick="openBugattiSellModal()">🏷️ Продать Bugatti Chiron (до 5M 🪙)</button>`;
-      } else {
-        let halfPrice = Math.round(car.price / 2);
-        container.innerHTML = `<button class="btn-small" style="background:rgba(231,76,60,0.2); color:var(--red); border-color:var(--red); width:100%;" onclick="sellRegularCar(${carId}, ${halfPrice})">🏷️ Продать за ${halfPrice.toLocaleString()} 🪙 (50%)</button>`;
-      }
-    }
-
-    function sellRegularCar(carId, price) {
-      soundFX.playClick();
-      if (confirm(`Вы уверены, что хотите продать авто за ${price.toLocaleString()} 🪙?`)) {
-        state.coins += price;
-        const idx = state.ownedCars.indexOf(carId);
-        if (idx !== -1) state.ownedCars.splice(idx, 1);
-        delete state.equippedPlates[carId];
-        state.selectedCarIdx = 0;
-        soundFX.playCoins();
-        saveState();
-        updateHeader();
-        renderGarage();
-      }
-    }
-
-    function openBugattiSellModal() {
-      soundFX.playClick();
-      document.getElementById('bugattiSellModal').classList.add('active');
-    }
-
-    function closeBugattiSellModal() {
-      soundFX.playClick();
-      document.getElementById('bugattiSellModal').classList.remove('active');
-    }
-
-    function confirmSellBugatti() {
-      soundFX.playClick();
-      const input = document.getElementById('bugattiPriceInput');
-      const price = parseInt(input.value);
-
-      if (isNaN(price) || price <= 0) { alert("Укажите корректную цену!"); return; }
-      if (price > 5000000) { alert("Превышен лимит! Нельзя поставить цену выше 5 000 000 🪙!"); return; }
-
-      state.coins += price;
-      const idx = state.ownedCars.indexOf(10);
-      if (idx !== -1) state.ownedCars.splice(idx, 1);
-      delete state.equippedPlates[10];
-      state.selectedCarIdx = 0;
-
-      soundFX.playCoins();
-      closeBugattiSellModal();
-      saveState();
-      updateHeader();
-      renderGarage();
-      showModal("ГИПЕРКАР ПРОДАН!", `Вы успешно продали Bugatti Chiron за ${price.toLocaleString()} 🪙!`);
-    }
-
-    // PASS XP SYSTEM (+5 XP PER SPIN)
-    function addPassXp(amount) {
-      if (state.pass.level >= 30) return;
-      state.pass.xp += amount;
-      
-      while (state.pass.level < 30) {
-        let req = state.pass.level * 50;
-        if (state.pass.xp >= req) {
-          state.pass.xp -= req;
-          state.pass.level++;
-          soundFX.playWin('purple');
-        } else { break; }
-      }
-      saveState();
-      renderPassUI();
-    }
-
-    // SPIN SYSTEM
-    function performSpin() {
-      const cost = getSpinCost();
-      if (state.coins < cost || state.isSpinning) return;
-
-      soundFX.playClick();
-      state.coins -= cost;
-      state.spins++;
-      state.isSpinning = true;
-
-      addPassXp(5);
-
-      updateHeader();
-
-      const plateCard = document.getElementById('plateCard');
-      const plateText = document.getElementById('plateText');
-      const dropTitle = document.getElementById('dropTitle');
-      const dropVal = document.getElementById('dropVal');
-
-      let interval = setInterval(() => {
-        plateText.innerText = generateRandomPlateText();
-        soundFX.playSpinTick();
-      }, 60);
-
-      setTimeout(() => {
-        clearInterval(interval);
-        const result = rollPlateResult();
-        
-        plateText.innerText = result.text;
-        plateCard.className = `plate-card rarity-${result.rarity}`;
-        
-        dropTitle.innerText = result.rarityName;
-        dropTitle.style.color = result.color;
-        dropVal.innerText = `+${result.value.toLocaleString()} 🪙 (Авто-продажа)`;
-
-        state.coins += result.value;
-        state.ownedPlates.push(result);
-
-        if (result.rarity === 'purple' || result.rarity === 'yellow') state.hasLegendary = true;
-        state.isSpinning = false;
-        
-        soundFX.playWin(result.rarity);
-        saveState();
-        updateHeader();
-        renderGarage();
-      }, 1200);
-    }
-
-    function rollPlateResult() {
-      let rarity = 'white'; let rarityName = 'Обычный номер'; let color = '#A0AEC0';
-      let baseVal = 700 + Math.floor(Math.random() * 300);
-      let canDropLegendary = state.luckLvl >= 3;
-      let luckMult = 1 + (state.luckLvl * 0.1);
-      let rand = Math.random() * 100;
-
-      if (canDropLegendary && rand < (0.1 * luckMult)) {
-        rarity = 'yellow'; rarityName = '🔥 СУПЕР-ЛЕГЕНДАРНЫЙ 🔥'; color = '#EAB308'; baseVal = 5000;
-      } else if (canDropLegendary && rand < (1.0 * luckMult)) {
-        rarity = 'purple'; rarityName = '✨ Эпический ✨'; color = '#A855F7'; baseVal = 3000 + Math.floor(Math.random() * 2000);
-      } else if (rand < 10) {
-        rarity = 'blue'; rarityName = 'Супер-редкий'; color = '#3B82F6'; baseVal = 1500 + Math.floor(Math.random() * 1000);
-      } else if (rand < 40) {
-        rarity = 'green'; rarityName = 'Редкий номер'; color = '#22C55E'; baseVal = 1000 + Math.floor(Math.random() * 500);
-      } else {
-        rarity = 'white'; rarityName = 'Обычный номер'; color = '#E2E8F0'; baseVal = 700 + Math.floor(Math.random() * 300);
-      }
-
-      let prestigeMult = 1 + (state.prestigeLvl * 0.15);
-      return { id: Date.now() + Math.random(), text: generateRandomPlateText(), rarity, rarityName, color, value: Math.round(baseVal * prestigeMult) };
-    }
-
-    function openSpecialCase() {
-      soundFX.playClick();
-      if (state.specialCases <= 0) { alert("У вас нет Особых кейсов!"); return; }
-      state.specialCases--;
-      saveState();
-      updateTasksUI();
-
-      let rand = Math.random();
-      if (rand < 0.05 && !state.ownedCars.includes(10)) {
-        state.ownedCars.push(10);
-        soundFX.playWin('yellow');
-        showModal("ОТКРЫТИЕ КЕЙСА!", "🎉 НЕВЕРОЯТНО! Из Особого кейса выпал эксклюзивный гиперкар Bugatti Chiron!");
-      } else {
-        state.coins += 2000000;
-        soundFX.playCoins();
-        showModal("ОТКРЫТИЕ КЕЙСА!", "💰 Вам выпало 2 000 000 монет из Особого кейса!");
-      }
-      updateHeader();
-      renderGarage();
-    }
-
-    function openRegularCase() {
-      soundFX.playClick();
-      if ((state.regularCases || 0) <= 0) { alert("У вас нет Обычных кейсов!"); return; }
-      state.regularCases--;
-      saveState();
-      updateTasksUI();
-
-      let rand = Math.random();
-      if (rand < 0.1 && !state.ownedCars.includes(2)) {
-        state.ownedCars.push(2);
-        soundFX.playWin('yellow');
-        showModal("ОТКРЫТИЕ КЕЙСА!", "🎉 Из Обычного кейса вам выпала Toyota Camry 70!");
-      } else {
-        state.coins += 10000;
-        soundFX.playCoins();
-        showModal("ОТКРЫТИЕ КЕЙСА!", "💰 Из Обычного кейса вам выпало 10 000 монет!");
-      }
-      updateHeader();
-      renderGarage();
-    }
-
-    function upgradeLuck() {
-      const cost = getLuckCost();
-      if (state.coins >= cost) {
-        soundFX.playCoins(); state.coins -= cost; state.luckLvl++; saveState(); updateHeader();
-      }
-    }
-
-    // PASS SYSTEM REST OF FUNCTIONS
-    const PASS_REWARDS = {
-      1:  { free: { type: 'coins', val: 500 },  prem: { type: 'coins', val: 2000 } },
-      2:  { free: { type: 'xp', val: 50 },      prem: { type: 'coins', val: 5000 } },
-      3:  { free: { type: 'coins', val: 1000 }, prem: { type: 'coins', val: 10000 } },
-      4:  { free: { type: 'plate', rarity: 'white' }, prem: { type: 'regular_case', val: 1 } },
-      5:  { free: { type: 'regular_case', val: 1 }, prem: { type: 'coins', val: 20000 } },
-      6:  { free: { type: 'coins', val: 1500 }, prem: { type: 'coins', val: 25000 } },
-      7:  { free: { type: 'plate', rarity: 'green' }, prem: { type: 'regular_case', val: 1 } },
-      8:  { free: { type: 'coins', val: 2000 }, prem: { type: 'luck', val: 1 } },
-      9:  { free: { type: 'xp', val: 100 },     prem: { type: 'coins', val: 30000 } },
-      10: { free: { type: 'regular_case', val: 1 }, prem: { type: 'plate', rarity: 'purple' } },
-      11: { free: { type: 'coins', val: 3000 }, prem: { type: 'coins', val: 40000 } },
-      12: { free: { type: 'plate', rarity: 'green' }, prem: { type: 'regular_case', val: 1 } },
-      13: { free: { type: 'coins', val: 5000 }, prem: { type: 'coins', val: 50000 } },
-      14: { free: { type: 'xp', val: 150 },     prem: { type: 'regular_case', val: 1 } },
-      15: { free: { type: 'regular_case', val: 1 }, prem: { type: 'car', id: 1 } },
-      16: { free: { type: 'coins', val: 7000 }, prem: { type: 'coins', val: 60000 } },
-      17: { free: { type: 'plate', rarity: 'green' }, prem: { type: 'coins', val: 75000 } },
-      18: { free: { type: 'coins', val: 8000 }, prem: { type: 'regular_case', val: 1 } },
-      19: { free: { type: 'plate', rarity: 'blue' }, prem: { type: 'coins', val: 100000 } },
-      20: { free: { type: 'regular_case', val: 1 }, prem: { type: 'plate', rarity: 'purple' } },
-      21: { free: { type: 'coins', val: 10000 }, prem: { type: 'coins', val: 120000 } },
-      22: { free: { type: 'plate', rarity: 'blue' }, prem: { type: 'special_case', val: 1 } },
-      23: { free: { type: 'coins', val: 12000 }, prem: { type: 'coins', val: 150000 } },
-      24: { free: { type: 'xp', val: 200 },     prem: { type: 'coins', val: 200000 } },
-      25: { free: { type: 'regular_case', val: 1 }, prem: { type: 'special_case', val: 1 } },
-      26: { free: { type: 'coins', val: 15000 }, prem: { type: 'coins', val: 250000 } },
-      27: { free: { type: 'plate', rarity: 'blue' }, prem: { type: 'plate', rarity: 'purple' } },
-      28: { free: { type: 'coins', val: 20000 }, prem: { type: 'coins', val: 300000 } },
-      29: { free: { type: 'regular_case', val: 1 }, prem: { type: 'special_case', val: 1 } },
-      30: { free: { type: 'regular_case', val: 1 }, prem: { type: 'coins', val: 500000 } }
-    };
-
-    async function buyPremiumPass() {
-      soundFX.playClick();
-      if (state.pass.isPremium) return;
-      if (!tg) { alert("Откройте через Telegram!"); return; }
+    async function buyWithStars(title, description, amountStars, rewardCoins) {
+      if (!tg) { alert("Откройте игру через Telegram!"); return; }
       try {
-        const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/createInvoiceLink`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title: 'Премиум Пасс ⭐ 10', description: 'Разблокировка Премиум Пасса', payload: `pass_${Date.now()}`, provider_token: "", currency: "XTR", prices: [{ label: 'Премиум', amount: 10 }] })
+        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/createInvoiceLink`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: title, description: description, payload: `stars_donate_${Date.now()}`,
+            provider_token: "", currency: "XTR", prices: [{ label: title, amount: amountStars }]
+          })
         });
-        const data = await res.json();
+        const data = await response.json();
         if (data.ok && data.result) {
           tg.openInvoice(data.result, function(status) {
-            if (status === 'paid') { state.pass.isPremium = true; soundFX.playWin('yellow'); saveState(); renderPassUI(); }
+            if (status === 'paid') {
+              state.coins += rewardCoins;
+              saveState();
+              updateHeader();
+              closeStarsModal();
+              tg.showAlert(`⭐ Вам зачислено ${rewardCoins.toLocaleString()} монет!`);
+            }
           });
         }
-      } catch (err) {}
+      } catch (err) { alert("Ошибка при оплате Звёздами"); }
     }
 
-    function claimPassReward(lvl, isPrem) {
-      soundFX.playClick();
-      if (lvl > state.pass.level) return;
-      const arr = isPrem ? state.pass.claimedPremium : state.pass.claimedFree;
-      if (arr.includes(lvl)) return;
-      arr.push(lvl);
-      const rew = isPrem ? PASS_REWARDS[lvl].prem : PASS_REWARDS[lvl].free;
+    function performSpin() {
+      if (state.coins < 100 || state.isSpinning) return;
+      state.coins -= 100;
+      state.spins++;
+      state.isSpinning = true;
+      updateHeader();
 
-      if (rew.type === 'coins') state.coins += rew.val;
-      else if (rew.type === 'xp') addPassXp(rew.val);
-      else if (rew.type === 'regular_case') state.regularCases = (state.regularCases || 0) + rew.val;
-      else if (rew.type === 'special_case') state.specialCases += rew.val;
-      else if (rew.type === 'luck') state.luckLvl += rew.val;
-      else if (rew.type === 'car' && !state.ownedCars.includes(rew.id)) state.ownedCars.push(rew.id);
-      else if (rew.type === 'plate') {
-        state.ownedPlates.push({ id: Date.now(), text: generateRandomPlateText(), rarity: rew.rarity, rarityName: 'Редкий', color: '#22C55E', value: 1500 });
-      }
-      saveState(); updateHeader(); renderPassUI();
+      setTimeout(() => {
+        let val = 700 + Math.floor(Math.random() * 800);
+        state.coins += val;
+        state.isSpinning = false;
+        saveState();
+        updateHeader();
+      }, 1000);
     }
-
-    function renderPassUI() {
-      document.getElementById('passLvlBadge').innerText = `Ур. ${state.pass.level}`;
-      let req = state.pass.level * 50;
-      if (state.pass.level >= 30) {
-        document.getElementById('passXpText').innerText = "МАКС. УРОВЕНЬ";
-        document.getElementById('passProgressBar').style.width = '100%';
-      } else {
-        document.getElementById('passXpText').innerText = `XP: ${state.pass.xp} / ${req}`;
-        document.getElementById('passProgressBar').style.width = `${Math.min(100, Math.floor((state.pass.xp / req) * 100))}%`;
-      }
-
-      const buyBtn = document.getElementById('buyPremiumPassBtn');
-      buyBtn.innerText = state.pass.isPremium ? "Premium Куплен ✓" : "Открыть Premium (⭐ 10)";
-      buyBtn.disabled = state.pass.isPremium;
-
-      const container = document.getElementById('passLevelsList'); container.innerHTML = '';
-      for (let i = 1; i <= 30; i++) {
-        const rew = PASS_REWARDS[i];
-        const freeC = state.pass.claimedFree.includes(i);
-        const premC = state.pass.claimedPremium.includes(i);
-        const row = document.createElement('div'); row.className = 'pass-level-row';
-        row.innerHTML = `
-          <div class="pass-level-badge">${i}</div>
-          <div class="pass-rewards-grid">
-            <div class="pass-reward-box">
-              <span>🆓 ${getRewardText(rew.free)}</span>
-              <button class="btn-small" style="padding:4px 8px; font-size:0.7rem;" ${(state.pass.level < i || freeC) ? 'disabled' : ''} onclick="claimPassReward(${i}, false)">${freeC ? '✓' : 'Забрать'}</button>
-            </div>
-            <div class="pass-reward-box premium">
-              <span>🌟 ${getRewardText(rew.prem)}</span>
-              <button class="btn-small" style="padding:4px 8px; font-size:0.7rem;" ${(state.pass.level < i || !state.pass.isPremium || premC) ? 'disabled' : ''} onclick="claimPassReward(${i}, true)">${premC ? '✓' : 'Забрать'}</button>
-            </div>
-          </div>
-        `;
-        container.appendChild(row);
-      }
-    }
-
-    function getRewardText(r) {
-      if (r.type === 'coins') return `${r.val.toLocaleString()} 🪙`;
-      if (r.type === 'xp') return `+${r.val} XP`;
-      if (r.type === 'regular_case') return `📦 Обычный кейс`;
-      if (r.type === 'special_case') return `📦 Особый кейс`;
-      if (r.type === 'luck') return `+${r.val} Удача`;
-      if (r.type === 'car') return `🏎️ ВАЗ 2115`;
-      if (r.type === 'plate') return `🚘 Номер (${r.rarity.toUpperCase()})`;
-      return 'Награда';
-    }
-
-    // CRAFT FUNCTIONS
-    function updateCraftSlotsUI() {
-      for (let i = 0; i < 3; i++) {
-        const slotEl = document.getElementById(`craftSlot${i}`);
-        const plate = state.craftSlots[i];
-        slotEl.className = plate ? 'craft-slot filled' : 'craft-slot';
-        slotEl.innerHTML = plate ? `${plate.text}<br><span style="font-size:0.65rem;">(Сброс)</span>` : `Слот ${i+1}<br>(Пусто)`;
-      }
-      document.getElementById('startCraftBtn').disabled = state.craftSlots.some(s => s === null);
-      renderCraftInventory();
-    }
-
-    function renderCraftInventory() {
-      const grid = document.getElementById('craftInventoryGrid'); grid.innerHTML = '';
-      const targetRarity = document.getElementById('craftTypeSelect').value;
-      const valid = state.ownedPlates.filter(p => p.rarity === targetRarity && !state.craftSlots.includes(p));
-      if (valid.length === 0) { grid.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.85rem;">Нет доступных номеров в инвентаре</p>'; return; }
-      valid.forEach((plate) => {
-        const item = document.createElement('div'); item.className = 'plate-item';
-        item.innerHTML = `<div style="display:flex; align-items:center; gap:8px; cursor:pointer; flex:1;" onclick="addPlateToCraftSlot('${plate.id}')"><div class="plate-item-mini">${plate.text}</div><div><div style="font-size:0.7rem; color:${plate.color}">${plate.rarityName}</div></div></div>`;
-        grid.appendChild(item);
-      });
-    }
-
-    function addPlateToCraftSlot(id) {
-      soundFX.playClick();
-      const p = state.ownedPlates.find(x => x.id == id);
-      const emptyIdx = state.craftSlots.findIndex(s => s === null);
-      if (p && emptyIdx !== -1) { state.craftSlots[emptyIdx] = p; updateCraftSlotsUI(); }
-    }
-
-    function clearCraftSlot(idx) { soundFX.playClick(); state.craftSlots[idx] = null; updateCraftSlotsUI(); }
-
-    function performCraft() {
-      soundFX.playClick();
-      if (state.craftSlots.some(s => s === null)) return;
-      const type = document.getElementById('craftTypeSelect').value;
-      state.craftSlots.forEach(s => { const idx = state.ownedPlates.findIndex(p => p.id === s.id); if (idx !== -1) state.ownedPlates.splice(idx, 1); });
-      state.craftSlots = [null, null, null];
-
-      let chance = 0.7; let nextR = 'green'; let nextN = 'Редкий'; let c = '#22C55E';
-      if (type === 'green') { chance = 0.6; nextR = 'blue'; nextN = 'Супер-редкий'; c = '#3B82F6'; }
-      else if (type === 'blue') { chance = 0.4; nextR = 'purple'; nextN = 'Эпический'; c = '#A855F7'; }
-      else if (type === 'purple') { chance = 0.2; nextR = 'purple'; nextN = '🔥 Легендарный'; c = '#A855F7'; }
-      else if (type === 'yellow') { chance = 0.05; nextR = 'yellow'; nextN = '🔥 СУПЕР-ЛЕГЕНДАРНЫЙ 🔥'; c = '#EAB308'; }
-
-      if (Math.random() < chance) {
-        const newP = { id: Date.now(), text: generateRandomPlateText(), rarity: nextR, rarityName: nextN, color: c, value: 2500 };
-        state.ownedPlates.push(newP); soundFX.playWin('purple');
-        showModal("УСПЕШНЫЙ КРАФТ!", type === 'purple' ? "Поздравляем! Вы скрафтили легендарные номера!" : type === 'yellow' ? "Поздравляем! Вы скрафтили супер-легендарные номера!" : `Скрафчен номер ${newP.text}!`);
-      } else {
-        showModal("НЕУДАЧА!", "К сожалению, крафт не удался. Все 3 номера сгорели!");
-      }
-      saveState(); updateCraftSlotsUI(); renderGarage();
-    }
-
-    // GARAGE CANVAS
-    let carAngle = 0; let isDragging = false; let startX = 0;
-    function initGarageCanvas() {
-      const canvas = document.getElementById('carCanvas'); if (!canvas) return;
-      canvas.addEventListener('mousedown', (e) => { isDragging = true; startX = e.clientX; });
-      window.addEventListener('mouseup', () => { isDragging = false; });
-      window.addEventListener('mousemove', (e) => { if (!isDragging) return; carAngle += (e.clientX - startX) * 0.01; startX = e.clientX; drawGarageCar(); });
-      canvas.addEventListener('touchstart', (e) => { isDragging = true; startX = e.touches[0].clientX; });
-      window.addEventListener('touchend', () => { isDragging = false; });
-      window.addEventListener('touchmove', (e) => { if (!isDragging) return; carAngle += (e.touches[0].clientX - startX) * 0.01; startX = e.touches[0].clientX; drawGarageCar(); });
-    }
-
-    function drawGarageCar() {
-      const canvas = document.getElementById('carCanvas'); if (!canvas) return;
-      const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (state.ownedCars.length === 0) return;
-
-      const carData = CARS_DATA[state.ownedCars[state.selectedCarIdx]];
-      const equippedPlate = state.equippedPlates[carData.id];
-
-      ctx.save(); ctx.translate(canvas.width / 2, canvas.height / 2 + 10);
-      let cos = Math.cos(carAngle);
-
-      ctx.fillStyle = "rgba(0,0,0,0.4)"; ctx.beginPath(); ctx.ellipse(0, 40, 100 * Math.abs(cos) + 50, 16, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = carData.color; ctx.strokeStyle = "#000"; ctx.lineWidth = 3;
-      ctx.beginPath(); let width = 140 * Math.abs(cos) + 35; let height = 45; ctx.roundRect(-width/2, -height/2, width, height, 8); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = "#111"; ctx.beginPath(); ctx.roundRect(-width/3, -height/2 - 25, width/1.5, 30, 4); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = "#222"; ctx.beginPath(); ctx.arc(-width/3, 22, 15, 0, Math.PI * 2); ctx.arc(width/3, 22, 15, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-
-      if (equippedPlate) {
-        ctx.fillStyle = "#FFF"; ctx.strokeStyle = "#000"; ctx.lineWidth = 1;
-        let plateW = 50 * Math.abs(cos) + 15; let plateH = 14; ctx.fillRect(-plateW/2, 8, plateW, plateH); ctx.strokeRect(-plateW/2, 8, plateW, plateH);
-        ctx.fillStyle = "#000"; ctx.font = "bold 8px monospace"; ctx.textAlign = "center"; ctx.fillText(equippedPlate.text, 0, 18);
-      }
-      ctx.restore();
-    }
-
-    function renderGarage() {
-      if (state.ownedCars.length === 0) return;
-      const carId = state.ownedCars[state.selectedCarIdx];
-      const carData = CARS_DATA[carId];
-      const equippedPlate = state.equippedPlates[carId];
-
-      document.getElementById('carTitle').innerText = carData.name;
-      document.getElementById('carType').innerText = carData.type === 'Electric' ? '⚡ Электрокар' : carData.type === 'Exclusive' ? '👑 Эксклюзив' : '⛽ Бензиновый';
-      document.getElementById('equippedPlateInfo').innerText = equippedPlate ? `Номер: ${equippedPlate.text}` : "Номер: Не установлен";
-
-      drawGarageCar();
-      renderCarSellButton();
-
-      const grid = document.getElementById('platesGrid'); grid.innerHTML = '';
-      if (state.ownedPlates.length === 0) { grid.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.85rem;">У вас нет сохраненных номеров</p>'; return; }
-
-      state.ownedPlates.forEach((plate, index) => {
-        const item = document.createElement('div');
-        const isEquipped = equippedPlate && equippedPlate.id === plate.id;
-        item.className = `plate-item ${isEquipped ? 'equipped' : ''}`;
-        item.innerHTML = `<div style="display:flex; align-items:center; gap:8px; cursor:pointer; flex:1;" onclick="equipPlate(${index})"><div class="plate-item-mini">${plate.text}</div><div><div style="font-size:0.7rem; color:${plate.color}">${plate.rarityName}</div><div style="font-size:0.65rem; color:var(--text-sub);">${isEquipped ? 'На авто ✓' : 'Нажмите, чтобы надеть'}</div></div></div>`;
-        grid.appendChild(item);
-      });
-    }
-
-    function equipPlate(index) {
-      soundFX.playClick();
-      state.equippedPlates[state.ownedCars[state.selectedCarIdx]] = state.ownedPlates[index];
-      saveState(); renderGarage();
-    }
-
-    function prevCar() { soundFX.playClick(); if (state.selectedCarIdx > 0) { state.selectedCarIdx--; renderGarage(); } }
-    function nextCar() { soundFX.playClick(); if (state.selectedCarIdx < state.ownedCars.length - 1) { state.selectedCarIdx++; renderGarage(); } }
-
-    // SHOP SYSTEM
-    function renderShop() {
-      const shopList = document.getElementById('shopList'); shopList.innerHTML = '';
-      CARS_DATA.forEach(car => {
-        if (car.type === 'Exclusive') return;
-        const isOwned = state.ownedCars.includes(car.id);
-        const item = document.createElement('div'); item.className = 'car-shop-item';
-        item.innerHTML = `<div class="car-shop-info"><h4>${car.name}</h4><p>${car.price.toLocaleString()} 🪙</p></div><button class="btn-small" ${isOwned || state.coins < car.price ? 'disabled' : ''} onclick="buyCar(${car.id})">${isOwned ? 'Куплено' : 'Купить'}</button>`;
-        shopList.appendChild(item);
-      });
-    }
-
-    function buyCar(id) {
-      const car = CARS_DATA[id];
-      if (state.coins >= car.price && !state.ownedCars.includes(id)) {
-        state.coins -= car.price; state.ownedCars.push(id); soundFX.playCoins(); saveState(); updateHeader(); renderShop(); renderGarage();
-      }
-    }
-
-    // DAILY REWARDS & TASKS & MARKET RENDERERS
-    function renderDailyRewards() {
-      const grid = document.getElementById('dailyGrid'); if (!grid) return; grid.innerHTML = '';
-      const DAILY_REWARDS = [
-        { day: 1, name: "Обычный кейс" }, { day: 2, name: "50 000 🪙" }, { day: 3, name: "Ап Удачи" },
-        { day: 4, name: "150 000 🪙" }, { day: 5, name: "Редкий номер" }, { day: 6, name: "500 000 🪙" }, { day: 7, name: "Особый кейс" }
-      ];
-      DAILY_REWARDS.forEach((rew, idx) => {
-        const box = document.createElement('div');
-        box.className = `day-box ${idx < state.daily.claimedDays ? 'claimed' : ''}`;
-        box.innerHTML = `<div style="font-weight:bold;">Д.${rew.day}</div><div style="font-size:0.65rem; color:var(--gold);">${rew.name}</div>`;
-        grid.appendChild(box);
-      });
-    }
-
-    function claimDailyReward() {
-      const todayStr = new Date().toDateString();
-      if (state.daily.lastClaimDate === todayStr || state.daily.claimedDays >= 7) return;
-      state.daily.claimedDays++; state.daily.lastClaimDate = todayStr;
-      state.coins += 50000; soundFX.playCoins(); saveState(); updateHeader(); renderDailyRewards();
-      showModal("БОНУС ЗАБРАН", "Вы заложили ежедневную награду!");
-    }
-
-    function updateTasksUI() {
-      document.getElementById('specialCasesCount').innerText = state.specialCases;
-      document.getElementById('regularCasesCount').innerText = state.regularCases || 0;
-    }
-
-    function renderClubScreen() {
-      const noClubCard = document.getElementById('noClubCard');
-      const hasClubContainer = document.getElementById('hasClubContainer');
-      if (!state.club.name) { noClubCard.style.display = 'block'; hasClubContainer.style.display = 'none'; return; }
-      noClubCard.style.display = 'none'; hasClubContainer.style.display = 'block';
-      document.getElementById('clubTitle').innerText = `Клуб: ${state.club.name}`;
-      document.getElementById('rareClubCasesCount').innerText = state.club.rareCases || 0;
-    }
-
-    function renderMarketChat() {}
 
     function switchTab(tab) {
-      soundFX.playClick();
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-
-      if (tab === 'spin') { document.querySelectorAll('.nav-btn')[0].classList.add('active'); document.getElementById('spinScreen').classList.add('active'); }
-      else if (tab === 'garage') { document.querySelectorAll('.nav-btn')[1].classList.add('active'); document.getElementById('garageScreen').classList.add('active'); renderGarage(); }
-      else if (tab === 'craft') { document.querySelectorAll('.nav-btn')[2].classList.add('active'); document.getElementById('craftScreen').classList.add('active'); updateCraftSlotsUI(); }
-      else if (tab === 'auction') { document.querySelectorAll('.nav-btn')[3].classList.add('active'); document.getElementById('auctionScreen').classList.add('active'); }
-      else if (tab === 'pass') { document.querySelectorAll('.nav-btn')[4].classList.add('active'); document.getElementById('passScreen').classList.add('active'); renderPassUI(); }
-      else if (tab === 'shop') { document.querySelectorAll('.nav-btn')[5].classList.add('active'); document.getElementById('shopScreen').classList.add('active'); renderShop(); }
-      else if (tab === 'cases') { document.querySelectorAll('.nav-btn')[6].classList.add('active'); document.getElementById('casesScreen').classList.add('active'); renderDailyRewards(); updateTasksUI(); }
-      else if (tab === 'club') { document.querySelectorAll('.nav-btn')[7].classList.add('active'); document.getElementById('clubScreen').classList.add('active'); renderClubScreen(); }
-      else if (tab === 'market') { document.querySelectorAll('.nav-btn')[8].classList.add('active'); document.getElementById('marketScreen').classList.add('active'); }
-      else if (tab === 'tasks') { document.querySelectorAll('.nav-btn')[9].classList.add('active'); document.getElementById('tasksScreen').classList.add('active'); updateTasksUI(); }
+      const tabs = ['spin','garage','craft','auction','pass','shop','cases','club','market','tasks'];
+      const idx = tabs.indexOf(tab);
+      if (idx !== -1) {
+        document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+        document.getElementById(`${tab}Screen`).classList.add('active');
+      }
     }
 
     function showModal(title, desc) {
@@ -2069,17 +922,10 @@
       document.getElementById('victoryModal').classList.add('active');
     }
 
-    function closeModal() { soundFX.playClick(); document.getElementById('victoryModal').classList.remove('active'); }
+    function closeModal() { document.getElementById('victoryModal').classList.remove('active'); }
 
     window.onload = () => {
-      initGarageCanvas();
       updateHeader();
-      renderDailyRewards();
-      updateTasksUI();
-      renderClubScreen();
-      renderPassUI();
-      updateCraftSlotsUI();
-      initAuctionTimer();
     };
   </script>
 </body>
