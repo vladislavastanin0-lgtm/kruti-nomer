@@ -337,7 +337,7 @@
 
     /* DAILY & TASKS UI */
     .daily-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
-    .daily-card { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px; text-align: center; font-size: 0.7rem; }
+    .daily-card { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px; text-align: center; font-size: 0.65rem; }
     .daily-card.claimed { opacity: 0.5; border-color: var(--green); }
 
     .task-item { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.8rem; }
@@ -349,6 +349,12 @@
     .craft-slots { display: flex; justify-content: space-around; gap: 6px; margin: 10px 0; }
     .craft-slot { width: 75px; height: 45px; border: 2px dashed rgba(255,255,255,0.2); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 0.7rem; color: var(--text-sub); cursor: pointer; text-align: center; }
     .craft-slot.filled { border-style: solid; border-color: var(--accent-color); background: rgba(59,130,246,0.1); color: white; font-weight: bold; font-family: monospace; }
+
+    /* CASE SPINNER */
+    .case-spinner-box {
+      width: 100%; height: 80px; background: rgba(0,0,0,0.5); border: 2px solid var(--gold); border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin: 15px 0; position: relative;
+    }
+    .spinner-item-text { font-size: 1.2rem; font-weight: bold; color: var(--gold); animation: pulse 0.1s infinite alternate; }
 
     /* MODAL */
     .modal-overlay {
@@ -364,6 +370,10 @@
 
     .stars-item {
       background: rgba(255,255,255,0.03); border: 1px solid rgba(255,215,0,0.2); border-radius: 10px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;
+    }
+
+    .buyer-card {
+      background: rgba(255,255,255,0.05); border-radius: 10px; padding: 10px; text-align: left; margin-bottom: 10px; border-left: 3px solid var(--accent-color);
     }
   </style>
 </head>
@@ -518,20 +528,20 @@
     <!-- CASES & DAILY SCREEN -->
     <div id="casesScreen" class="screen">
       <div class="section-card">
-        <h3>🎁 Ежедневные бонусы</h3>
+        <h3>🎁 Ежедневные бонусы (7 Дней)</h3>
         <div class="daily-grid" id="dailyGrid"></div>
         <button id="claimDailyBtn" class="main-btn" style="width:100%; padding:8px; font-size:0.85rem;" onclick="claimDailyReward()">Забрать бонус дня</button>
       </div>
 
       <div class="section-card">
         <h3>📦 Особый кейс</h3>
-        <p>Содержит 2 000 000 монет или Bugatti Chiron!</p>
+        <p>Содержит Tank 500 (редко) или 2 000 000 монет!</p>
         <button id="openSpecialCaseBtn" class="main-btn" style="width:100%; padding:10px;" onclick="openSpecialCase()">Открыть особый кейс (<span id="specialCasesCount">0</span>)</button>
       </div>
 
       <div class="section-card">
         <h3>📦 Обычный кейс</h3>
-        <p>Содержит монеты или Toyota Camry 70!</p>
+        <p>Содержит Toyota Camry 70 (редко) или 10 000 монет!</p>
         <button id="openRegularCaseBtn" class="main-btn" style="width:100%; padding:10px; background:linear-gradient(135deg, #22c55e, #3b82f6);" onclick="openRegularCase()">Открыть обычный кейс (<span id="regularCasesCount">0</span>)</button>
       </div>
     </div>
@@ -540,10 +550,19 @@
     <div id="marketScreen" class="screen">
       <div class="section-card">
         <h3>💬 Авторынок номеров</h3>
-        <p>Выставляйте свои номера на продажу или покупайте чужие!</p>
+        <p>Выставляйте свои номера на продажу. Покупатели свяжутся с вами!</p>
         <button class="main-btn" style="width:100%; padding:8px; font-size:0.85rem; margin-bottom:10px;" onclick="openSellModal()">🏷️ Выставить свой номер</button>
       </div>
-      <div id="marketList"></div>
+
+      <div class="section-card">
+        <h3>📩 Предложения покупателей</h3>
+        <div id="myMarketOffersList"></div>
+      </div>
+
+      <div class="section-card">
+        <h3>🛒 Все номера на рынке</h3>
+        <div id="marketList"></div>
+      </div>
     </div>
 
     <!-- TASKS SCREEN -->
@@ -560,9 +579,21 @@
       <div class="modal-card">
         <h2>Выставить номер</h2>
         <select id="plateToSellSelect" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:8px;"></select>
+        <div style="font-size:0.7rem; color:var(--gold); margin-bottom:6px;" id="priceLimitHint">Макс. цена: --</div>
         <input type="number" id="sellPriceInput" placeholder="Цена в монетах" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:12px; text-align:center;">
         <button class="main-btn" style="width:100%; padding:8px; margin-bottom:6px;" onclick="confirmSellPlate()">Выставить на рынок</button>
         <button class="btn-small" style="width:100%;" onclick="closeSellModal()">Отмена</button>
+      </div>
+    </div>
+
+    <!-- CASE SPINNER MODAL -->
+    <div id="caseSpinnerModal" class="modal-overlay">
+      <div class="modal-card">
+        <h2 id="caseSpinnerTitle">Открытие кейса...</h2>
+        <div class="case-spinner-box">
+          <div id="spinnerText" class="spinner-item-text">...</div>
+        </div>
+        <p style="font-size:0.75rem; color:var(--text-sub);" id="spinnerSub">Испытываем удачу!</p>
       </div>
     </div>
 
@@ -627,6 +658,16 @@
 
     const BOT_TOKEN = "8977809186:AAF0fqobqVRQf8wbnwApirFl_dwSrHZvxPc";
 
+    // Ограничения цен по редкостям
+    const RARITY_LIMITS = {
+      'white': { name: 'Обычный', max: 300, color: '#E2E8F0' },
+      'green': { name: 'Редкий', max: 600, color: '#22C55E' },
+      'blue': { name: 'Супер-редкий', max: 1000, color: '#3B82F6' },
+      'purple': { name: 'Эпический', max: 2000, color: '#A855F7' },
+      'yellow': { name: 'Легендарный', max: 7000, color: '#FFD700' },
+      'red': { name: 'Супер-легендарный', max: 20000, color: '#E74C3C' }
+    };
+
     let state = {
       coins: 2000,
       spins: 0,
@@ -644,10 +685,11 @@
         spin5: { progress: 0, max: 5, claimed: false },
         spin20: { progress: 0, max: 20, claimed: false }
       },
+      myListings: [], // Выставленные пользователем номера
       market: [
-        { id: 101, text: "777 WWW 02", price: 15000, seller: "Арман" },
-        { id: 102, text: "001 KZ 01", price: 50000, seller: "Данияр" },
-        { id: 103, text: "555 VIP 05", price: 30000, seller: "Тимур" }
+        { id: 101, text: "777 WWW 02", price: 500, seller: "Арман", rarity: 'green' },
+        { id: 102, text: "001 KZ 01", price: 900, seller: "Данияр", rarity: 'blue' },
+        { id: 103, text: "555 VIP 05", price: 1800, seller: "Тимур", rarity: 'purple' }
       ],
       isSpinning: false
     };
@@ -725,7 +767,7 @@
       }
     }
 
-    // CAROUSEL & 3D ROTATION CANVAS
+    // GARAGE CANVAS
     let carAngle = 0; let isDragging = false; let startX = 0;
     function initGarageCanvas() {
       const canvas = document.getElementById('carCanvas'); if (!canvas) return;
@@ -940,19 +982,24 @@
       saveState();
     }
 
-    // DAILY BONUSES
-    const DAILY_REWARDS = [
-      { day: 1, type: 'coins', val: 1000, label: '1 000 🪙' },
-      { day: 2, type: 'regular_case', val: 1, label: '📦 Кейс' },
-      { day: 3, type: 'coins', val: 5000, label: '5 000 🪙' },
-      { day: 4, type: 'luck', val: 1, label: '✨ Удача' }
+    // DAILY BONUSES (7 Дней)
+    const DAILY_REWARDS_7 = [
+      { day: 1, label: '1 000 🪙', action: () => state.coins += 1000 },
+      { day: 2, label: '📦 Обычный кейс', action: () => state.regularCases++ },
+      { day: 3, label: '10 000 🪙', action: () => state.coins += 10000 },
+      { day: 4, label: '20 000 🪙', action: () => state.coins += 20000 },
+      { day: 5, label: '🔵 Супер-редкий номер', action: () => {
+          state.ownedPlates.push({ id: Date.now(), text: generateRandomPlateText(), rarity: 'blue', rarityName: 'Супер-редкий', color: '#3B82F6', value: 1000 });
+      }},
+      { day: 6, label: '📦 Особый кейс', action: () => state.specialCases++ },
+      { day: 7, label: '📦 Обычный кейс', action: () => state.regularCases++ }
     ];
 
     function renderDailyUI() {
       const grid = document.getElementById('dailyGrid');
       if (!grid) return;
       grid.innerHTML = '';
-      DAILY_REWARDS.forEach((rew, idx) => {
+      DAILY_REWARDS_7.forEach((rew, idx) => {
         const dayNum = idx + 1;
         const isClaimed = state.daily.claimedDays >= dayNum;
         const div = document.createElement('div');
@@ -965,18 +1012,225 @@
     function claimDailyReward() {
       const today = new Date().toDateString();
       if (state.daily.lastDate === today) { alert("Вы уже забрали бонус сегодня!"); return; }
-      if (state.daily.claimedDays >= DAILY_REWARDS.length) { state.daily.claimedDays = 0; }
+      if (state.daily.claimedDays >= DAILY_REWARDS_7.length) { state.daily.claimedDays = 0; }
 
-      let rew = DAILY_REWARDS[state.daily.claimedDays];
+      let rew = DAILY_REWARDS_7[state.daily.claimedDays];
       state.daily.claimedDays++;
       state.daily.lastDate = today;
 
-      if (rew.type === 'coins') state.coins += rew.val;
-      else if (rew.type === 'regular_case') state.regularCases++;
-      else if (rew.type === 'luck') state.luckLvl++;
+      rew.action();
 
-      saveState(); updateHeader(); renderDailyUI();
+      saveState(); updateHeader(); renderDailyUI(); updateTasksUI();
       alert(`🎉 Вы получили бонус: ${rew.label}!`);
+    }
+
+    // CASE OPENING ANIMATIONS
+    function openRegularCase() {
+      if ((state.regularCases || 0) <= 0) { alert("У вас нет обычных кейсов!"); return; }
+      state.regularCases--;
+      updateTasksUI(); saveState();
+
+      const items = ["🚗 Toyota Camry 70", "10 000 🪙", "10 000 🪙", "10 000 🪙"];
+      startCaseSpinner("Обычный кейс", items, () => {
+        let isCamry = Math.random() < 0.1; // Маленький шанс на камри
+        if (isCamry) {
+          if (!state.ownedCars.includes(2)) state.ownedCars.push(2);
+          alert("🎉 ВАМ ВЫПАЛА TOYOTA CAMRY 70!");
+        } else {
+          state.coins += 10000;
+          alert("🪙 Вы выиграли 10 000 монет!");
+        }
+        saveState(); updateHeader();
+      });
+    }
+
+    function openSpecialCase() {
+      if ((state.specialCases || 0) <= 0) { alert("У вас нет особых кейсов!"); return; }
+      state.specialCases--;
+      updateTasksUI(); saveState();
+
+      const items = ["🚙 Tank 500", "2 000 000 🪙", "2 000 000 🪙"];
+      startCaseSpinner("Особый кейс", items, () => {
+        let isTank = Math.random() < 0.15; // Маленький шанс на танк
+        if (isTank) {
+          if (!state.ownedCars.includes(7)) state.ownedCars.push(7);
+          alert("🎉 ВАМ ВЫПАЛ TANK 500!");
+        } else {
+          state.coins += 2000000;
+          alert("🪙 Вы выиграли 2 000 000 монет!");
+        }
+        saveState(); updateHeader();
+      });
+    }
+
+    function startCaseSpinner(title, items, callback) {
+      const modal = document.getElementById('caseSpinnerModal');
+      const textEl = document.getElementById('spinnerText');
+      document.getElementById('caseSpinnerTitle').innerText = title;
+      modal.classList.add('active');
+
+      let speed = 50;
+      let count = 0;
+      let maxCount = 25;
+
+      let timer = setInterval(() => {
+        textEl.innerText = items[count % items.length];
+        count++;
+        if (count >= maxCount) {
+          clearInterval(timer);
+          modal.classList.remove('active');
+          callback();
+        }
+      }, speed);
+    }
+
+    // MARKET & BUYERS WITH PERSONALITIES
+    const BUYER_TYPES = [
+      { type: "Хамло", phrases: ["Слышь, отдай дешевле или вали!", "Кому твое ведро нужно?", "Цена конская, давай скидку!"], discountRange: [0.5, 0.7] },
+      { type: "Наглый", phrases: ["Заберу прямо сейчас за копейки.", "Этих денег не стоит. Беру со скидкой."], discountRange: [0.6, 0.8] },
+      { type: "Злой", phrases: ["Ты с ума сшел такие цены ставить?", "Давай сбрасывай цену или забудь."], discountRange: [0.7, 0.85] },
+      { type: "Добряк", phrases: ["Хороший номер! Небольшую скидочку сделаешь?", "Привет! Беру, но можно чуть сбросить?"], discountRange: [0.85, 0.95] }
+    ];
+
+    function renderMarket() {
+      renderMyListings();
+      const list = document.getElementById('marketList');
+      if (!list) return;
+      list.innerHTML = '';
+      if (state.market.length === 0) {
+        list.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.8rem;">На рынке пока нет номеров</p>';
+        return;
+      }
+      state.market.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = 'market-item';
+        div.innerHTML = `
+          <div>
+            <div class="plate-item-mini" style="display:inline-block; margin-bottom:2px;">${item.text}</div>
+            <div style="font-size:0.7rem; color:var(--text-sub);">Продавец: ${item.seller}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.8rem; font-weight:bold; color:var(--gold); margin-bottom:4px;">${item.price.toLocaleString()} 🪙</div>
+            <button class="btn-small" onclick="buyMarketPlate(${idx})">Купить</button>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function renderMyListings() {
+      const list = document.getElementById('myMarketOffersList');
+      if (!list) return;
+      list.innerHTML = '';
+
+      if (!state.myListings || state.myListings.length === 0) {
+        list.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.75rem;">Вы еще не выставили номера на продажу</p>';
+        return;
+      }
+
+      state.myListings.forEach((item, idx) => {
+        if (!item.buyerOffer) {
+          const b = BUYER_TYPES[Math.floor(Math.random() * BUYER_TYPES.length)];
+          const phrase = b.phrases[Math.floor(Math.random() * b.phrases.length)];
+          const disc = b.discountRange[0] + Math.random() * (b.discountRange[1] - b.discountRange[0]);
+          const offerPrice = Math.round(item.price * disc);
+
+          item.buyerOffer = { name: `${b.type}`, phrase: phrase, offerPrice: offerPrice };
+        }
+
+        const div = document.createElement('div');
+        div.className = 'buyer-card';
+        div.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <b style="color:var(--gold);">${item.text}</b>
+            <span style="font-size:0.7rem; color:var(--text-sub);">Ваша цена: ${item.price.toLocaleString()} 🪙</span>
+          </div>
+          <div style="font-size:0.75rem; color:#FFF; margin-bottom:4px;"><b>${item.buyerOffer.name}:</b> "${item.buyerOffer.phrase}"</div>
+          <div style="font-size:0.75rem; color:var(--green); font-weight:bold; margin-bottom:8px;">Предложение: ${item.buyerOffer.offerPrice.toLocaleString()} 🪙</div>
+          <div style="display:flex; gap:4px;">
+            <button class="btn-small" style="flex:1; background:rgba(34,197,94,0.2); color:var(--green);" onclick="acceptBuyerOffer(${idx}, true)">🤝 Поторговаться (${item.buyerOffer.offerPrice.toLocaleString()} 🪙)</button>
+            <button class="btn-small" style="flex:1;" onclick="acceptBuyerOffer(${idx}, false)">💰 За полную (${item.price.toLocaleString()} 🪙)</button>
+            <button class="btn-small" style="background:rgba(231,76,60,0.2); color:var(--red);" onclick="rejectBuyerOffer(${idx})">❌</button>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function acceptBuyerOffer(idx, isDiscount) {
+      const item = state.myListings[idx];
+      const finalPrice = isDiscount ? item.buyerOffer.offerPrice : item.price;
+      state.coins += finalPrice;
+      state.myListings.splice(idx, 1);
+      saveState(); updateHeader(); renderMarket();
+      alert(`🎉 Вы продали номер ${item.text} за ${finalPrice.toLocaleString()} 🪙!`);
+    }
+
+    function rejectBuyerOffer(idx) {
+      state.myListings[idx].buyerOffer = null; // Сброс покупателя
+      renderMarket();
+    }
+
+    function openSellModal() {
+      const select = document.getElementById('plateToSellSelect');
+      select.innerHTML = '';
+      if (state.ownedPlates.length === 0) {
+        select.innerHTML = '<option value="">Нет доступных номеров</option>';
+        document.getElementById('priceLimitHint').innerText = "Нет номеров";
+      } else {
+        state.ownedPlates.forEach((plate, idx) => {
+          select.innerHTML += `<option value="${idx}">${plate.text} (${plate.rarityName})</option>`;
+        });
+        updatePriceLimitHint();
+      }
+      select.onchange = updatePriceLimitHint;
+      document.getElementById('sellModal').classList.add('active');
+    }
+
+    function updatePriceLimitHint() {
+      const select = document.getElementById('plateToSellSelect');
+      if (!select.value && select.value !== "0") return;
+      const plate = state.ownedPlates[parseInt(select.value)];
+      if (plate) {
+        const lim = RARITY_LIMITS[plate.rarity || 'white'];
+        document.getElementById('priceLimitHint').innerText = `Категория: ${lim.name} | Макс. цена: ${lim.max.toLocaleString()} 🪙`;
+      }
+    }
+
+    function closeSellModal() { document.getElementById('sellModal').classList.remove('active'); }
+
+    function confirmSellPlate() {
+      const select = document.getElementById('plateToSellSelect');
+      if (select.value === "") return;
+      const idx = parseInt(select.value);
+      const price = parseInt(document.getElementById('sellPriceInput').value);
+
+      if (state.ownedPlates.length <= idx) return;
+      const plate = state.ownedPlates[idx];
+      const lim = RARITY_LIMITS[plate.rarity || 'white'];
+
+      if (isNaN(price) || price <= 0) { alert("Укажите корректную цену!"); return; }
+      if (price > lim.max) {
+        alert(`❌ Нельзя продавать ${lim.name} номер дороже ${lim.max.toLocaleString()} 🪙!`);
+        return;
+      }
+
+      state.ownedPlates.splice(idx, 1);
+      if (!state.myListings) state.myListings = [];
+      state.myListings.push({ id: plate.id, text: plate.text, price: price, rarity: plate.rarity });
+
+      closeSellModal(); saveState(); renderMarket(); renderGarage();
+      alert("Номер выставлен! Ожидайте покупателей во вкладке рынка.");
+    }
+
+    function buyMarketPlate(idx) {
+      const item = state.market[idx];
+      if (state.coins < item.price) { alert("Недостаточно монет!"); return; }
+      state.coins -= item.price;
+      state.ownedPlates.push({ id: item.id, text: item.text, rarity: item.rarity, rarityName: RARITY_LIMITS[item.rarity].name, color: RARITY_LIMITS[item.rarity].color, value: item.price });
+      state.market.splice(idx, 1);
+      saveState(); updateHeader(); renderMarket();
+      alert("Вы успешно купили номер!");
     }
 
     // TASKS SYSTEM
@@ -1008,68 +1262,6 @@
       if (key === 'spin20') { state.coins += 10000; addPassXp(50); }
       saveState(); updateHeader(); renderTasksUI();
       alert("Награда за задание получена!");
-    }
-
-    // MARKET SYSTEM
-    function renderMarket() {
-      const list = document.getElementById('marketList');
-      if (!list) return;
-      list.innerHTML = '';
-      if (state.market.length === 0) {
-        list.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.8rem;">На рынке пока нет номеров</p>';
-        return;
-      }
-      state.market.forEach((item, idx) => {
-        const div = document.createElement('div');
-        div.className = 'market-item';
-        div.innerHTML = `
-          <div>
-            <div class="plate-item-mini" style="display:inline-block; margin-bottom:2px;">${item.text}</div>
-            <div style="font-size:0.7rem; color:var(--text-sub);">Продавец: ${item.seller}</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:0.8rem; font-weight:bold; color:var(--gold); margin-bottom:4px;">${item.price.toLocaleString()} 🪙</div>
-            <button class="btn-small" onclick="buyMarketPlate(${idx})">Купить</button>
-          </div>
-        `;
-        list.appendChild(div);
-      });
-    }
-
-    function openSellModal() {
-      const select = document.getElementById('plateToSellSelect');
-      select.innerHTML = '';
-      if (state.ownedPlates.length === 0) {
-        select.innerHTML = '<option>Нет доступных номеров</option>';
-      } else {
-        state.ownedPlates.forEach((plate, idx) => {
-          select.innerHTML += `<option value="${idx}">${plate.text} (${plate.rarityName})</option>`;
-        });
-      }
-      document.getElementById('sellModal').classList.add('active');
-    }
-    function closeSellModal() { document.getElementById('sellModal').classList.remove('active'); }
-
-    function confirmSellPlate() {
-      const idx = parseInt(document.getElementById('plateToSellSelect').value);
-      const price = parseInt(document.getElementById('sellPriceInput').value);
-      if (isNaN(price) || price <= 0) { alert("Укажите корректную цену!"); return; }
-      if (state.ownedPlates.length <= idx) return;
-
-      const plate = state.ownedPlates.splice(idx, 1)[0];
-      state.market.push({ id: plate.id, text: plate.text, price: price, seller: "Вы" });
-      closeSellModal(); saveState(); renderMarket(); renderGarage();
-      alert("Номер успешно выставлен на авторынок!");
-    }
-
-    function buyMarketPlate(idx) {
-      const item = state.market[idx];
-      if (state.coins < item.price) { alert("Недостаточно монет!"); return; }
-      state.coins -= item.price;
-      state.ownedPlates.push({ id: item.id, text: item.text, rarity: 'green', rarityName: 'Редкий', color: '#22C55E', value: item.price });
-      state.market.splice(idx, 1);
-      saveState(); updateHeader(); renderMarket();
-      alert("Вы успешно купили номер!");
     }
 
     // SPIN
