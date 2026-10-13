@@ -131,7 +131,7 @@
       outline: none;
     }
 
-    /* Compact Menu Nav Bar */
+    /* Menu Nav Bar */
     nav {
       display: flex;
       background: var(--card-bg);
@@ -140,9 +140,7 @@
       scrollbar-width: none;
     }
 
-    nav::-webkit-scrollbar {
-      display: none;
-    }
+    nav::-webkit-scrollbar { display: none; }
 
     .nav-btn {
       flex: 0 0 auto;
@@ -168,7 +166,7 @@
       background: rgba(59, 130, 246, 0.08);
     }
 
-    /* Content Screens */
+    /* Screens */
     .screen {
       flex: 1;
       display: none;
@@ -177,9 +175,7 @@
       overflow-y: auto;
     }
 
-    .screen.active {
-      display: flex;
-    }
+    .screen.active { display: flex; }
 
     /* SPIN SCREEN */
     .plate-display-area {
@@ -217,19 +213,8 @@
       min-width: 36px;
     }
 
-    .flag-icon {
-      width: 22px;
-      height: 13px;
-      position: relative;
-      border-radius: 1px;
-    }
-
-    .country-code {
-      font-size: 10px;
-      font-weight: bold;
-      color: #000;
-      margin-top: 2px;
-    }
+    .flag-icon { width: 22px; height: 13px; position: relative; border-radius: 1px; }
+    .country-code { font-size: 10px; font-weight: bold; color: #000; margin-top: 2px; }
 
     .plate-number-text {
       font-family: 'Courier New', Courier, monospace;
@@ -241,17 +226,11 @@
       text-align: center;
     }
 
-    /* Rarity Glows */
-    .plate-card.rarity-white { border-color: #E2E8F0; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
-    .plate-card.rarity-green { border-color: #22C55E; box-shadow: 0 0 25px rgba(34,197,94,0.5); }
-    .plate-card.rarity-blue { border-color: #3B82F6; box-shadow: 0 0 25px rgba(59,130,246,0.5); }
-    .plate-card.rarity-purple { border-color: #A855F7; box-shadow: 0 0 30px rgba(168,85,247,0.6); }
-    .plate-card.rarity-yellow { border-color: #EAB308; box-shadow: 0 0 40px rgba(234,179,8,0.8); animation: pulseGlow 1.5s infinite alternate; }
-
-    @keyframes pulseGlow {
-      from { box-shadow: 0 0 20px rgba(234,179,8,0.6); }
-      to { box-shadow: 0 0 45px rgba(234,179,8,1); }
-    }
+    .plate-card.rarity-white { border-color: #E2E8F0; }
+    .plate-card.rarity-green { border-color: #22C55E; }
+    .plate-card.rarity-blue { border-color: #3B82F6; }
+    .plate-card.rarity-purple { border-color: #A855F7; }
+    .plate-card.rarity-yellow { border-color: #EAB308; }
 
     .drop-info { text-align: center; min-height: 45px; }
     .drop-rarity-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 2px; }
@@ -272,10 +251,8 @@
       align-items: center;
       gap: 8px;
     }
-
     .main-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 
-    /* LUCK UPGRADE */
     .luck-box {
       background: var(--card-bg);
       padding: 10px 12px;
@@ -311,12 +288,13 @@
       margin-bottom: 12px;
     }
 
-    .car-canvas-container { width: 100%; height: 160px; display: flex; justify-content: center; align-items: center; }
-    canvas#carCanvas { width: 100%; height: 100%; background: radial-gradient(circle, #2a2d42 0%, #181a26 100%); border-radius: 10px; }
+    .car-canvas-container { width: 100%; height: 160px; display: flex; justify-content: center; align-items: center; position: relative; }
+    canvas#carCanvas { width: 100%; height: 100%; background: radial-gradient(circle, #2a2d42 0%, #181a26 100%); border-radius: 10px; cursor: grab; }
+    canvas#carCanvas:active { cursor: grabbing; }
 
     .carousel-nav-btn {
       position: absolute; top: 50%; transform: translateY(-50%);
-      background: rgba(0,0,0,0.5); color: white; border: none;
+      background: rgba(0,0,0,0.6); color: white; border: none;
       width: 32px; height: 32px; border-radius: 50%; font-weight: bold; cursor: pointer; z-index: 5;
     }
     .carousel-nav-btn.prev { left: 8px; }
@@ -329,14 +307,22 @@
     }
     .plate-item-mini { font-family: monospace; font-weight: bold; font-size: 0.85rem; padding: 3px 6px; background: #FFF; color: #000; border-radius: 4px; }
 
-    /* SECTION CARD */
+    /* SECTION CARD & SHOP */
     .section-card {
       background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05);
     }
     .section-card h3 { font-size: 0.95rem; color: var(--gold); margin-bottom: 4px; }
     .section-card p { font-size: 0.8rem; color: var(--text-sub); margin-bottom: 10px; }
 
-    /* AUCTION CONTAINER STYLES */
+    .car-shop-item {
+      background: var(--card-bg); border-radius: 12px; padding: 10px 14px;
+      display: flex; align-items: center; justify-content: space-between;
+      border: 1px solid rgba(255,255,255,0.05); margin-bottom: 8px;
+    }
+    .car-shop-info h4 { font-size: 0.9rem; }
+    .car-shop-info p { font-size: 0.75rem; color: var(--gold); font-weight: bold; margin-top: 2px; }
+
+    /* AUCTION CONTAINER */
     .auction-container {
       background: linear-gradient(135deg, #1e1b4b, #311042);
       border: 1px solid rgba(168,85,247,0.4);
@@ -345,9 +331,7 @@
       text-align: center;
       margin-bottom: 10px;
     }
-
     .auction-timer { font-size: 1.3rem; font-weight: bold; color: var(--gold); margin: 6px 0; }
-
     .bids-history-box {
       background: rgba(0,0,0,0.4); border-radius: 8px; padding: 6px;
       max-height: 100px; overflow-y: auto; font-size: 0.75rem;
@@ -369,6 +353,7 @@
     .pass-level-badge { width: 30px; height: 30px; background: var(--accent-color); color: white; font-weight: bold; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; flex-shrink: 0; }
     .pass-rewards-grid { display: flex; flex-direction: column; gap: 3px; flex: 1; }
     .pass-reward-box { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 3px 6px; border-radius: 4px; font-size: 0.7rem; }
+    .pass-reward-box.premium { border: 1px solid rgba(255,215,0,0.3); background: rgba(255,215,0,0.05); }
 
     /* CRAFT UI */
     .craft-slots { display: flex; justify-content: space-around; gap: 6px; margin: 10px 0; }
@@ -407,9 +392,9 @@
       </div>
       <div class="header-actions">
         <select id="countrySelect" class="country-select" onchange="changeCountry()">
-          <option value="kz">🇰🇿</option>
-          <option value="ru">🇷🇺</option>
-          <option value="ua">🇺🇦</option>
+          <option value="kz">🇰🇿 KZ</option>
+          <option value="ru">🇷🇺 RU</option>
+          <option value="ua">🇺🇦 UA</option>
         </select>
         <button class="reset-btn" onclick="resetGame()">🔄</button>
         <button class="donate-btn" onclick="openStarsModal()">⭐ Донат</button>
@@ -475,15 +460,15 @@
           <canvas id="carCanvas" width="360" height="160"></canvas>
         </div>
 
-        <div style="text-align:center; width:100%;">
+        <div style="text-align:center; width:100%; margin-top:6px;">
           <div id="carTitle" style="font-weight:bold; font-size:1rem;">Жигули (2106)</div>
           <div id="carType" style="font-size:0.7rem; color:var(--text-sub);">Бензиновый</div>
           <div id="equippedPlateInfo" style="font-size:0.75rem; margin-top:2px;">Номер: Не установлен</div>
-          <div id="carSellSection" style="margin-top: 6px;"></div>
+          <div id="carSellSection" style="margin-top: 8px;"></div>
         </div>
       </div>
 
-      <div style="font-size:0.85rem; color:var(--text-sub); margin-bottom:6px;">Коллекция номеров:</div>
+      <div style="font-size:0.85rem; color:var(--text-sub); margin-bottom:6px;">Коллекция номеров (нажмите, чтобы надеть):</div>
       <div id="platesGrid" class="plates-grid"></div>
     </div>
 
@@ -491,7 +476,7 @@
     <div id="craftScreen" class="screen">
       <div class="section-card">
         <h3>🔨 Мастерская крафта</h3>
-        <p>Скрещивайте 3 номера одинаковой категории, чтобы выбить категорию выше!</p>
+        <p>Скрещивайте 3 номера одинаковой категории для получения следующей категории!</p>
         
         <select id="craftTypeSelect" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:8px; font-size:0.8rem;" onchange="updateCraftSlotsUI()">
           <option value="white">3 Обычных ➔ Редкий (70%)</option>
@@ -527,7 +512,7 @@
         </div>
 
         <div class="bids-history-box" id="bidsHistoryBox">
-          <div><span style="color:var(--text-sub);">Аукцион открывается каждые 20 минут часа!</span></div>
+          <div><span style="color:var(--text-sub);">Аукцион проходит каждые 20 минут каждого часа!</span></div>
         </div>
 
         <button id="placeBidBtn" class="main-btn" style="width:100%; padding:10px;" disabled onclick="placeAuctionBid()">Перебить ставку (+20 000 🪙)</button>
@@ -537,7 +522,7 @@
         <h3>ℹ️ Что внутри контейнера?</h3>
         <p style="font-size:0.75rem; line-height:1.4;">
           • 🏎️ Эксклюзивный гиперкар <b>Bugatti Chiron</b><br>
-          • 📦 <b>Особый кейс</b> (Внутри Bugatti или 2M монет)<br>
+          • 📦 <b>Особый кейс</b> (Bugatti или 2M монет)<br>
           • 👑 <b>Супер-легендарный номер</b> выбранного региона<br>
           • 🪙 200 000 монет
         </p>
@@ -566,6 +551,10 @@
 
     <!-- SHOP SCREEN -->
     <div id="shopScreen" class="screen">
+      <div class="section-card" style="margin-bottom:8px;">
+        <h3>🏬 Автосалон</h3>
+        <p>Покупайте новые машины за монеты!</p>
+      </div>
       <div id="shopList" style="display:flex; flex-direction:column; gap:8px;"></div>
     </div>
 
@@ -585,7 +574,7 @@
 
       <div class="section-card">
         <h3>📦 Обычный кейс</h3>
-        <p>Содержит от 10 000 монет до Toyota Camry 70!</p>
+        <p>Содержит монеты или Toyota Camry 70!</p>
         <button id="openRegularCaseBtn" class="main-btn" style="width:100%; padding:10px; background:linear-gradient(135deg, #22c55e, #3b82f6);" onclick="openRegularCase()">Открыть обычный кейс (<span id="regularCasesCount">0</span>)</button>
       </div>
     </div>
@@ -612,7 +601,7 @@
     <div id="marketScreen" class="screen">
       <div class="section-card">
         <h3>💬 Авторынок номеров</h3>
-        <button id="sellPlateBtn" class="main-btn" style="width:100%; padding:8px; font-size:0.85rem;" onclick="openSellModal()">🏷️ Выставить номер на продажу</button>
+        <p>Выставляйте и продавайте свои номера.</p>
       </div>
     </div>
 
@@ -620,18 +609,7 @@
     <div id="tasksScreen" class="screen">
       <div class="section-card">
         <h3>🏆 Задания</h3>
-        <p>Выполняйте задания для прокачки Пасса!</p>
-      </div>
-    </div>
-
-    <!-- SELL MODAL -->
-    <div id="sellModal" class="modal-overlay">
-      <div class="modal-card">
-        <h2>Продажа номера</h2>
-        <select id="plateToSellSelect" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:8px;"></select>
-        <input type="number" id="sellPriceInput" placeholder="Цена в монетах" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:12px; text-align:center;">
-        <button class="main-btn" style="width:100%; padding:8px; margin-bottom:6px;" onclick="confirmStartSelling()">Выставить</button>
-        <button class="btn-small" style="width:100%;" onclick="closeSellModal()">Отмена</button>
+        <p>Крутите номера и выполняйте задания!</p>
       </div>
     </div>
 
@@ -706,12 +684,8 @@
       ownedPlates: [],
       specialCases: 0,
       regularCases: 0,
-      prestigeLvl: 0,
       country: 'kz',
-      daily: { claimedDays: 0, lastClaimDate: null },
-      club: { name: null, rareCases: 0 },
       pass: { level: 1, xp: 0, isPremium: false, claimedFree: [], claimedPremium: [] },
-      craftSlots: [null, null, null],
       auction: { highestBid: 50000, highestBidder: 'Никто', isActive: false, warned: false },
       isSpinning: false
     };
@@ -730,11 +704,24 @@
       { id: 10, name: "Bugatti Chiron", price: 0, type: "Exclusive", color: "#003366" }
     ];
 
+    const PASS_REWARDS = {
+      1:  { free: { type: 'coins', val: 500 },  prem: { type: 'coins', val: 2000 } },
+      2:  { free: { type: 'xp', val: 50 },      prem: { type: 'coins', val: 5000 } },
+      3:  { free: { type: 'coins', val: 1000 }, prem: { type: 'coins', val: 10000 } },
+      4:  { free: { type: 'regular_case', val: 1 }, prem: { type: 'regular_case', val: 2 } },
+      5:  { free: { type: 'regular_case', val: 1 }, prem: { type: 'coins', val: 20000 } },
+      6:  { free: { type: 'coins', val: 1500 }, prem: { type: 'coins', val: 25000 } },
+      7:  { free: { type: 'coins', val: 2000 }, prem: { type: 'regular_case', val: 2 } },
+      8:  { free: { type: 'coins', val: 2500 }, prem: { type: 'luck', val: 1 } },
+      9:  { free: { type: 'xp', val: 100 },     prem: { type: 'coins', val: 30000 } },
+      10: { free: { type: 'regular_case', val: 1 }, prem: { type: 'special_case', val: 1 } }
+    };
+
     const saved = localStorage.getItem('kruti_nomera_state');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        state = { ...state, ...parsed };
+        state = { ...state, ...parsed, pass: { ...state.pass, ...(parsed.pass || {}) } };
       } catch(e){}
     }
 
@@ -768,7 +755,7 @@
       if (auctionC) auctionC.innerText = state.country.toUpperCase();
 
       if (state.country === 'kz') {
-        flagEl.style.background = '#00AFCA'; flagEl.innerHTML = '☀️'; codeEl.innerText = 'KZ';
+        flagEl.style.background = '#00AFCA'; flagEl.innerHTML = ''; codeEl.innerText = 'KZ';
       } else if (state.country === 'ru') {
         flagEl.style.background = 'linear-gradient(to bottom, #fff 33%, #0039a6 33%, #0039a6 66%, #d52b1e 66%)'; flagEl.innerHTML = ''; codeEl.innerText = 'RU';
       } else if (state.country === 'ua') {
@@ -776,90 +763,292 @@
       }
     }
 
-    // 20-MINUTE SCHEDULED AUCTION TIMER
+    // CAROUSEL & 3D ROTATION CANVAS
+    let carAngle = 0; let isDragging = false; let startX = 0;
+    function initGarageCanvas() {
+      const canvas = document.getElementById('carCanvas'); if (!canvas) return;
+      canvas.addEventListener('mousedown', (e) => { isDragging = true; startX = e.clientX; });
+      window.addEventListener('mouseup', () => { isDragging = false; });
+      window.addEventListener('mousemove', (e) => { if (!isDragging) return; carAngle += (e.clientX - startX) * 0.02; startX = e.clientX; drawGarageCar(); });
+      canvas.addEventListener('touchstart', (e) => { isDragging = true; startX = e.touches[0].clientX; });
+      window.addEventListener('touchend', () => { isDragging = false; });
+      window.addEventListener('touchmove', (e) => { if (!isDragging) return; carAngle += (e.touches[0].clientX - startX) * 0.02; startX = e.touches[0].clientX; drawGarageCar(); });
+    }
+
+    function drawGarageCar() {
+      const canvas = document.getElementById('carCanvas'); if (!canvas) return;
+      const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (state.ownedCars.length === 0) return;
+
+      const carId = state.ownedCars[state.selectedCarIdx];
+      const carData = CARS_DATA[carId];
+      const equippedPlate = state.equippedPlates[carId];
+
+      ctx.save(); ctx.translate(canvas.width / 2, canvas.height / 2 + 10);
+      let cos = Math.cos(carAngle);
+
+      ctx.fillStyle = "rgba(0,0,0,0.4)"; ctx.beginPath(); ctx.ellipse(0, 40, 90 * Math.abs(cos) + 40, 14, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = carData.color; ctx.strokeStyle = "#000"; ctx.lineWidth = 3;
+      let width = 130 * Math.abs(cos) + 30; let height = 40;
+      ctx.beginPath(); ctx.roundRect(-width/2, -height/2, width, height, 6); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "#111"; ctx.beginPath(); ctx.roundRect(-width/3, -height/2 - 22, width/1.5, 26, 4); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "#222"; ctx.beginPath(); ctx.arc(-width/3, 20, 14, 0, Math.PI * 2); ctx.arc(width/3, 20, 14, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+      if (equippedPlate) {
+        ctx.fillStyle = "#FFF"; ctx.strokeStyle = "#000"; ctx.lineWidth = 1;
+        let plateW = 46 * Math.abs(cos) + 12; let plateH = 12; ctx.fillRect(-plateW/2, 6, plateW, plateH); ctx.strokeRect(-plateW/2, 6, plateW, plateH);
+        ctx.fillStyle = "#000"; ctx.font = "bold 7px monospace"; ctx.textAlign = "center"; ctx.fillText(equippedPlate.text, 0, 14);
+      }
+      ctx.restore();
+    }
+
+    function renderGarage() {
+      if (state.ownedCars.length === 0) return;
+      if (state.selectedCarIdx >= state.ownedCars.length) state.selectedCarIdx = 0;
+      const carId = state.ownedCars[state.selectedCarIdx];
+      const carData = CARS_DATA[carId];
+      const equippedPlate = state.equippedPlates[carId];
+
+      document.getElementById('carTitle').innerText = carData.name;
+      document.getElementById('carType').innerText = carData.type === 'Electric' ? '⚡ Электрокар' : carData.type === 'Exclusive' ? '👑 Эксклюзив' : '⛽ Бензиновый';
+      document.getElementById('equippedPlateInfo').innerText = equippedPlate ? `Номер: ${equippedPlate.text}` : "Номер: Не установлен";
+
+      drawGarageCar();
+      renderCarSellButton(carId, carData);
+
+      const grid = document.getElementById('platesGrid'); grid.innerHTML = '';
+      if (state.ownedPlates.length === 0) {
+        grid.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.8rem;">У вас пока нет номеров</p>';
+      } else {
+        state.ownedPlates.forEach((plate, index) => {
+          const item = document.createElement('div');
+          const isEquipped = equippedPlate && equippedPlate.id === plate.id;
+          item.className = `plate-item ${isEquipped ? 'equipped' : ''}`;
+          item.innerHTML = `<div style="display:flex; align-items:center; gap:8px; cursor:pointer; flex:1;" onclick="equipPlate(${index})"><div class="plate-item-mini">${plate.text}</div><div><div style="font-size:0.7rem; color:${plate.color}">${plate.rarityName}</div><div style="font-size:0.6rem; color:var(--text-sub);">${isEquipped ? 'На авто ✓' : 'Надеть'}</div></div></div>`;
+          grid.appendChild(item);
+        });
+      }
+    }
+
+    function renderCarSellButton(carId, carData) {
+      const container = document.getElementById('carSellSection');
+      if (!container) return;
+      container.innerHTML = '';
+      if (carId === 0) return; // Жигули нельзя продать
+
+      if (carId === 10) {
+        container.innerHTML = `<button class="btn-small" style="background:rgba(168,85,247,0.2); color:var(--purple); border-color:var(--purple); width:100%;" onclick="openBugattiSellModal()">🏷️ Продать Bugatti (до 5M 🪙)</button>`;
+      } else {
+        let halfPrice = Math.round(carData.price / 2);
+        container.innerHTML = `<button class="btn-small" style="background:rgba(231,76,60,0.2); color:var(--red); border-color:var(--red); width:100%;" onclick="sellRegularCar(${carId}, ${halfPrice})">🏷️ Продать за ${halfPrice.toLocaleString()} 🪙 (50%)</button>`;
+      }
+    }
+
+    function sellRegularCar(carId, price) {
+      if (confirm(`Продать машину за ${price.toLocaleString()} 🪙 (50% от стоимости)?`)) {
+        state.coins += price;
+        state.ownedCars = state.ownedCars.filter(id => id !== carId);
+        delete state.equippedPlates[carId];
+        state.selectedCarIdx = 0;
+        saveState(); updateHeader(); renderGarage();
+      }
+    }
+
+    function openBugattiSellModal() { document.getElementById('bugattiSellModal').classList.add('active'); }
+    function closeBugattiSellModal() { document.getElementById('bugattiSellModal').classList.remove('active'); }
+    function confirmSellBugatti() {
+      const price = parseInt(document.getElementById('bugattiPriceInput').value);
+      if (isNaN(price) || price <= 0 || price > 5000000) { alert("Укажите цену не более 5 000 000 🪙!"); return; }
+      state.coins += price;
+      state.ownedCars = state.ownedCars.filter(id => id !== 10);
+      delete state.equippedPlates[10];
+      state.selectedCarIdx = 0;
+      closeBugattiSellModal();
+      saveState(); updateHeader(); renderGarage();
+      alert(`Bugatti успешно продана за ${price.toLocaleString()} 🪙!`);
+    }
+
+    function prevCar() { if (state.selectedCarIdx > 0) { state.selectedCarIdx--; renderGarage(); } }
+    function nextCar() { if (state.selectedCarIdx < state.ownedCars.length - 1) { state.selectedCarIdx++; renderGarage(); } }
+
+    function equipPlate(idx) {
+      state.equippedPlates[state.ownedCars[state.selectedCarIdx]] = state.ownedPlates[idx];
+      saveState(); renderGarage();
+    }
+
+    // SHOP SYSTEM
+    function renderShop() {
+      const shopList = document.getElementById('shopList'); shopList.innerHTML = '';
+      CARS_DATA.forEach(car => {
+        if (car.type === 'Exclusive') return;
+        const isOwned = state.ownedCars.includes(car.id);
+        const item = document.createElement('div');
+        item.className = 'car-shop-item';
+        item.innerHTML = `
+          <div class="car-shop-info">
+            <h4>${car.name}</h4>
+            <p>${car.price.toLocaleString()} 🪙</p>
+          </div>
+          <button class="btn-small" ${isOwned || state.coins < car.price ? 'disabled' : ''} onclick="buyCar(${car.id})">${isOwned ? 'Куплено' : 'Купить'}</button>
+        `;
+        shopList.appendChild(item);
+      });
+    }
+
+    function buyCar(id) {
+      const car = CARS_DATA[id];
+      if (state.coins >= car.price && !state.ownedCars.includes(id)) {
+        state.coins -= car.price;
+        state.ownedCars.push(id);
+        saveState(); updateHeader(); renderShop();
+      }
+    }
+
+    // PASS SYSTEM
+    function renderPassUI() {
+      document.getElementById('passLvlBadge').innerText = `Ур. ${state.pass.level}`;
+      let req = state.pass.level * 50;
+      document.getElementById('passXpText').innerText = `XP: ${state.pass.xp} / ${req}`;
+      document.getElementById('passProgressBar').style.width = `${Math.min(100, Math.floor((state.pass.xp / req) * 100))}%`;
+
+      const buyBtn = document.getElementById('buyPremiumPassBtn');
+      buyBtn.innerText = state.pass.isPremium ? "Premium Активен ✓" : "Открыть Premium (⭐ 10)";
+      buyBtn.disabled = state.pass.isPremium;
+
+      const container = document.getElementById('passLevelsList'); container.innerHTML = '';
+      for (let i = 1; i <= 10; i++) {
+        const rew = PASS_REWARDS[i];
+        if (!rew) continue;
+        const freeC = state.pass.claimedFree.includes(i);
+        const premC = state.pass.claimedPremium.includes(i);
+        const row = document.createElement('div'); row.className = 'pass-level-row';
+        row.innerHTML = `
+          <div class="pass-level-badge">${i}</div>
+          <div class="pass-rewards-grid">
+            <div class="pass-reward-box">
+              <span>🆓 ${getRewardText(rew.free)}</span>
+              <button class="btn-small" style="padding:2px 6px; font-size:0.65rem;" ${(state.pass.level < i || freeC) ? 'disabled' : ''} onclick="claimPassReward(${i}, false)">${freeC ? '✓' : 'Забрать'}</button>
+            </div>
+            <div class="pass-reward-box premium">
+              <span>🌟 ${getRewardText(rew.prem)}</span>
+              <button class="btn-small" style="padding:2px 6px; font-size:0.65rem;" ${(state.pass.level < i || !state.pass.isPremium || premC) ? 'disabled' : ''} onclick="claimPassReward(${i}, true)">${premC ? '✓' : 'Забрать'}</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(row);
+      }
+    }
+
+    function getRewardText(r) {
+      if (r.type === 'coins') return `${r.val.toLocaleString()} 🪙`;
+      if (r.type === 'xp') return `+${r.val} XP`;
+      if (r.type === 'regular_case') return `📦 Обычный кейс (${r.val})`;
+      if (r.type === 'special_case') return `📦 Особый кейс`;
+      if (r.type === 'luck') return `+${r.val} Удача`;
+      return 'Награда';
+    }
+
+    function claimPassReward(lvl, isPrem) {
+      const arr = isPrem ? state.pass.claimedPremium : state.pass.claimedFree;
+      if (arr.includes(lvl)) return;
+      arr.push(lvl);
+      const rew = isPrem ? PASS_REWARDS[lvl].prem : PASS_REWARDS[lvl].free;
+
+      if (rew.type === 'coins') state.coins += rew.val;
+      else if (rew.type === 'regular_case') state.regularCases = (state.regularCases || 0) + rew.val;
+      else if (rew.type === 'special_case') state.specialCases += rew.val;
+      else if (rew.type === 'luck') state.luckLvl += rew.val;
+
+      saveState(); updateHeader(); renderPassUI(); updateTasksUI();
+    }
+
+    function addPassXp(amount) {
+      if (state.pass.level >= 10) return;
+      state.pass.xp += amount;
+      let req = state.pass.level * 50;
+      if (state.pass.xp >= req) {
+        state.pass.xp -= req;
+        state.pass.level++;
+      }
+      saveState();
+    }
+
+    // SPIN
+    function performSpin() {
+      if (state.coins < 100 || state.isSpinning) return;
+      state.coins -= 100;
+      state.spins++;
+      state.isSpinning = true;
+      addPassXp(5);
+      updateHeader();
+
+      setTimeout(() => {
+        let val = 700 + Math.floor(Math.random() * 800);
+        state.coins += val;
+        state.ownedPlates.push({ id: Date.now(), text: generateRandomPlateText(), rarity: 'white', rarityName: 'Обычный', color: '#E2E8F0', value: val });
+        state.isSpinning = false;
+        saveState(); updateHeader();
+      }, 1000);
+    }
+
+    function generateRandomPlateText() {
+      const nums = Math.floor(100 + Math.random() * 900);
+      return `${nums} AAA 02`;
+    }
+
+    function upgradeLuck() {
+      const cost = 1000 * Math.pow(2, state.luckLvl);
+      if (state.coins >= cost) { state.coins -= cost; state.luckLvl++; saveState(); updateHeader(); }
+    }
+
+    // AUCTION TIMER & SCHEDULE
     function checkScheduledAuction() {
       const now = new Date();
       const minutes = now.getMinutes();
       const seconds = now.getSeconds();
-
-      const currentCycleMin = minutes % 20; // 0..19 min
+      const currentCycleMin = minutes % 20;
       const remMin = 19 - currentCycleMin;
       const remSec = 59 - seconds;
 
       const timerEl = document.getElementById('auctionTimer');
       const btnEl = document.getElementById('placeBidBtn');
 
-      // Warning at 15m (5 mins before start)
-      if (currentCycleMin === 15 && seconds === 0 && !state.auction.warned) {
-        state.auction.warned = true;
-        showModal("🔔 ВНИМАНИЕ!", "До начала Секретного Аукциона осталось 5 минут! Приготовьте свои монеты!");
-      }
-
-      // Active Auction window: 0 to 2 minutes of the cycle
       if (currentCycleMin < 2) {
         state.auction.isActive = true;
-        state.auction.warned = false;
-
         let activeRemSec = (1 - currentCycleMin) * 60 + remSec;
         if (timerEl) timerEl.innerText = `ИДЕТ АУКЦИОН! (00:${activeRemSec.toString().padStart(2, '0')})`;
         if (btnEl) btnEl.disabled = false;
-
-        // Bot bids simulation during active phase
-        if (Math.random() < 0.2) {
-          state.auction.highestBid += 20000;
-          state.auction.highestBidder = ["Арман", "Данияр", "Максат", "Баха", "Тимур"][Math.floor(Math.random()*5)];
-          document.getElementById('highestBidVal').innerText = `${state.auction.highestBid.toLocaleString()} 🪙`;
-          document.getElementById('highestBidderName').innerText = state.auction.highestBidder;
-        }
       } else {
-        // Countdown to next auction
-        if (state.auction.isActive) {
-          state.auction.isActive = false;
-          finishAuction();
-        }
+        if (state.auction.isActive) { state.auction.isActive = false; finishAuction(); }
         if (timerEl) timerEl.innerText = `До аукциона: ${remMin.toString().padStart(2, '0')}:${remSec.toString().padStart(2, '0')}`;
         if (btnEl) btnEl.disabled = true;
       }
     }
-
     setInterval(checkScheduledAuction, 1000);
 
     function placeAuctionBid() {
       if (!state.auction.isActive) return;
       let nextBid = state.auction.highestBid + 20000;
-      if (state.coins < nextBid) { alert("У вас недостаточно монет!"); return; }
+      if (state.coins < nextBid) { alert("Недостаточно монет!"); return; }
       state.coins -= nextBid;
       state.auction.highestBid = nextBid;
       state.auction.highestBidder = "Вы";
       document.getElementById('highestBidVal').innerText = `${nextBid.toLocaleString()} 🪙`;
       document.getElementById('highestBidderName').innerText = "Вы";
-      saveState();
-      updateHeader();
+      saveState(); updateHeader();
     }
 
     function finishAuction() {
       if (state.auction.highestBidder === "Вы") {
-        let rand = Math.random();
-        if (rand < 0.05 && !state.ownedCars.includes(10)) {
-          state.ownedCars.push(10);
-          showModal("АУКЦИОН ВЫИГРАН!", "🎉 В контейнере оказался Bugatti Chiron!");
-        } else if (rand < 0.25) {
-          state.specialCases++;
-          showModal("АУКЦИОН ВЫИГРАН!", "📦 Вы получили 1 Особый кейс!");
-        } else {
-          state.coins += 200000;
-          showModal("АУКЦИОН ВЫИГРАН!", "💰 Вы выиграли 200 000 монет!");
-        }
-      } else {
-        showModal("АУКЦИОН ЗАВЕРШЕН", `Победитель: ${state.auction.highestBidder}`);
+        state.coins += 200000;
+        alert("Вы выиграли аукцион и забрали 200 000 монет!");
       }
       state.auction.highestBid = 50000;
       state.auction.highestBidder = 'Никто';
-      saveState();
-      updateHeader();
+      saveState(); updateHeader();
     }
 
-    // DONATE VIA TELEGRAM STARS
+    // DONATE STARS
     function openStarsModal() { document.getElementById('starsModal').classList.add('active'); }
     function closeStarsModal() { document.getElementById('starsModal').classList.remove('active'); }
 
@@ -867,42 +1056,25 @@
       if (!tg) { alert("Откройте игру через Telegram!"); return; }
       try {
         const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/createInvoiceLink`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: title, description: description, payload: `stars_donate_${Date.now()}`,
-            provider_token: "", currency: "XTR", prices: [{ label: title, amount: amountStars }]
-          })
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, description, payload: `stars_${Date.now()}`, provider_token: "", currency: "XTR", prices: [{ label: title, amount: amountStars }] })
         });
         const data = await response.json();
         if (data.ok && data.result) {
           tg.openInvoice(data.result, function(status) {
             if (status === 'paid') {
               state.coins += rewardCoins;
-              saveState();
-              updateHeader();
-              closeStarsModal();
-              tg.showAlert(`⭐ Вам зачислено ${rewardCoins.toLocaleString()} монет!`);
+              saveState(); updateHeader(); closeStarsModal();
+              tg.showAlert(`⭐ Успешно! Зачислено ${rewardCoins.toLocaleString()} монет!`);
             }
           });
         }
-      } catch (err) { alert("Ошибка при оплате Звёздами"); }
+      } catch (err) { alert("Ошибка оплаты"); }
     }
 
-    function performSpin() {
-      if (state.coins < 100 || state.isSpinning) return;
-      state.coins -= 100;
-      state.spins++;
-      state.isSpinning = true;
-      updateHeader();
-
-      setTimeout(() => {
-        let val = 700 + Math.floor(Math.random() * 800);
-        state.coins += val;
-        state.isSpinning = false;
-        saveState();
-        updateHeader();
-      }, 1000);
+    function updateTasksUI() {
+      document.getElementById('specialCasesCount').innerText = state.specialCases || 0;
+      document.getElementById('regularCasesCount').innerText = state.regularCases || 0;
     }
 
     function switchTab(tab) {
@@ -914,17 +1086,14 @@
         document.querySelectorAll('.nav-btn')[idx].classList.add('active');
         document.getElementById(`${tab}Screen`).classList.add('active');
       }
+      if (tab === 'garage') renderGarage();
+      if (tab === 'shop') renderShop();
+      if (tab === 'pass') renderPassUI();
+      if (tab === 'cases') updateTasksUI();
     }
-
-    function showModal(title, desc) {
-      document.getElementById('modalTitle').innerText = title;
-      document.getElementById('modalDesc').innerText = desc;
-      document.getElementById('victoryModal').classList.add('active');
-    }
-
-    function closeModal() { document.getElementById('victoryModal').classList.remove('active'); }
 
     window.onload = () => {
+      initGarageCanvas();
       updateHeader();
     };
   </script>
