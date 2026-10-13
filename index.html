@@ -928,9 +928,9 @@
         <div class="progress-bar-bg">
           <div id="passProgressBar" class="progress-bar-fill"></div>
         </div>
-        <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-sub);">
+        <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-sub); align-items:center;">
           <span id="passXpText">XP: 0 / 50</span>
-          <button id="buyPremiumPassBtn" class="btn-small" onclick="buyPremiumPass()">Открыть Premium (10 🪙)</button>
+          <button id="buyPremiumPassBtn" class="btn-small" onclick="buyPremiumPass()">Открыть Premium (⭐ 10)</button>
         </div>
       </div>
 
@@ -1560,20 +1560,48 @@
       30: { free: { type: 'regular_case', val: 1 }, prem: { type: 'coins', val: 500000 } }
     };
 
-    function buyPremiumPass() {
+    async function buyPremiumPass() {
       soundFX.playClick();
       if (state.pass.isPremium) return;
-      if (state.coins < 10) {
-        alert("Вам не хватает 10 монет!");
+
+      if (!tg) {
+        alert("Пожалуйста, откройте игру через Telegram!");
         return;
       }
-      state.coins -= 10;
-      state.pass.isPremium = true;
-      soundFX.playCoins();
-      saveState();
-      updateHeader();
-      renderPassUI();
-      showModal("PREMIUM PASS", "🎉 Вы успешно активировали Premium ветку наград Пасса!");
+
+      try {
+        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/createInvoiceLink`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: 'Премиум Блатной Пасс ⭐ 10',
+            description: 'Разблокировка Премиум ветки наград в Блатном Пассе',
+            payload: `pass_premium_${Date.now()}`,
+            provider_token: "",
+            currency: "XTR",
+            prices: [{ label: 'Премиум Пасс', amount: 10 }]
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.ok && data.result) {
+          tg.openInvoice(data.result, function(status) {
+            if (status === 'paid') {
+              state.pass.isPremium = true;
+              soundFX.playWin('yellow');
+              saveState();
+              renderPassUI();
+              tg.showAlert("🎉 Премиум ветка Блатного Пасса успешно активирована!");
+            }
+          });
+        } else {
+          alert("Ошибка создания счета: " + (data.description || "Неизвестная ошибка"));
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Ошибка соединения с Telegram API");
+      }
     }
 
     function claimPassReward(lvl, isPrem) {
@@ -1651,7 +1679,7 @@
         buyBtn.innerText = "Premium Куплен ✓";
         buyBtn.disabled = true;
       } else {
-        buyBtn.innerText = "Купить Premium (10 🪙)";
+        buyBtn.innerText = "Открыть Premium (⭐ 10)";
         buyBtn.disabled = false;
       }
 
