@@ -1131,24 +1131,24 @@
       if (!list) return;
       list.innerHTML = '';
 
-      if (!state.myListings || state.myListings.length === 0) {
-        list.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.75rem;">Вы пока не выставили номера на продажу</p>';
+      // Фильтруем список, чтобы отображать только те объявления, где покупатель уже нашелся
+      const activeListings = (state.myListings || []).filter(item => item.status === 'chatting');
+
+      if (activeListings.length === 0) {
+        list.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.75rem;">Пока нет новых покупателей и сообщений</p>';
         return;
       }
 
       state.myListings.forEach((item, idx) => {
+        if (item.status !== 'chatting') return;
+
         const div = document.createElement('div');
         div.className = 'buyer-card';
 
-        let statusHtml = '';
-        if (item.status === 'searching') {
-          statusHtml = `<div style="font-size:0.75rem; color:var(--gold);">🔍 Ищем покупателя (до 3 мин)...</div>`;
-        } else if (item.status === 'chatting') {
-          statusHtml = `
-            <div style="font-size:0.75rem; color:var(--green); margin-bottom:6px;">Покупатель найден! (${item.buyer.name})</div>
-            <button class="main-btn" style="width:100%; padding:6px; font-size:0.8rem;" onclick="openChatModal(${idx})">💬 Открыть чат</button>
-          `;
-        }
+        const statusHtml = `
+          <div style="font-size:0.75rem; color:var(--green); margin-bottom:6px;">Новое сообщение! (${item.buyer.name})</div>
+          <button class="main-btn" style="width:100%; padding:6px; font-size:0.8rem;" onclick="openChatModal(${idx})">💬 Открыть чат</button>
+        `;
 
         div.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
@@ -1216,7 +1216,7 @@
       state.myListings.push(listing);
       closeSellModal(); saveState(); renderMarket(); renderGarage();
 
-      // Таймер поиска от 0 до 3 минут (180 секунд)
+      // Бесшумный таймер поиска покупателя от 0 до 3 минут (неожиданное появление)
       const searchTime = Math.floor(Math.random() * 180) * 1000;
       setTimeout(() => {
         const pers = BOT_PERSONALITIES[Math.floor(Math.random() * BOT_PERSONALITIES.length)];
