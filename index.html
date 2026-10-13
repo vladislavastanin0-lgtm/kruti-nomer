@@ -342,9 +342,6 @@
 
     .task-item { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.8rem; }
 
-    /* MARKET UI */
-    .market-item { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-
     /* CRAFT UI */
     .craft-slots { display: flex; justify-content: space-around; gap: 6px; margin: 10px 0; }
     .craft-slot { width: 75px; height: 45px; border: 2px dashed rgba(255,255,255,0.2); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 0.7rem; color: var(--text-sub); cursor: pointer; text-align: center; }
@@ -354,7 +351,32 @@
     .case-spinner-box {
       width: 100%; height: 80px; background: rgba(0,0,0,0.5); border: 2px solid var(--gold); border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin: 15px 0; position: relative;
     }
-    .spinner-item-text { font-size: 1.2rem; font-weight: bold; color: var(--gold); animation: pulse 0.1s infinite alternate; }
+    .spinner-item-text { font-size: 1.2rem; font-weight: bold; color: var(--gold); }
+
+    /* MARKET UI */
+    .buyer-card {
+      background: rgba(255,255,255,0.05); border-radius: 10px; padding: 10px; text-align: left; margin-bottom: 10px; border-left: 3px solid var(--accent-color);
+    }
+
+    /* CHAT UI */
+    .chat-container {
+      display: flex; flex-direction: column; height: 350px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;
+    }
+    .chat-messages {
+      flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
+    }
+    .chat-bubble {
+      max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.8rem; line-height: 1.3;
+    }
+    .chat-bubble.bot { background: rgba(255,255,255,0.1); align-self: flex-start; border-bottom-left-radius: 2px; }
+    .chat-bubble.user { background: var(--accent-color); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+
+    .chat-input-box {
+      display: flex; padding: 8px; background: rgba(0,0,0,0.4); gap: 6px; border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .chat-input {
+      flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px; color: white; font-size: 0.8rem; outline: none;
+    }
 
     /* MODAL */
     .modal-overlay {
@@ -370,10 +392,6 @@
 
     .stars-item {
       background: rgba(255,255,255,0.03); border: 1px solid rgba(255,215,0,0.2); border-radius: 10px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;
-    }
-
-    .buyer-card {
-      background: rgba(255,255,255,0.05); border-radius: 10px; padding: 10px; text-align: left; margin-bottom: 10px; border-left: 3px solid var(--accent-color);
     }
   </style>
 </head>
@@ -549,19 +567,14 @@
     <!-- MARKET SCREEN -->
     <div id="marketScreen" class="screen">
       <div class="section-card">
-        <h3>💬 Авторынок номеров</h3>
-        <p>Выставляйте свои номера на продажу. Покупатели свяжутся с вами!</p>
+        <h3>💬 Продажа номеров</h3>
+        <p>Выставляйте свои номера на продажу. Покупатели свяжутся с вами в чате!</p>
         <button class="main-btn" style="width:100%; padding:8px; font-size:0.85rem; margin-bottom:10px;" onclick="openSellModal()">🏷️ Выставить свой номер</button>
       </div>
 
       <div class="section-card">
-        <h3>📩 Предложения покупателей</h3>
-        <div id="myMarketOffersList"></div>
-      </div>
-
-      <div class="section-card">
-        <h3>🛒 Все номера на рынке</h3>
-        <div id="marketList"></div>
+        <h3>📩 Ваши объявления и чаты</h3>
+        <div id="myMarketListings"></div>
       </div>
     </div>
 
@@ -572,6 +585,38 @@
         <p>Выполняйте задания и получайте XP и монеты!</p>
       </div>
       <div id="tasksList"></div>
+    </div>
+
+    <!-- CHAT MODAL -->
+    <div id="chatModal" class="modal-overlay">
+      <div class="modal-card" style="max-width:380px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <h3 id="chatTitle" style="color:var(--gold); font-size:0.95rem;">Чат с покупателем</h3>
+          <button class="btn-small" onclick="closeChatModal()">✕</button>
+        </div>
+        
+        <div class="chat-container">
+          <div id="chatMessages" class="chat-messages"></div>
+          <div class="chat-input-box">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Напишите сообщение..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+            <button class="btn-small" onclick="sendChatMessage()">➔</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OVERPRICE WARNING MODAL -->
+    <div id="overpriceModal" class="modal-overlay">
+      <div class="modal-card">
+        <h2 style="color:var(--red);">⚠️ Предупреждение!</h2>
+        <p style="text-align:left; font-size:0.8rem; margin-bottom:15px; color:#FFF;">
+          Покупатель может отказаться в покупке ваших номеров, потомучто у вас стоит цена больше, чем указано.
+        </p>
+        <div style="display:flex; gap:8px;">
+          <button class="main-btn" style="flex:1; padding:8px; background:var(--red);" onclick="confirmOverpriceSend()">Всё равно отправить</button>
+          <button class="btn-small" style="flex:1;" onclick="closeOverpriceModal()">Отмена</button>
+        </div>
+      </div>
     </div>
 
     <!-- SELL MODAL -->
@@ -641,15 +686,6 @@
         <button class="btn-small" style="width:100%;" onclick="closeBugattiSellModal()">Отмена</button>
       </div>
     </div>
-
-    <!-- VICTORY MODAL -->
-    <div id="victoryModal" class="modal-overlay">
-      <div class="modal-card">
-        <h2 id="modalTitle">ПОЗДРАВЛЯЕМ!</h2>
-        <p id="modalDesc"></p>
-        <button class="main-btn" style="width:100%;" onclick="closeModal()">Отлично!</button>
-      </div>
-    </div>
   </div>
 
   <script>
@@ -658,7 +694,7 @@
 
     const BOT_TOKEN = "8977809186:AAF0fqobqVRQf8wbnwApirFl_dwSrHZvxPc";
 
-    // Ограничения цен по редкостям
+    // Лимиты цен
     const RARITY_LIMITS = {
       'white': { name: 'Обычный', max: 300, color: '#E2E8F0' },
       'green': { name: 'Редкий', max: 600, color: '#22C55E' },
@@ -667,6 +703,9 @@
       'yellow': { name: 'Легендарный', max: 7000, color: '#FFD700' },
       'red': { name: 'Супер-легендарный', max: 20000, color: '#E74C3C' }
     };
+
+    // Запрещенные слова
+    const BAD_WORDS = ["fuck", "shit", "bitch", "ass", "cunt", "мат", "сука", "блять", "хуй", "пизда", "ебать", "чмо", "гандон", "пидор"];
 
     let state = {
       coins: 2000,
@@ -686,11 +725,6 @@
         spin20: { progress: 0, max: 20, claimed: false }
       },
       myListings: [], // Выставленные пользователем номера
-      market: [
-        { id: 101, text: "777 WWW 02", price: 500, seller: "Арман", rarity: 'green' },
-        { id: 102, text: "001 KZ 01", price: 900, seller: "Данияр", rarity: 'blue' },
-        { id: 103, text: "555 VIP 05", price: 1800, seller: "Тимур", rarity: 'purple' }
-      ],
       isSpinning: false
     };
 
@@ -982,7 +1016,7 @@
       saveState();
     }
 
-    // DAILY BONUSES (7 Дней)
+    // DAILY BONUSES
     const DAILY_REWARDS_7 = [
       { day: 1, label: '1 000 🪙', action: () => state.coins += 1000 },
       { day: 2, label: '📦 Обычный кейс', action: () => state.regularCases++ },
@@ -1030,9 +1064,9 @@
       state.regularCases--;
       updateTasksUI(); saveState();
 
-      const items = ["🚗 Toyota Camry 70", "10 000 🪙", "10 000 🪙", "10 000 🪙"];
+      const items = ["🚗 Toyota Camry 70", "10 000 🪙", "10 000 🪙"];
       startCaseSpinner("Обычный кейс", items, () => {
-        let isCamry = Math.random() < 0.1; // Маленький шанс на камри
+        let isCamry = Math.random() < 0.1;
         if (isCamry) {
           if (!state.ownedCars.includes(2)) state.ownedCars.push(2);
           alert("🎉 ВАМ ВЫПАЛА TOYOTA CAMRY 70!");
@@ -1051,7 +1085,7 @@
 
       const items = ["🚙 Tank 500", "2 000 000 🪙", "2 000 000 🪙"];
       startCaseSpinner("Особый кейс", items, () => {
-        let isTank = Math.random() < 0.15; // Маленький шанс на танк
+        let isTank = Math.random() < 0.15;
         if (isTank) {
           if (!state.ownedCars.includes(7)) state.ownedCars.push(7);
           alert("🎉 ВАМ ВЫПАЛ TANK 500!");
@@ -1069,10 +1103,7 @@
       document.getElementById('caseSpinnerTitle').innerText = title;
       modal.classList.add('active');
 
-      let speed = 50;
-      let count = 0;
-      let maxCount = 25;
-
+      let speed = 50; let count = 0; let maxCount = 25;
       let timer = setInterval(() => {
         textEl.innerText = items[count % items.length];
         count++;
@@ -1084,91 +1115,50 @@
       }, speed);
     }
 
-    // MARKET & BUYERS WITH PERSONALITIES
-    const BUYER_TYPES = [
-      { type: "Хамло", phrases: ["Слышь, отдай дешевле или вали!", "Кому твое ведро нужно?", "Цена конская, давай скидку!"], discountRange: [0.5, 0.7] },
-      { type: "Наглый", phrases: ["Заберу прямо сейчас за копейки.", "Этих денег не стоит. Беру со скидкой."], discountRange: [0.6, 0.8] },
-      { type: "Злой", phrases: ["Ты с ума сшел такие цены ставить?", "Давай сбрасывай цену или забудь."], discountRange: [0.7, 0.85] },
-      { type: "Добряк", phrases: ["Хороший номер! Небольшую скидочку сделаешь?", "Привет! Беру, но можно чуть сбросить?"], discountRange: [0.85, 0.95] }
+    // MARKET & CHAT BOT SYSTEM
+    let activeChatListingIdx = null;
+    let pendingMessageText = null;
+
+    const BOT_PERSONALITIES = [
+      { name: "Добряк", type: "kind", greetings: ["Здарова! Продаешь номерок?", "Приветствую! Заинтересовал твой номер."], badPrice: ["Ого, дороговато немного...", "Цена кусается, сбросишь?"], success: ["Ладно, по рукам! Покупаю.", "Договорились, беру!"], fail: ["Не, слишком дорого для меня. Удачи!"] },
+      { name: "Хамло", type: "rude", greetings: ["Э, слышь, номер продаешь?", "Здорово, чё за цена такая?"], badPrice: ["Ты с дуба рухнул такую цену ставить?!", "Кому твое ведро нужно за такие бабки?"], success: ["Ладно, заберу, раз уж выставил.", "Хрен с тобой, по рукам."], fail: ["Вали с такими ценами, дядЯ!"] },
+      { name: "Наглый", type: "arrogant", greetings: ["Привет. Скидывай цену, прямо сейчас заберу.", "Здорово. Давай быстро договоримся."], badPrice: ["Ты серьезно? Скидывай 30% или я ушел.", "Цена конская."], success: ["Забираю. Высылай документы.", "Ну ок, пойдет."], fail: ["Поищи дурака в другом месте! Bye."] },
+      { name: "Злой", type: "angry", greetings: ["Че за номер продаешь?", "Ну и цена... Продаешь еще?"], badPrice: ["Совсем обнаглел с такой ценой?!", "Я за такие деньги лучше машину купли!"], success: ["Чёрт с тобой, беру.", "Ладно, забью его себе."], fail: ["Ариведерчи, грабитель!"] }
     ];
 
     function renderMarket() {
-      renderMyListings();
-      const list = document.getElementById('marketList');
-      if (!list) return;
-      list.innerHTML = '';
-      if (state.market.length === 0) {
-        list.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.8rem;">На рынке пока нет номеров</p>';
-        return;
-      }
-      state.market.forEach((item, idx) => {
-        const div = document.createElement('div');
-        div.className = 'market-item';
-        div.innerHTML = `
-          <div>
-            <div class="plate-item-mini" style="display:inline-block; margin-bottom:2px;">${item.text}</div>
-            <div style="font-size:0.7rem; color:var(--text-sub);">Продавец: ${item.seller}</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:0.8rem; font-weight:bold; color:var(--gold); margin-bottom:4px;">${item.price.toLocaleString()} 🪙</div>
-            <button class="btn-small" onclick="buyMarketPlate(${idx})">Купить</button>
-          </div>
-        `;
-        list.appendChild(div);
-      });
-    }
-
-    function renderMyListings() {
-      const list = document.getElementById('myMarketOffersList');
+      const list = document.getElementById('myMarketListings');
       if (!list) return;
       list.innerHTML = '';
 
       if (!state.myListings || state.myListings.length === 0) {
-        list.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.75rem;">Вы еще не выставили номера на продажу</p>';
+        list.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.75rem;">Вы пока не выставили номера на продажу</p>';
         return;
       }
 
       state.myListings.forEach((item, idx) => {
-        if (!item.buyerOffer) {
-          const b = BUYER_TYPES[Math.floor(Math.random() * BUYER_TYPES.length)];
-          const phrase = b.phrases[Math.floor(Math.random() * b.phrases.length)];
-          const disc = b.discountRange[0] + Math.random() * (b.discountRange[1] - b.discountRange[0]);
-          const offerPrice = Math.round(item.price * disc);
-
-          item.buyerOffer = { name: `${b.type}`, phrase: phrase, offerPrice: offerPrice };
-        }
-
         const div = document.createElement('div');
         div.className = 'buyer-card';
+
+        let statusHtml = '';
+        if (item.status === 'searching') {
+          statusHtml = `<div style="font-size:0.75rem; color:var(--gold);">🔍 Ищем покупателя (до 3 мин)...</div>`;
+        } else if (item.status === 'chatting') {
+          statusHtml = `
+            <div style="font-size:0.75rem; color:var(--green); margin-bottom:6px;">Покупатель найден! (${item.buyer.name})</div>
+            <button class="main-btn" style="width:100%; padding:6px; font-size:0.8rem;" onclick="openChatModal(${idx})">💬 Открыть чат</button>
+          `;
+        }
+
         div.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <b style="color:var(--gold);">${item.text}</b>
-            <span style="font-size:0.7rem; color:var(--text-sub);">Ваша цена: ${item.price.toLocaleString()} 🪙</span>
+            <b style="color:var(--gold); font-size:0.9rem;">${item.text}</b>
+            <span style="font-size:0.7rem; color:var(--text-sub);">Цена: ${item.price.toLocaleString()} 🪙</span>
           </div>
-          <div style="font-size:0.75rem; color:#FFF; margin-bottom:4px;"><b>${item.buyerOffer.name}:</b> "${item.buyerOffer.phrase}"</div>
-          <div style="font-size:0.75rem; color:var(--green); font-weight:bold; margin-bottom:8px;">Предложение: ${item.buyerOffer.offerPrice.toLocaleString()} 🪙</div>
-          <div style="display:flex; gap:4px;">
-            <button class="btn-small" style="flex:1; background:rgba(34,197,94,0.2); color:var(--green);" onclick="acceptBuyerOffer(${idx}, true)">🤝 Поторговаться (${item.buyerOffer.offerPrice.toLocaleString()} 🪙)</button>
-            <button class="btn-small" style="flex:1;" onclick="acceptBuyerOffer(${idx}, false)">💰 За полную (${item.price.toLocaleString()} 🪙)</button>
-            <button class="btn-small" style="background:rgba(231,76,60,0.2); color:var(--red);" onclick="rejectBuyerOffer(${idx})">❌</button>
-          </div>
+          ${statusHtml}
         `;
         list.appendChild(div);
       });
-    }
-
-    function acceptBuyerOffer(idx, isDiscount) {
-      const item = state.myListings[idx];
-      const finalPrice = isDiscount ? item.buyerOffer.offerPrice : item.price;
-      state.coins += finalPrice;
-      state.myListings.splice(idx, 1);
-      saveState(); updateHeader(); renderMarket();
-      alert(`🎉 Вы продали номер ${item.text} за ${finalPrice.toLocaleString()} 🪙!`);
-    }
-
-    function rejectBuyerOffer(idx) {
-      state.myListings[idx].buyerOffer = null; // Сброс покупателя
-      renderMarket();
     }
 
     function openSellModal() {
@@ -1193,7 +1183,7 @@
       const plate = state.ownedPlates[parseInt(select.value)];
       if (plate) {
         const lim = RARITY_LIMITS[plate.rarity || 'white'];
-        document.getElementById('priceLimitHint').innerText = `Категория: ${lim.name} | Макс. цена: ${lim.max.toLocaleString()} 🪙`;
+        document.getElementById('priceLimitHint').innerText = `Категория: ${lim.name} | Обычная цена: ${lim.max.toLocaleString()} 🪙`;
       }
     }
 
@@ -1207,30 +1197,159 @@
 
       if (state.ownedPlates.length <= idx) return;
       const plate = state.ownedPlates[idx];
-      const lim = RARITY_LIMITS[plate.rarity || 'white'];
 
       if (isNaN(price) || price <= 0) { alert("Укажите корректную цену!"); return; }
-      if (price > lim.max) {
-        alert(`❌ Нельзя продавать ${lim.name} номер дороже ${lim.max.toLocaleString()} 🪙!`);
-        return;
-      }
 
       state.ownedPlates.splice(idx, 1);
       if (!state.myListings) state.myListings = [];
-      state.myListings.push({ id: plate.id, text: plate.text, price: price, rarity: plate.rarity });
 
+      const listing = {
+        id: plate.id,
+        text: plate.text,
+        price: price,
+        rarity: plate.rarity || 'white',
+        status: 'searching',
+        chatHistory: [],
+        buyer: null
+      };
+
+      state.myListings.push(listing);
       closeSellModal(); saveState(); renderMarket(); renderGarage();
-      alert("Номер выставлен! Ожидайте покупателей во вкладке рынка.");
+
+      // Таймер поиска от 0 до 3 минут (180 секунд)
+      const searchTime = Math.floor(Math.random() * 180) * 1000;
+      setTimeout(() => {
+        const pers = BOT_PERSONALITIES[Math.floor(Math.random() * BOT_PERSONALITIES.length)];
+        listing.status = 'chatting';
+        listing.buyer = pers;
+        listing.chatHistory.push({ sender: 'bot', text: pers.greetings[Math.floor(Math.random() * pers.greetings.length)] });
+        saveState(); renderMarket();
+      }, searchTime);
     }
 
-    function buyMarketPlate(idx) {
-      const item = state.market[idx];
-      if (state.coins < item.price) { alert("Недостаточно монет!"); return; }
-      state.coins -= item.price;
-      state.ownedPlates.push({ id: item.id, text: item.text, rarity: item.rarity, rarityName: RARITY_LIMITS[item.rarity].name, color: RARITY_LIMITS[item.rarity].color, value: item.price });
-      state.market.splice(idx, 1);
-      saveState(); updateHeader(); renderMarket();
-      alert("Вы успешно купили номер!");
+    // CHAT SYSTEM
+    function openChatModal(idx) {
+      activeChatListingIdx = idx;
+      const listing = state.myListings[idx];
+      document.getElementById('chatTitle').innerText = `Чат с ${listing.buyer.name}`;
+      renderChatMessages();
+      document.getElementById('chatModal').classList.add('active');
+    }
+
+    function closeChatModal() { document.getElementById('chatModal').classList.remove('active'); activeChatListingIdx = null; }
+
+    function renderChatMessages() {
+      const container = document.getElementById('chatMessages');
+      if (!container || activeChatListingIdx === null) return;
+      container.innerHTML = '';
+
+      const listing = state.myListings[activeChatListingIdx];
+      listing.chatHistory.forEach(msg => {
+        const div = document.createElement('div');
+        div.className = `chat-bubble ${msg.sender}`;
+        div.innerText = msg.text;
+        container.appendChild(div);
+      });
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text || activeChatListingIdx === null) return;
+
+      // Проверка на мат
+      let lower = text.toLowerCase();
+      if (BAD_WORDS.some(w => lower.includes(w))) {
+        alert("⚠️ Запрещено использовать маты и непристойные выражения!");
+        return;
+      }
+
+      const listing = state.myListings[activeChatListingIdx];
+      const lim = RARITY_LIMITS[listing.rarity || 'white'];
+
+      // Если в тексте упоминается цена или цифра, превышающая максимум
+      let foundNum = text.match(/\d+/);
+      let proposedPrice = foundNum ? parseInt(foundNum[0]) : listing.price;
+
+      if (proposedPrice > lim.max) {
+        pendingMessageText = text;
+        document.getElementById('overpriceModal').classList.add('active');
+        return;
+      }
+
+      processUserMessage(text);
+      input.value = '';
+    }
+
+    function confirmOverpriceSend() {
+      closeOverpriceModal();
+      if (pendingMessageText) {
+        processUserMessage(pendingMessageText, true);
+        document.getElementById('chatInput').value = '';
+        pendingMessageText = null;
+      }
+    }
+
+    function closeOverpriceModal() { document.getElementById('overpriceModal').classList.remove('active'); }
+
+    function processUserMessage(text, isOverprice = false) {
+      const listing = state.myListings[activeChatListingIdx];
+      listing.chatHistory.push({ sender: 'user', text: text });
+      renderChatMessages();
+
+      setTimeout(() => {
+        let botText = "";
+        const b = listing.buyer;
+
+        if (isOverprice) {
+          // 10% шанс что возьмет при завышенной цене, 90% что откажется
+          if (Math.random() < 0.10) {
+            botText = b.success[Math.floor(Math.random() * b.success.length)];
+            completeSale(listing, listing.price);
+          } else {
+            botText = b.badPrice[Math.floor(Math.random() * b.badPrice.length)] + " " + b.fail[Math.floor(Math.random() * b.fail.length)];
+            cancelSale(listing);
+          }
+        } else {
+          // Обычный торг
+          let lower = text.toLowerCase();
+          if (lower.includes("привет") || lower.includes("как дела")) {
+            botText = "Да потихоньку. Что по номеру, отдашь за нормальную цену?";
+          } else if (lower.includes("забирай") || lower.includes("по рукам") || lower.includes("ок") || lower.includes("бери")) {
+            // Обычная сделка
+            if (Math.random() < 0.6) {
+              botText = b.success[Math.floor(Math.random() * b.success.length)];
+              completeSale(listing, listing.price);
+            } else {
+              botText = b.badPrice[Math.floor(Math.random() * b.badPrice.length)];
+            }
+          } else {
+            botText = "Ты назови нормальную цену или давай соглашайся!";
+          }
+        }
+
+        listing.chatHistory.push({ sender: 'bot', text: botText });
+        saveState();
+        renderChatMessages();
+      }, 1000);
+    }
+
+    function completeSale(listing, price) {
+      setTimeout(() => {
+        state.coins += price;
+        state.myListings = state.myListings.filter(l => l.id !== listing.id);
+        saveState(); updateHeader(); closeChatModal(); renderMarket();
+        alert(`🎉 Номер ${listing.text} успешно продан за ${price.toLocaleString()} 🪙!`);
+      }, 1500);
+    }
+
+    function cancelSale(listing) {
+      setTimeout(() => {
+        state.myListings = state.myListings.filter(l => l.id !== listing.id);
+        saveState(); closeChatModal(); renderMarket();
+        alert(`❌ Покупатель отказался от сделки и ушел.`);
+      }, 1500);
     }
 
     // TASKS SYSTEM
