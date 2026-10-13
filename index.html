@@ -146,7 +146,7 @@
       border: none;
       color: var(--text-sub);
       font-weight: 600;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
@@ -476,7 +476,7 @@
       border: 1px solid #000;
     }
 
-    /* CASES & TASKS SCREEN UI */
+    /* SECTION CARDS */
     .section-card {
       background: var(--card-bg);
       border-radius: 14px;
@@ -521,6 +521,110 @@
     .day-box.active-day {
       border-color: var(--gold);
       background: rgba(255,215,0,0.1);
+    }
+
+    /* PASS SYSTEM UI */
+    .pass-header {
+      background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(59,130,246,0.15));
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 14px;
+      padding: 15px;
+      margin-bottom: 12px;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 12px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 8px 0;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3B82F6, #FFD700);
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    .pass-level-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 8px;
+    }
+
+    .pass-level-badge {
+      width: 36px;
+      height: 36px;
+      background: var(--accent-color);
+      color: white;
+      font-weight: bold;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .pass-rewards-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .pass-reward-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.03);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+    }
+
+    .pass-reward-box.premium {
+      border: 1px solid rgba(255,215,0,0.3);
+      background: rgba(255,215,0,0.05);
+    }
+
+    /* CRAFT SYSTEM UI */
+    .craft-slots {
+      display: flex;
+      justify-content: space-around;
+      gap: 8px;
+      margin: 15px 0;
+    }
+
+    .craft-slot {
+      width: 80px;
+      height: 50px;
+      border: 2px dashed rgba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .craft-slot.filled {
+      border-style: solid;
+      border-color: var(--accent-color);
+      background: rgba(59,130,246,0.1);
+      color: white;
+      font-weight: bold;
+      font-family: monospace;
     }
 
     /* SHOP SCREEN */
@@ -697,28 +801,28 @@
       <button class="nav-btn active" onclick="switchTab('spin')">
         <span>🎲</span> Рулетка
       </button>
-
       <button class="nav-btn" onclick="switchTab('garage')">
         <span>🚗</span> Гараж
       </button>
-
+      <button class="nav-btn" onclick="switchTab('craft')">
+        <span>🔨</span> Крафт
+      </button>
+      <button class="nav-btn" onclick="switchTab('pass')">
+        <span>🎟️</span> Пасс
+      </button>
       <button class="nav-btn" onclick="switchTab('shop')">
         <span>🏬</span> Салон
       </button>
-
       <button class="nav-btn" onclick="switchTab('cases')">
         <span>📦</span> Кейсы
       </button>
-
       <button class="nav-btn" onclick="switchTab('club')">
         <span>🛡️</span> Клуб
       </button>
-
       <button class="nav-btn" onclick="switchTab('market')">
         <span>💬</span> Рынок
         <div id="marketBadge" class="badge-dot"></div>
       </button>
-
       <button class="nav-btn" onclick="switchTab('tasks')">
         <span>🏆</span> Задания
       </button>
@@ -782,6 +886,59 @@
       </div>
     </div>
 
+    <!-- CRAFT SCREEN -->
+    <div id="craftScreen" class="screen">
+      <div class="section-card">
+        <h3>🔨 Мастерская крафта номеров</h3>
+        <p>Скрещивайте 3 одинаковых по редкости номера, чтобы попытать удачу получить номер следующей категории!</p>
+        
+        <label style="font-size:0.8rem; color:var(--text-sub);">Тип крафта:</label>
+        <select id="craftTypeSelect" style="width:100%; padding:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; margin:6px 0 12px 0;" onchange="updateCraftSlotsUI()">
+          <option value="white">3 Обычных ➔ Редкий (Шанс: 70%)</option>
+          <option value="green">3 Редких ➔ Супер-редкий (Шанс: 60%)</option>
+          <option value="blue">3 Супер-редких ➔ Эпический (Шанс: 40%)</option>
+          <option value="purple">3 Эпических ➔ Легендарный (Шанс: 20%)</option>
+          <option value="yellow">3 Легендарных ➔ СУПЕР-ЛЕГЕНДАРНЫЙ (Шанс: 5%)</option>
+        </select>
+
+        <div class="craft-slots">
+          <div id="craftSlot0" class="craft-slot" onclick="clearCraftSlot(0)">Слот 1<br>(Пусто)</div>
+          <div id="craftSlot1" class="craft-slot" onclick="clearCraftSlot(1)">Слот 2<br>(Пусто)</div>
+          <div id="craftSlot2" class="craft-slot" onclick="clearCraftSlot(2)">Слот 3<br>(Пусто)</div>
+        </div>
+
+        <button id="startCraftBtn" class="main-btn" style="width:100%; padding:12px;" disabled onclick="performCraft()">Скрафтить (Риск 100%)</button>
+      </div>
+
+      <div class="inventory-title">Выберите подходящие номера для слотов:</div>
+      <div id="craftInventoryGrid" class="plates-grid">
+        <!-- Dyn generated -->
+      </div>
+    </div>
+
+    <!-- DRIVE PASS SCREEN -->
+    <div id="passScreen" class="screen">
+      <div class="pass-header">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h3 style="color:var(--gold);">🏆 Блатной Пасс (Сезон 1)</h3>
+          <span style="font-weight:bold; font-size:0.85rem;" id="passLvlBadge">Ур. 1</span>
+        </div>
+        <p style="font-size:0.75rem; color:var(--text-sub); margin-top:2px;">Крутите номера (+10 XP за спин) или выполняйте задания!</p>
+        
+        <div class="progress-bar-bg">
+          <div id="passProgressBar" class="progress-bar-fill"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-sub);">
+          <span id="passXpText">XP: 0 / 50</span>
+          <button id="buyPremiumPassBtn" class="btn-small" onclick="buyPremiumPass()">Открыть Premium (10 🪙)</button>
+        </div>
+      </div>
+
+      <div id="passLevelsList">
+        <!-- Dyn generated 30 levels -->
+      </div>
+    </div>
+
     <!-- SHOP SCREEN -->
     <div id="shopScreen" class="screen">
       <div id="prestigeSection" class="prestige-card" style="display: none;">
@@ -813,6 +970,15 @@
           Доступно кейсов: <span id="specialCasesCount" style="font-weight: bold;">0</span>
         </div>
         <button id="openSpecialCaseBtn" class="main-btn" style="width: 100%; padding: 12px;" onclick="openSpecialCase()">Открыть особый кейс</button>
+      </div>
+
+      <div class="section-card">
+        <h3>📦 Обычный кейс</h3>
+        <p>Содержит от 10 000 монет до эксклюзивной Toyota Camry 70!</p>
+        <div style="font-size: 0.85rem; color: var(--gold); margin-bottom: 10px;">
+          Доступно кейсов: <span id="regularCasesCount" style="font-weight: bold;">0</span>
+        </div>
+        <button id="openRegularCaseBtn" class="main-btn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #22c55e, #3b82f6);" onclick="openRegularCase()">Открыть обычный кейс</button>
       </div>
     </div>
 
@@ -886,9 +1052,15 @@
     <div id="tasksScreen" class="screen">
       <div class="section-card">
         <h3>🏆 Достижения и Задания</h3>
-        <p>Выполняйте условия и получайте ценные награды!</p>
+        <p>Выполняйте условия, чтобы получать опыт Пасса и ценные награды!</p>
         
         <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+            <div style="font-weight: bold; font-size: 0.9rem; margin-bottom: 4px;">🎯 Сделай 50 спинов</div>
+            <div style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 8px;">Прогресс: <span id="spinTaskPassProg">0</span> / 50</div>
+            <button id="claimSpinPassTask" class="btn-small" style="width: 100%;" disabled onclick="claimPassTask(50, 150)">Забрать: +150 XP Пасса</button>
+          </div>
+
           <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
             <div style="font-weight: bold; font-size: 0.9rem; margin-bottom: 4px;">🎯 Сделай 500 спинов</div>
             <div style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 8px;">Прогресс: <span id="spinTaskProg">0</span> / 500</div>
@@ -1102,6 +1274,7 @@
       equippedPlates: {},
       ownedPlates: [],
       specialCases: 0,
+      regularCases: 0,
       hasLegendary: false,
       prestigeLvl: 0,
       activeSale: null,
@@ -1118,7 +1291,16 @@
         dailySpinsProgress: 0,
         completedTasks: []
       },
+      pass: {
+        level: 1,
+        xp: 0,
+        isPremium: false,
+        claimedFree: [],
+        claimedPremium: []
+      },
+      craftSlots: [null, null, null],
       tasks: {
+        spin50PassClaimed: false,
         spinsClaimed: false,
         legendaryClaimed: false
       },
@@ -1139,10 +1321,10 @@
       return BAD_WORDS_PATTERNS.some(pattern => pattern.test(cleanText));
     }
 
-    // ADVANCED PERSONALITY DIALOGUES
+    // BOT PERSONALITIES
     const BOT_PERSONALITIES = [
       {
-        type: 'kind', // Добрый
+        type: 'kind',
         greetings: ["Доброго дня!", "Приветствую!", "Салам алейкум!", "Здорово!"],
         offers: [
           "Видел номер {plate}. Отличный вариант! Заберу за {price} 🪙 прямо сейчас?",
@@ -1165,7 +1347,7 @@
         ]
       },
       {
-        type: 'rude', // Злой / Дерзкий
+        type: 'rude',
         greetings: ["Эй", "Слышь", "Че за цена?", "Привет."],
         offers: [
           "Че за космический ценник на {plate}? Отдам максимум {price} 🪙 и по рукам.",
@@ -1188,7 +1370,7 @@
         ]
       },
       {
-        type: 'business', // Деловой / Молчаливый
+        type: 'business',
         greetings: ["Привет.", "Здравствуйте.", "На связи."],
         offers: [
           "Номер {plate}. Предлагаю {price} 🪙. Быстрый расчет.",
@@ -1244,6 +1426,7 @@
           ...parsed,
           club: { ...state.club, ...(parsed.club || {}) },
           daily: { ...state.daily, ...(parsed.daily || {}) },
+          pass: { ...state.pass, ...(parsed.pass || {}) },
           tasks: { ...state.tasks, ...(parsed.tasks || {}) }
         };
       } catch(e){}
@@ -1321,6 +1504,316 @@
       showModal("🌟 НОВЫЙ ПРЕСТИЖ!", `Поздравляем с переходом на Престиж #${state.prestigeLvl}! Ваш постоянный бонус к доходу теперь составляет +${state.prestigeLvl * 15}%!`);
     }
 
+    // PASS SYSTEM FUNCTIONS
+    function getReqXpForLevel(lvl) {
+      return lvl * 50;
+    }
+
+    function addPassXp(amount) {
+      if (state.pass.level >= 30) return;
+      state.pass.xp += amount;
+      
+      while (state.pass.level < 30) {
+        let req = getReqXpForLevel(state.pass.level);
+        if (state.pass.xp >= req) {
+          state.pass.xp -= req;
+          state.pass.level++;
+          soundFX.playWin('purple');
+        } else {
+          break;
+        }
+      }
+      saveState();
+      renderPassUI();
+    }
+
+    const PASS_REWARDS = {
+      1:  { free: { type: 'coins', val: 500 },  prem: { type: 'coins', val: 2000 } },
+      2:  { free: { type: 'xp', val: 50 },      prem: { type: 'coins', val: 5000 } },
+      3:  { free: { type: 'coins', val: 1000 }, prem: { type: 'coins', val: 10000 } },
+      4:  { free: { type: 'plate', rarity: 'white' }, prem: { type: 'regular_case', val: 1 } },
+      5:  { free: { type: 'regular_case', val: 1 }, prem: { type: 'coins', val: 20000 } },
+      6:  { free: { type: 'coins', val: 1500 }, prem: { type: 'coins', val: 25000 } },
+      7:  { free: { type: 'plate', rarity: 'green' }, prem: { type: 'regular_case', val: 1 } },
+      8:  { free: { type: 'coins', val: 2000 }, prem: { type: 'luck', val: 1 } },
+      9:  { free: { type: 'xp', val: 100 },     prem: { type: 'coins', val: 30000 } },
+      10: { free: { type: 'regular_case', val: 1 }, prem: { type: 'plate', rarity: 'purple' } },
+      11: { free: { type: 'coins', val: 3000 }, prem: { type: 'coins', val: 40000 } },
+      12: { free: { type: 'plate', rarity: 'green' }, prem: { type: 'regular_case', val: 1 } },
+      13: { free: { type: 'coins', val: 5000 }, prem: { type: 'coins', val: 50000 } },
+      14: { free: { type: 'xp', val: 150 },     prem: { type: 'regular_case', val: 1 } },
+      15: { free: { type: 'regular_case', val: 1 }, prem: { type: 'car', id: 1 } },
+      16: { free: { type: 'coins', val: 7000 }, prem: { type: 'coins', val: 60000 } },
+      17: { free: { type: 'plate', rarity: 'green' }, prem: { type: 'coins', val: 75000 } },
+      18: { free: { type: 'coins', val: 8000 }, prem: { type: 'regular_case', val: 1 } },
+      19: { free: { type: 'plate', rarity: 'blue' }, prem: { type: 'coins', val: 100000 } },
+      20: { free: { type: 'regular_case', val: 1 }, prem: { type: 'plate', rarity: 'purple' } },
+      21: { free: { type: 'coins', val: 10000 }, prem: { type: 'coins', val: 120000 } },
+      22: { free: { type: 'plate', rarity: 'blue' }, prem: { type: 'special_case', val: 1 } },
+      23: { free: { type: 'coins', val: 12000 }, prem: { type: 'coins', val: 150000 } },
+      24: { free: { type: 'xp', val: 200 },     prem: { type: 'coins', val: 200000 } },
+      25: { free: { type: 'regular_case', val: 1 }, prem: { type: 'special_case', val: 1 } },
+      26: { free: { type: 'coins', val: 15000 }, prem: { type: 'coins', val: 250000 } },
+      27: { free: { type: 'plate', rarity: 'blue' }, prem: { type: 'plate', rarity: 'purple' } },
+      28: { free: { type: 'coins', val: 20000 }, prem: { type: 'coins', val: 300000 } },
+      29: { free: { type: 'regular_case', val: 1 }, prem: { type: 'special_case', val: 1 } },
+      30: { free: { type: 'regular_case', val: 1 }, prem: { type: 'coins', val: 500000 } }
+    };
+
+    function buyPremiumPass() {
+      soundFX.playClick();
+      if (state.pass.isPremium) return;
+      if (state.coins < 10) {
+        alert("Вам не хватает 10 монет!");
+        return;
+      }
+      state.coins -= 10;
+      state.pass.isPremium = true;
+      soundFX.playCoins();
+      saveState();
+      updateHeader();
+      renderPassUI();
+      showModal("PREMIUM PASS", "🎉 Вы успешно активировали Premium ветку наград Пасса!");
+    }
+
+    function claimPassReward(lvl, isPrem) {
+      soundFX.playClick();
+      if (lvl > state.pass.level) return;
+      if (isPrem && !state.pass.isPremium) return;
+
+      const arr = isPrem ? state.pass.claimedPremium : state.pass.claimedFree;
+      if (arr.includes(lvl)) return;
+
+      arr.push(lvl);
+      const rew = isPrem ? PASS_REWARDS[lvl].prem : PASS_REWARDS[lvl].free;
+
+      if (rew.type === 'coins') {
+        state.coins += rew.val;
+        soundFX.playCoins();
+      } else if (rew.type === 'xp') {
+        addPassXp(rew.val);
+      } else if (rew.type === 'regular_case') {
+        state.regularCases = (state.regularCases || 0) + rew.val;
+        soundFX.playWin('blue');
+      } else if (rew.type === 'special_case') {
+        state.specialCases += rew.val;
+        soundFX.playWin('purple');
+      } else if (rew.type === 'luck') {
+        state.luckLvl += rew.val;
+        soundFX.playCoins();
+      } else if (rew.type === 'car') {
+        if (!state.ownedCars.includes(rew.id)) state.ownedCars.push(rew.id);
+        soundFX.playWin('yellow');
+      } else if (rew.type === 'plate') {
+        const plate = {
+          id: Date.now() + Math.random(),
+          text: generateRandomPlateText(),
+          rarity: rew.rarity,
+          rarityName: rew.rarity === 'white' ? 'Обычный' : rew.rarity === 'green' ? 'Редкий' : rew.rarity === 'blue' ? 'Супер-редкий' : 'Эпический',
+          color: rew.rarity === 'white' ? '#E2E8F0' : rew.rarity === 'green' ? '#22C55E' : rew.rarity === 'blue' ? '#3B82F6' : '#A855F7',
+          value: 1500
+        };
+        state.ownedPlates.push(plate);
+        soundFX.playWin('purple');
+      }
+
+      saveState();
+      updateHeader();
+      renderPassUI();
+    }
+
+    function getRewardText(r) {
+      if (r.type === 'coins') return `${r.val.toLocaleString()} 🪙`;
+      if (r.type === 'xp') return `+${r.val} XP Пасса`;
+      if (r.type === 'regular_case') return `📦 Обычный кейс`;
+      if (r.type === 'special_case') return `📦 Особый кейс`;
+      if (r.type === 'luck') return `+${r.val} Уровень Удачи`;
+      if (r.type === 'car') return `🏎️ ВАЗ 2115`;
+      if (r.type === 'plate') return `🚘 Номер (${r.rarity.toUpperCase()})`;
+      return 'Награда';
+    }
+
+    function renderPassUI() {
+      document.getElementById('passLvlBadge').innerText = `Ур. ${state.pass.level}`;
+      let req = getReqXpForLevel(state.pass.level);
+      
+      if (state.pass.level >= 30) {
+        document.getElementById('passXpText').innerText = "МАКС. УРОВЕНЬ";
+        document.getElementById('passProgressBar').style.width = '100%';
+      } else {
+        document.getElementById('passXpText').innerText = `XP: ${state.pass.xp} / ${req}`;
+        let pct = Math.min(100, Math.floor((state.pass.xp / req) * 100));
+        document.getElementById('passProgressBar').style.width = `${pct}%`;
+      }
+
+      const buyBtn = document.getElementById('buyPremiumPassBtn');
+      if (state.pass.isPremium) {
+        buyBtn.innerText = "Premium Куплен ✓";
+        buyBtn.disabled = true;
+      } else {
+        buyBtn.innerText = "Купить Premium (10 🪙)";
+        buyBtn.disabled = false;
+      }
+
+      const container = document.getElementById('passLevelsList');
+      container.innerHTML = '';
+
+      for (let i = 1; i <= 30; i++) {
+        const rew = PASS_REWARDS[i];
+        const freeClaimed = state.pass.claimedFree.includes(i);
+        const premClaimed = state.pass.claimedPremium.includes(i);
+        const canClaimFree = state.pass.level >= i && !freeClaimed;
+        const canClaimPrem = state.pass.level >= i && state.pass.isPremium && !premClaimed;
+
+        const row = document.createElement('div');
+        row.className = 'pass-level-row';
+
+        row.innerHTML = `
+          <div class="pass-level-badge">${i}</div>
+          <div class="pass-rewards-grid">
+            <div class="pass-reward-box">
+              <span>🆓 ${getRewardText(rew.free)}</span>
+              <button class="btn-small" style="padding:4px 8px; font-size:0.7rem;" ${!canClaimFree ? 'disabled' : ''} onclick="claimPassReward(${i}, false)">
+                ${freeClaimed ? '✓' : 'Забрать'}
+              </button>
+            </div>
+            <div class="pass-reward-box premium">
+              <span>🌟 ${getRewardText(rew.prem)}</span>
+              <button class="btn-small" style="padding:4px 8px; font-size:0.7rem;" ${!canClaimPrem ? 'disabled' : ''} onclick="claimPassReward(${i}, true)">
+                ${premClaimed ? '✓' : 'Забрать'}
+              </button>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(row);
+      }
+    }
+
+    // CRAFT SYSTEM FUNCTIONS
+    function updateCraftSlotsUI() {
+      const type = document.getElementById('craftTypeSelect').value;
+      
+      for (let i = 0; i < 3; i++) {
+        const slotEl = document.getElementById(`craftSlot${i}`);
+        const plate = state.craftSlots[i];
+        if (plate) {
+          slotEl.className = 'craft-slot filled';
+          slotEl.innerHTML = `${plate.text}<br><span style="font-size:0.65rem;">(Нажмите для сброса)</span>`;
+        } else {
+          slotEl.className = 'craft-slot';
+          slotEl.innerHTML = `Слот ${i+1}<br>(Пусто)`;
+        }
+      }
+
+      const allFilled = state.craftSlots.every(s => s !== null);
+      document.getElementById('startCraftBtn').disabled = !allFilled;
+
+      renderCraftInventory();
+    }
+
+    function renderCraftInventory() {
+      const grid = document.getElementById('craftInventoryGrid');
+      grid.innerHTML = '';
+
+      const targetRarity = document.getElementById('craftTypeSelect').value;
+      const validPlates = state.ownedPlates.filter(p => p.rarity === targetRarity && !state.craftSlots.includes(p));
+
+      if (validPlates.length === 0) {
+        grid.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.85rem;">Нет доступных номеров этой категории в инвентаре</p>';
+        return;
+      }
+
+      validPlates.forEach((plate) => {
+        const item = document.createElement('div');
+        item.className = 'plate-item';
+        item.innerHTML = `
+          <div style="display:flex; align-items:center; gap:8px; cursor:pointer; flex:1;" onclick="addPlateToCraftSlot('${plate.id}')">
+            <div class="plate-item-mini">${plate.text}</div>
+            <div>
+              <div style="font-size:0.7rem; color:${plate.color}">${plate.rarityName}</div>
+              <div style="font-size:0.65rem; color:var(--text-sub);">Нажмите, чтобы добавить в крафт</div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(item);
+      });
+    }
+
+    function addPlateToCraftSlot(plateId) {
+      soundFX.playClick();
+      const plate = state.ownedPlates.find(p => p.id == plateId);
+      if (!plate) return;
+
+      const emptyIdx = state.craftSlots.findIndex(s => s === null);
+      if (emptyIdx !== -1) {
+        state.craftSlots[emptyIdx] = plate;
+        updateCraftSlotsUI();
+      }
+    }
+
+    function clearCraftSlot(idx) {
+      soundFX.playClick();
+      state.craftSlots[idx] = null;
+      updateCraftSlotsUI();
+    }
+
+    function performCraft() {
+      soundFX.playClick();
+      if (state.craftSlots.some(s => s === null)) return;
+
+      const craftType = document.getElementById('craftTypeSelect').value;
+      
+      state.craftSlots.forEach(slotPlate => {
+        const idx = state.ownedPlates.findIndex(p => p.id === slotPlate.id);
+        if (idx !== -1) state.ownedPlates.splice(idx, 1);
+      });
+
+      state.craftSlots = [null, null, null];
+
+      let chance = 0.7;
+      let nextRarity = 'green';
+      let nextRarityName = 'Редкий';
+      let color = '#22C55E';
+
+      if (craftType === 'green') { chance = 0.6; nextRarity = 'blue'; nextRarityName = 'Супер-редкий'; color = '#3B82F6'; }
+      else if (craftType === 'blue') { chance = 0.4; nextRarity = 'purple'; nextRarityName = 'Эпический'; color = '#A855F7'; }
+      else if (craftType === 'purple') { chance = 0.2; nextRarity = 'purple'; nextRarityName = '🔥 Легендарный'; color = '#A855F7'; }
+      else if (craftType === 'yellow') { chance = 0.05; nextRarity = 'yellow'; nextRarityName = '🔥 СУПЕР-ЛЕГЕНДАРНЫЙ 🔥'; color = '#EAB308'; }
+
+      let rand = Math.random();
+
+      if (rand < chance) {
+        const newPlate = {
+          id: Date.now() + Math.random(),
+          text: generateRandomPlateText(),
+          rarity: nextRarity,
+          rarityName: nextRarityName,
+          color: color,
+          value: nextRarity === 'yellow' ? 5000 : 2500
+        };
+
+        state.ownedPlates.push(newPlate);
+        
+        if (craftType === 'purple') {
+          soundFX.playWin('yellow');
+          showModal("УСПЕШНЫЙ КРАФТ!", "Поздравляем! Вы скрафтили легендарные номера!");
+        } else if (craftType === 'yellow') {
+          soundFX.playWin('yellow');
+          showModal("УСПЕШНЫЙ КРАФТ!", "Поздравляем! Вы скрафтили супер-легендарные номера!");
+        } else {
+          soundFX.playWin('purple');
+          showModal("УСПЕШНЫЙ КРАФТ!", `Поздравляем! Вы скрафтили номер ${newPlate.text} (${nextRarityName})!`);
+        }
+      } else {
+        showModal("НЕУДАЧА!", "К сожалению, крафт не удался. Все 3 номера сгорели!");
+      }
+
+      saveState();
+      updateCraftSlotsUI();
+      renderGarage();
+    }
+
     // SPIN SYSTEM
     function performSpin() {
       const cost = getSpinCost();
@@ -1330,6 +1823,8 @@
       state.coins -= cost;
       state.spins++;
       state.isSpinning = true;
+
+      addPassXp(10);
 
       const todayStr = new Date().toDateString();
       if (state.club.name) {
@@ -1458,25 +1953,10 @@
       const input = document.getElementById('clubNameInput');
       const name = input.value.trim();
 
-      if (!name) {
-        alert("Введите название клуба!");
-        return;
-      }
-
-      if (name.length < 3 || name.length > 20) {
-        alert("Название клуба должно содержать от 3 до 20 символов!");
-        return;
-      }
-
-      if (containsProfanity(name)) {
-        alert("Название содержит нецензурные выражения (мат). Придумайте другое название!");
-        return;
-      }
-
-      if (state.coins < 1000) {
-        alert("Вам не хватает монет! Создание клуба стоит 1 000 🪙.");
-        return;
-      }
+      if (!name) { alert("Введите название клуба!"); return; }
+      if (name.length < 3 || name.length > 20) { alert("Название клуба должно содержать от 3 до 20 символов!"); return; }
+      if (containsProfanity(name)) { alert("Название содержит нецензурные выражения (мат). Придумайте другое название!"); return; }
+      if (state.coins < 1000) { alert("Вам не хватает монет! Создание клуба стоит 1 000 🪙."); return; }
 
       state.coins -= 1000;
       state.club.name = name;
@@ -1532,9 +2012,7 @@
       let canGetCaseThisWeek = state.club.lastCaseWeek !== currentWeekNum;
 
       let rewardsPool = [20000, 10000];
-      if (canGetCaseThisWeek) {
-        rewardsPool.push('rare_case');
-      }
+      if (canGetCaseThisWeek) rewardsPool.push('rare_case');
 
       let reward = getRandomItem(rewardsPool);
       let rewardMsg = "";
@@ -1735,10 +2213,7 @@
 
         let fullMsg = Math.random() < 0.6 ? `${greeting} ${offerText}` : offerText;
 
-        state.activeSale.chatHistory.push({
-          author: botName,
-          text: fullMsg
-        });
+        state.activeSale.chatHistory.push({ author: botName, text: fullMsg });
         document.getElementById('marketBadge').style.display = 'block';
         saveState();
         renderMarketChat();
@@ -1871,7 +2346,7 @@
       renderGarage();
     }
 
-    // DAILY REWARDS SYSTEM (7 Days)
+    // DAILY REWARDS SYSTEM
     const DAILY_REWARDS = [
       { day: 1, name: "Обычный кейс", desc: "10k монет или Camry 70" },
       { day: 2, name: "50 000 🪙", desc: "Монеты" },
@@ -1927,13 +2402,8 @@
 
       let msg = "";
       if (dayIdx === 0) {
-        if (Math.random() < 0.25 && !state.ownedCars.includes(2)) {
-          state.ownedCars.push(2);
-          msg = "🎁 Из кейса выпал автомобиль Toyota Camry 70!";
-        } else {
-          state.coins += 10000;
-          msg = "🎁 Из кейса выпало 10 000 монет!";
-        }
+        state.regularCases = (state.regularCases || 0) + 1;
+        msg = "🎁 Получен 1 Обычный кейс!";
       } else if (dayIdx === 1) {
         state.coins += 50000;
         msg = "🎁 Получено 50 000 монет!";
@@ -1973,6 +2443,18 @@
     // SPECIAL CASE & TASKS SYSTEM
     function updateTasksUI() {
       document.getElementById('specialCasesCount').innerText = state.specialCases;
+      document.getElementById('regularCasesCount').innerText = state.regularCases || 0;
+
+      const spinPassProgEl = document.getElementById('spinTaskPassProg');
+      const spinPassBtnEl = document.getElementById('claimSpinPassTask');
+      spinPassProgEl.innerText = Math.min(state.spins, 50);
+
+      if (state.spins >= 50 && !state.tasks.spin50PassClaimed) {
+        spinPassBtnEl.disabled = false;
+      } else if (state.tasks.spin50PassClaimed) {
+        spinPassBtnEl.innerText = "Получено ✓";
+        spinPassBtnEl.disabled = true;
+      }
 
       const spinProgEl = document.getElementById('spinTaskProg');
       const spinBtnEl = document.getElementById('claimSpinTask');
@@ -1998,6 +2480,17 @@
       }
     }
 
+    function claimPassTask(reqSpins, xpBonus) {
+      soundFX.playClick();
+      if (state.spins >= reqSpins && !state.tasks.spin50PassClaimed) {
+        state.tasks.spin50PassClaimed = true;
+        addPassXp(xpBonus);
+        showModal("НАГРАДА ЗАЧИСЛЕНА!", `Вы получили +${xpBonus} XP Пасса!`);
+      }
+      saveState();
+      updateTasksUI();
+    }
+
     function claimTask(type) {
       soundFX.playClick();
       if (type === 'spins' && state.spins >= 500 && !state.tasks.spinsClaimed) {
@@ -2019,7 +2512,7 @@
     function openSpecialCase() {
       soundFX.playClick();
       if (state.specialCases <= 0) {
-        alert("У вас нет Особых кейсов! Получайте их за задания или бонус 7-го дня.");
+        alert("У вас нет Особых кейсов!");
         return;
       }
 
@@ -2036,6 +2529,30 @@
         state.coins += 1000000;
         soundFX.playCoins();
         showModal("ОТКРЫТИЕ КЕЙСА!", "💰 Вам выпало 1 000 000 монет из Особого кейса!");
+      }
+      updateHeader();
+    }
+
+    function openRegularCase() {
+      soundFX.playClick();
+      if ((state.regularCases || 0) <= 0) {
+        alert("У вас нет Обычных кейсов!");
+        return;
+      }
+
+      state.regularCases--;
+      saveState();
+      updateTasksUI();
+
+      let rand = Math.random();
+      if (rand < 0.1 && !state.ownedCars.includes(2)) {
+        state.ownedCars.push(2);
+        soundFX.playWin('yellow');
+        showModal("ОТКРЫТИЕ КЕЙСА!", "🎉 Потрясающе! Из Обычного кейса вам выпала Toyota Camry 70!");
+      } else {
+        state.coins += 10000;
+        soundFX.playCoins();
+        showModal("ОТКРЫТИЕ КЕЙСА!", "💰 Из Обычного кейса вам выпало 10 000 монет!");
       }
       updateHeader();
     }
@@ -2326,25 +2843,33 @@
         document.querySelectorAll('.nav-btn')[1].classList.add('active');
         document.getElementById('garageScreen').classList.add('active');
         try { renderGarage(); } catch(e) { console.error(e); }
-      } else if (tab === 'shop') {
+      } else if (tab === 'craft') {
         document.querySelectorAll('.nav-btn')[2].classList.add('active');
+        document.getElementById('craftScreen').classList.add('active');
+        try { updateCraftSlotsUI(); } catch(e) { console.error(e); }
+      } else if (tab === 'pass') {
+        document.querySelectorAll('.nav-btn')[3].classList.add('active');
+        document.getElementById('passScreen').classList.add('active');
+        try { renderPassUI(); } catch(e) { console.error(e); }
+      } else if (tab === 'shop') {
+        document.querySelectorAll('.nav-btn')[4].classList.add('active');
         document.getElementById('shopScreen').classList.add('active');
         try { renderShop(); } catch(e) { console.error(e); }
       } else if (tab === 'cases') {
-        document.querySelectorAll('.nav-btn')[3].classList.add('active');
+        document.querySelectorAll('.nav-btn')[5].classList.add('active');
         document.getElementById('casesScreen').classList.add('active');
         try { renderDailyRewards(); } catch(e) { console.error(e); }
       } else if (tab === 'club') {
-        document.querySelectorAll('.nav-btn')[4].classList.add('active');
+        document.querySelectorAll('.nav-btn')[6].classList.add('active');
         document.getElementById('clubScreen').classList.add('active');
         try { renderClubScreen(); } catch(e) { console.error(e); }
       } else if (tab === 'market') {
-        document.querySelectorAll('.nav-btn')[5].classList.add('active');
+        document.querySelectorAll('.nav-btn')[7].classList.add('active');
         document.getElementById('marketScreen').classList.add('active');
         document.getElementById('marketBadge').style.display = 'none';
         try { renderMarketChat(); } catch(e) { console.error(e); }
       } else if (tab === 'tasks') {
-        document.querySelectorAll('.nav-btn')[6].classList.add('active');
+        document.querySelectorAll('.nav-btn')[8].classList.add('active');
         document.getElementById('tasksScreen').classList.add('active');
         try { updateTasksUI(); } catch(e) { console.error(e); }
       }
@@ -2369,6 +2894,8 @@
       updateTasksUI();
       renderMarketChat();
       renderClubScreen();
+      renderPassUI();
+      updateCraftSlotsUI();
     };
   </script>
 </body>
