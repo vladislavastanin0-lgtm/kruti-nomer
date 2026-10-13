@@ -1115,23 +1115,105 @@
       }, speed);
     }
 
-    // MARKET & CHAT BOT SYSTEM
+    // AI CHAT BOT SYSTEM
     let activeChatListingIdx = null;
     let pendingMessageText = null;
 
     const BOT_PERSONALITIES = [
-      { name: "Добряк", type: "kind", greetings: ["Здарова! Продаешь номерок?", "Приветствую! Заинтересовал твой номер."], badPrice: ["Ого, дороговато немного...", "Цена кусается, сбросишь?"], success: ["Ладно, по рукам! Покупаю.", "Договорились, беру!"], fail: ["Не, слишком дорого для меня. Удачи!"] },
-      { name: "Хамло", type: "rude", greetings: ["Э, слышь, номер продаешь?", "Здорово, чё за цена такая?"], badPrice: ["Ты с дуба рухнул такую цену ставить?!", "Кому твое ведро нужно за такие бабки?"], success: ["Ладно, заберу, раз уж выставил.", "Хрен с тобой, по рукам."], fail: ["Вали с такими ценами, дядЯ!"] },
-      { name: "Наглый", type: "arrogant", greetings: ["Привет. Скидывай цену, прямо сейчас заберу.", "Здорово. Давай быстро договоримся."], badPrice: ["Ты серьезно? Скидывай 30% или я ушел.", "Цена конская."], success: ["Забираю. Высылай документы.", "Ну ок, пойдет."], fail: ["Поищи дурака в другом месте! Bye."] },
-      { name: "Злой", type: "angry", greetings: ["Че за номер продаешь?", "Ну и цена... Продаешь еще?"], badPrice: ["Совсем обнаглел с такой ценой?!", "Я за такие деньги лучше машину купли!"], success: ["Чёрт с тобой, беру.", "Ладно, забью его себе."], fail: ["Ариведерчи, грабитель!"] }
+      { 
+        name: "Добряк", 
+        type: "kind", 
+        greetings: ["Приветствую! Обожаю красивые номера, продашь свой?", "Здарова, друг! Слушай, классный номер у тебя."],
+        unknownResponses: ["Хах, интригуешь! Давай лучше ближе к делу, по рукам?", "Интересно мыслишь! Так что, оформляем сделку?", "Понимаю тебя! Ну что, забираю номерок?"],
+        priceAgreed: ["Отлично, мне цена нравится! Забираю!", "Супер, приятно иметь дело! Покупаю."],
+        tooExpensive: ["Оу, бро, это слишком дорого для меня...", "Цена великовата, не потяну к сожалению..."],
+        discountAsked: ["Небольшую скидочку сделаешь, или цена окончательная?", "А сбросить чутка цену сможем?"]
+      },
+      { 
+        name: "Хамло", 
+        type: "rude", 
+        greetings: ["Э, слышь, че за номерок продаешь?", "Здорово. Чё за ценник конский?"],
+        unknownResponses: ["Ты че мне тут зубы заговариваешь?", "Меньше слов, больше дела! Продаешь или тупишь?", "Ты нормально общаться умеешь? Давай к делу!"],
+        priceAgreed: ["Хрен с тобой, заберу. Высылай.", "Ладно, хватай бабло, пока я добрый."],
+        tooExpensive: ["Ты с дуба рухнул?! Вали с такими ценами!", "Совсем обнаглел? За такие бабки сам на нем катайся!"],
+        discountAsked: ["Давай скидывай ценник, а то закрою чат!", "Че так дорого-то? Сбрось или чао."]
+      },
+      { 
+        name: "Наглый", 
+        type: "arrogant", 
+        greetings: ["Привет. Быстро договариваемся и я забираю.", "Здарова. За сколько реально отдашь?"],
+        unknownResponses: ["Это всё конечно круто, но меня волнует только сделка.", "Не увиливай от ответа. По рукам или нет?", "Давай без лишней воды, сразу к цене."],
+        priceAgreed: ["Забираю прямо сейчас. Готовь документы.", "Ок, устраивает. Покупаю."],
+        tooExpensive: ["Ты серьезно думаешь, что кто-то это купит за столько? Забудь.", "Ахаха, удачи найти дурака за такую цену!"],
+        discountAsked: ["Скидывай минимум 20%, тогда подумаю.", "Цена завышена. Скинешь?"]
+      },
+      { 
+        name: "Злой", 
+        type: "angry", 
+        greetings: ["Че за номер? Продаешь еще?", "Ну и варианты... Что по цене?"],
+        unknownResponses: ["Не беси меня, говори четко по делу!", "Мне твой трёп не интересен! Продаешь или нет?", "Хватит ерунду писать!"],
+        priceAgreed: ["Чёрт с тобой, беру!", "Ладно, забью его себе, плачу."],
+        tooExpensive: ["Совсем с ума сошел?! Грабеж средь бела дня!", "Забудь мой номер, грабитель!"],
+        discountAsked: ["Цену сбрасывай, иначе я ухожу!", "Это слишком много! Скидывай!"]
+      }
     ];
+
+    function generateAIResponse(userText, listing, isOverprice) {
+      const b = listing.buyer;
+      const lower = userText.toLowerCase();
+
+      // Проверка на завышенную цену с вероятностью 10/90
+      if (isOverprice) {
+        if (Math.random() < 0.10) {
+          setTimeout(() => completeSale(listing, listing.price), 1000);
+          return b.priceAgreed[Math.floor(Math.random() * b.priceAgreed.length)];
+        } else {
+          setTimeout(() => cancelSale(listing), 1000);
+          return b.tooExpensive[Math.floor(Math.random() * b.tooExpensive.length)];
+        }
+      }
+
+      // Если ИИ распознал ключевые мысли:
+      if (lower.includes("привет") || lower.includes("здравствуй") || lower.includes("здарова") || lower.includes("салам")) {
+        return "Привет-привет! Ну что, обсудим твой номер " + listing.text + "?";
+      }
+
+      if (lower.includes("как дела") || lower.includes("как ты") || lower.includes("чѐ кого")) {
+        return "Да нормально всё. Давай лучше к делу — за сколько отдашь " + listing.text + "?";
+      }
+
+      if (lower.includes("скидк") || lower.includes("уступ") || lower.includes("торг") || lower.includes("дешев")) {
+        return b.discountAsked[Math.floor(Math.random() * b.discountAsked.length)];
+      }
+
+      if (lower.includes("ок") || lower.includes("согласен") || lower.includes("давай") || lower.includes("бери") || lower.includes("по рукам") || lower.includes("продам") || lower.includes("забирай")) {
+        if (Math.random() < 0.7) {
+          setTimeout(() => completeSale(listing, listing.price), 1000);
+          return b.priceAgreed[Math.floor(Math.random() * b.priceAgreed.length)];
+        } else {
+          return b.discountAsked[Math.floor(Math.random() * b.discountAsked.length)];
+        }
+      }
+
+      if (lower.includes("нет") || lower.includes("неа") || lower.includes("не хочу") || lower.includes("без торга")) {
+        if (Math.random() < 0.5) {
+          setTimeout(() => completeSale(listing, listing.price), 1000);
+          return b.priceAgreed[Math.floor(Math.random() * b.priceAgreed.length)];
+        } else {
+          setTimeout(() => cancelSale(listing), 1000);
+          return b.tooExpensive[Math.floor(Math.random() * b.tooExpensive.length)];
+        }
+      }
+
+      // Генерация ИИ ответа на любую произвольную фразу человека
+      return b.unknownResponses[Math.floor(Math.random() * b.unknownResponses.length)];
+    }
 
     function renderMarket() {
       const list = document.getElementById('myMarketListings');
       if (!list) return;
       list.innerHTML = '';
 
-      // Фильтруем список, чтобы отображать только те объявления, где покупатель уже нашелся
       const activeListings = (state.myListings || []).filter(item => item.status === 'chatting');
 
       if (activeListings.length === 0) {
@@ -1216,7 +1298,7 @@
       state.myListings.push(listing);
       closeSellModal(); saveState(); renderMarket(); renderGarage();
 
-      // Бесшумный таймер поиска покупателя от 0 до 3 минут (неожиданное появление)
+      // Неожиданное появление покупателя (0–3 мин)
       const searchTime = Math.floor(Math.random() * 180) * 1000;
       setTimeout(() => {
         const pers = BOT_PERSONALITIES[Math.floor(Math.random() * BOT_PERSONALITIES.length)];
@@ -1268,7 +1350,7 @@
       const listing = state.myListings[activeChatListingIdx];
       const lim = RARITY_LIMITS[listing.rarity || 'white'];
 
-      // Если в тексте упоминается цена или цифра, превышающая максимум
+      // Если в сообщении указано число больше нормы
       let foundNum = text.match(/\d+/);
       let proposedPrice = foundNum ? parseInt(foundNum[0]) : listing.price;
 
@@ -1299,57 +1381,24 @@
       renderChatMessages();
 
       setTimeout(() => {
-        let botText = "";
-        const b = listing.buyer;
-
-        if (isOverprice) {
-          // 10% шанс что возьмет при завышенной цене, 90% что откажется
-          if (Math.random() < 0.10) {
-            botText = b.success[Math.floor(Math.random() * b.success.length)];
-            completeSale(listing, listing.price);
-          } else {
-            botText = b.badPrice[Math.floor(Math.random() * b.badPrice.length)] + " " + b.fail[Math.floor(Math.random() * b.fail.length)];
-            cancelSale(listing);
-          }
-        } else {
-          // Обычный торг
-          let lower = text.toLowerCase();
-          if (lower.includes("привет") || lower.includes("как дела")) {
-            botText = "Да потихоньку. Что по номеру, отдашь за нормальную цену?";
-          } else if (lower.includes("забирай") || lower.includes("по рукам") || lower.includes("ок") || lower.includes("бери")) {
-            // Обычная сделка
-            if (Math.random() < 0.6) {
-              botText = b.success[Math.floor(Math.random() * b.success.length)];
-              completeSale(listing, listing.price);
-            } else {
-              botText = b.badPrice[Math.floor(Math.random() * b.badPrice.length)];
-            }
-          } else {
-            botText = "Ты назови нормальную цену или давай соглашайся!";
-          }
-        }
-
+        let botText = generateAIResponse(text, listing, isOverprice);
         listing.chatHistory.push({ sender: 'bot', text: botText });
         saveState();
         renderChatMessages();
-      }, 1000);
+      }, 800);
     }
 
     function completeSale(listing, price) {
-      setTimeout(() => {
-        state.coins += price;
-        state.myListings = state.myListings.filter(l => l.id !== listing.id);
-        saveState(); updateHeader(); closeChatModal(); renderMarket();
-        alert(`🎉 Номер ${listing.text} успешно продан за ${price.toLocaleString()} 🪙!`);
-      }, 1500);
+      state.coins += price;
+      state.myListings = state.myListings.filter(l => l.id !== listing.id);
+      saveState(); updateHeader(); closeChatModal(); renderMarket();
+      alert(`🎉 Номер ${listing.text} успешно продан за ${price.toLocaleString()} 🪙!`);
     }
 
     function cancelSale(listing) {
-      setTimeout(() => {
-        state.myListings = state.myListings.filter(l => l.id !== listing.id);
-        saveState(); closeChatModal(); renderMarket();
-        alert(`❌ Покупатель отказался от сделки и ушел.`);
-      }, 1500);
+      state.myListings = state.myListings.filter(l => l.id !== listing.id);
+      saveState(); closeChatModal(); renderMarket();
+      alert(`❌ Покупатель отказался от сделки и ушел.`);
     }
 
     // TASKS SYSTEM
