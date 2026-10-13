@@ -146,7 +146,7 @@
       border: none;
       color: var(--text-sub);
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
@@ -697,19 +697,28 @@
       <button class="nav-btn active" onclick="switchTab('spin')">
         <span>🎲</span> Рулетка
       </button>
+
       <button class="nav-btn" onclick="switchTab('garage')">
         <span>🚗</span> Гараж
       </button>
+
       <button class="nav-btn" onclick="switchTab('shop')">
         <span>🏬</span> Салон
       </button>
+
       <button class="nav-btn" onclick="switchTab('cases')">
         <span>📦</span> Кейсы
       </button>
+
+      <button class="nav-btn" onclick="switchTab('club')">
+        <span>🛡️</span> Клуб
+      </button>
+
       <button class="nav-btn" onclick="switchTab('market')">
         <span>💬</span> Рынок
         <div id="marketBadge" class="badge-dot"></div>
       </button>
+
       <button class="nav-btn" onclick="switchTab('tasks')">
         <span>🏆</span> Задания
       </button>
@@ -804,6 +813,44 @@
           Доступно кейсов: <span id="specialCasesCount" style="font-weight: bold;">0</span>
         </div>
         <button id="openSpecialCaseBtn" class="main-btn" style="width: 100%; padding: 12px;" onclick="openSpecialCase()">Открыть особый кейс</button>
+      </div>
+    </div>
+
+    <!-- CLUB SCREEN -->
+    <div id="clubScreen" class="screen">
+      <div id="noClubCard" class="section-card">
+        <h3>🛡️ Создать автоклуб</h3>
+        <p>Стоимость создания: <b style="color: var(--gold);">1 000 🪙</b>. Название не должно содержать маты!</p>
+        <input type="text" id="clubNameInput" placeholder="Название клуба" style="width:100%; padding:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; margin-bottom:12px; font-size:0.9rem;">
+        <button class="main-btn" style="width: 100%; padding:10px; font-size:0.95rem;" onclick="createClub()">Создать клуб за 1 000 🪙</button>
+      </div>
+
+      <div id="hasClubContainer" style="display: none;">
+        <div class="section-card" style="border-color: rgba(59, 130, 246, 0.4);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 id="clubTitle" style="margin: 0; font-size: 1.1rem; color: var(--accent-color);">Клуб: ---</h3>
+            <button class="btn-small" style="background: rgba(231,76,60,0.2); color: var(--red); border-color: rgba(231,76,60,0.4);" onclick="leaveClub()">Покинуть</button>
+          </div>
+          <p style="margin-top: 6px; font-size: 0.8rem; color: var(--text-sub);">Вы состояте в автоклубе. Выполняйте ежедневные задачи!</p>
+        </div>
+
+        <div class="section-card">
+          <h3>📅 Ежедневные задачи клуба</h3>
+          <p>Обновляются каждый день. Выполняйте цели, чтобы сгенерировать награду!</p>
+          
+          <div id="clubTasksList" style="display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
+            <!-- Dynamic tasks -->
+          </div>
+        </div>
+
+        <div class="section-card">
+          <h3>📦 Редкий клубный кейс</h3>
+          <p>Может содержать <b style="color:var(--gold);">50 000 🪙</b> или эксклюзивную <b style="color:var(--purple);">BMW M5 F90</b>! Доступен не чаще 1 раза в неделю.</p>
+          <div style="font-size:0.85rem; color:var(--gold); margin-bottom:10px;">
+            Доступно клубных кейсов: <span id="rareClubCasesCount" style="font-weight:bold;">0</span>
+          </div>
+          <button id="openRareClubCaseBtn" class="main-btn" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #a855f7, #3b82f6);" onclick="openRareClubCase()">Открыть клубный кейс</button>
+        </div>
       </div>
     </div>
 
@@ -1063,6 +1110,14 @@
         claimedDays: 0,
         lastClaimDate: null
       },
+      club: {
+        name: null,
+        rareCases: 0,
+        lastCaseWeek: null,
+        lastTaskDayDate: null,
+        dailySpinsProgress: 0,
+        completedTasks: []
+      },
       tasks: {
         spinsClaimed: false,
         legendaryClaimed: false
@@ -1071,6 +1126,18 @@
     };
 
     const BOT_NAMES = ["Арман", "Данияр", "Максат", "Айдос", "Ержан", "Тимур", "Алихан", "Нурсултан", "Баха", "Руслан", "Серик"];
+
+    // PROFANITY FILTER PATTERNS
+    const BAD_WORDS_PATTERNS = [
+      /хуй/i, /пизд/i, /еба/i, /ёба/i, /бля/i, /сука/i, /суч/i, /пидор/i, /гандон/i, /мудак/i, /дроч/i, /залуп/i, /чмо/i, /говно/i,
+      /fuck/i, /shit/i, /bitch/i, /asshole/i, /dick/i, /pussy/i, /cunt/i, /bastard/i, /cock/i, /prick/i, /whore/i, /slut/i
+    ];
+
+    function containsProfanity(text) {
+      if (!text) return false;
+      const cleanText = text.trim();
+      return BAD_WORDS_PATTERNS.some(pattern => pattern.test(cleanText));
+    }
 
     // ADVANCED PERSONALITY DIALOGUES
     const BOT_PERSONALITIES = [
@@ -1171,7 +1238,14 @@
     const saved = localStorage.getItem('kruti_nomera_state');
     if (saved) {
       try {
-        state = { ...state, ...JSON.parse(saved) };
+        const parsed = JSON.parse(saved);
+        state = { 
+          ...state, 
+          ...parsed,
+          club: { ...state.club, ...(parsed.club || {}) },
+          daily: { ...state.daily, ...(parsed.daily || {}) },
+          tasks: { ...state.tasks, ...(parsed.tasks || {}) }
+        };
       } catch(e){}
     }
 
@@ -1256,6 +1330,17 @@
       state.coins -= cost;
       state.spins++;
       state.isSpinning = true;
+
+      const todayStr = new Date().toDateString();
+      if (state.club.name) {
+        if (state.club.lastTaskDayDate !== todayStr) {
+          state.club.lastTaskDayDate = todayStr;
+          state.club.dailySpinsProgress = 0;
+          state.club.completedTasks = [];
+        }
+        state.club.dailySpinsProgress++;
+      }
+
       updateHeader();
 
       const plateCard = document.getElementById('plateCard');
@@ -1294,6 +1379,9 @@
         saveState();
         updateHeader();
         renderGarage();
+        if (state.club.name) {
+          renderClubScreen();
+        }
       }, rollTime);
     }
 
@@ -1362,6 +1450,190 @@
         saveState();
         updateHeader();
       }
+    }
+
+    // CLUB SYSTEM
+    function createClub() {
+      soundFX.playClick();
+      const input = document.getElementById('clubNameInput');
+      const name = input.value.trim();
+
+      if (!name) {
+        alert("Введите название клуба!");
+        return;
+      }
+
+      if (name.length < 3 || name.length > 20) {
+        alert("Название клуба должно содержать от 3 до 20 символов!");
+        return;
+      }
+
+      if (containsProfanity(name)) {
+        alert("Название содержит нецензурные выражения (мат). Придумайте другое название!");
+        return;
+      }
+
+      if (state.coins < 1000) {
+        alert("Вам не хватает монет! Создание клуба стоит 1 000 🪙.");
+        return;
+      }
+
+      state.coins -= 1000;
+      state.club.name = name;
+      state.club.lastTaskDayDate = new Date().toDateString();
+      state.club.dailySpinsProgress = 0;
+      state.club.completedTasks = [];
+
+      soundFX.playCoins();
+      saveState();
+      updateHeader();
+      renderClubScreen();
+      showModal("КЛУБ СОЗДАН!", `Поздравляем! Вы создали клуб "${name}".`);
+    }
+
+    function leaveClub() {
+      soundFX.playClick();
+      if (confirm("Вы действительно хотите покинуть клуб? Вся статистика заданий будет сброшена.")) {
+        state.club.name = null;
+        state.club.dailySpinsProgress = 0;
+        state.club.completedTasks = [];
+        saveState();
+        renderClubScreen();
+      }
+    }
+
+    function getClubDailyTasks() {
+      return [
+        { id: 1, title: "🎯 Сделать 15 спинов рулетки", target: 15, current: state.club.dailySpinsProgress || 0 },
+        { id: 2, title: "🚀 Сделать 30 спинов рулетки", target: 30, current: state.club.dailySpinsProgress || 0 }
+      ];
+    }
+
+    function claimClubTaskReward(taskId) {
+      soundFX.playClick();
+      if (!state.club.name) return;
+
+      const todayStr = new Date().toDateString();
+      if (state.club.lastTaskDayDate !== todayStr) {
+        state.club.lastTaskDayDate = todayStr;
+        state.club.dailySpinsProgress = 0;
+        state.club.completedTasks = [];
+      }
+
+      if (state.club.completedTasks.includes(taskId)) return;
+
+      const tasks = getClubDailyTasks();
+      const task = tasks.find(t => t.id === taskId);
+      if (!task || task.current < task.target) return;
+
+      state.club.completedTasks.push(taskId);
+
+      let currentWeekNum = getWeekNumber(new Date());
+      let canGetCaseThisWeek = state.club.lastCaseWeek !== currentWeekNum;
+
+      let rewardsPool = [20000, 10000];
+      if (canGetCaseThisWeek) {
+        rewardsPool.push('rare_case');
+      }
+
+      let reward = getRandomItem(rewardsPool);
+      let rewardMsg = "";
+
+      if (reward === 20000) {
+        state.coins += 20000;
+        rewardMsg = "Вы получили 20 000 🪙 за клубное задание!";
+        soundFX.playCoins();
+      } else if (reward === 10000) {
+        state.coins += 10000;
+        rewardMsg = "Вы получили 10 000 🪙 за клубное задание!";
+        soundFX.playCoins();
+      } else if (reward === 'rare_case') {
+        state.club.rareCases++;
+        state.club.lastCaseWeek = currentWeekNum;
+        rewardMsg = "🎉 Вам выпал редкий клубный кейс!";
+        soundFX.playWin('purple');
+      }
+
+      saveState();
+      updateHeader();
+      renderClubScreen();
+      showModal("НАГРАДА КЛУБА", rewardMsg);
+    }
+
+    function openRareClubCase() {
+      soundFX.playClick();
+      if (state.club.rareCases <= 0) {
+        alert("У вас нет доступных редких клубных кейсов!");
+        return;
+      }
+
+      state.club.rareCases--;
+      saveState();
+      renderClubScreen();
+
+      let rand = Math.random();
+      if (rand < 0.05 && !state.ownedCars.includes(3)) {
+        state.ownedCars.push(3);
+        soundFX.playWin('yellow');
+        showModal("ЭПИЧЕСКИЙ ДРОП!", "🏎️ Поздравляем! Из редкого клубного кейса вам выпала BMW M5 F90!");
+      } else {
+        state.coins += 50000;
+        soundFX.playCoins();
+        showModal("ОТКРЫТИЕ КЕЙСА!", "💰 Из редкого клубного кейса вам выпало 50 000 монет!");
+      }
+      updateHeader();
+      renderGarage();
+    }
+
+    function renderClubScreen() {
+      const noClubCard = document.getElementById('noClubCard');
+      const hasClubContainer = document.getElementById('hasClubContainer');
+
+      if (!state.club.name) {
+        noClubCard.style.display = 'block';
+        hasClubContainer.style.display = 'none';
+        return;
+      }
+
+      noClubCard.style.display = 'none';
+      hasClubContainer.style.display = 'block';
+
+      document.getElementById('clubTitle').innerText = `Клуб: ${state.club.name}`;
+      document.getElementById('rareClubCasesCount').innerText = state.club.rareCases || 0;
+
+      const todayStr = new Date().toDateString();
+      if (state.club.lastTaskDayDate !== todayStr) {
+        state.club.lastTaskDayDate = todayStr;
+        state.club.dailySpinsProgress = 0;
+        state.club.completedTasks = [];
+      }
+
+      const tasksList = document.getElementById('clubTasksList');
+      tasksList.innerHTML = '';
+
+      const tasks = getClubDailyTasks();
+      tasks.forEach(t => {
+        const isDone = state.club.completedTasks.includes(t.id);
+        const canClaim = t.current >= t.target && !isDone;
+
+        const div = document.createElement('div');
+        div.style.background = 'rgba(0,0,0,0.3)';
+        div.style.padding = '12px';
+        div.style.borderRadius = '10px';
+        div.style.border = '1px solid rgba(255,255,255,0.05)';
+
+        div.innerHTML = `
+          <div style="font-weight: bold; font-size: 0.9rem; margin-bottom: 4px;">${t.title}</div>
+          <div style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 8px;">
+            Прогресс: ${Math.min(t.current, t.target)} / ${t.target}
+          </div>
+          <button class="btn-small" style="width: 100%;" ${!canClaim ? 'disabled' : ''} onclick="claimClubTaskReward(${t.id})">
+            ${isDone ? 'Забрано ✓' : canClaim ? 'Забрать случайную награду' : 'В процессе...'}
+          </button>
+        `;
+
+        tasksList.appendChild(div);
+      });
     }
 
     // MARKET & CHAT SYSTEM
@@ -2062,13 +2334,17 @@
         document.querySelectorAll('.nav-btn')[3].classList.add('active');
         document.getElementById('casesScreen').classList.add('active');
         try { renderDailyRewards(); } catch(e) { console.error(e); }
-      } else if (tab === 'market') {
+      } else if (tab === 'club') {
         document.querySelectorAll('.nav-btn')[4].classList.add('active');
+        document.getElementById('clubScreen').classList.add('active');
+        try { renderClubScreen(); } catch(e) { console.error(e); }
+      } else if (tab === 'market') {
+        document.querySelectorAll('.nav-btn')[5].classList.add('active');
         document.getElementById('marketScreen').classList.add('active');
         document.getElementById('marketBadge').style.display = 'none';
         try { renderMarketChat(); } catch(e) { console.error(e); }
       } else if (tab === 'tasks') {
-        document.querySelectorAll('.nav-btn')[5].classList.add('active');
+        document.querySelectorAll('.nav-btn')[6].classList.add('active');
         document.getElementById('tasksScreen').classList.add('active');
         try { updateTasksUI(); } catch(e) { console.error(e); }
       }
@@ -2092,6 +2368,7 @@
       renderDailyRewards();
       updateTasksUI();
       renderMarketChat();
+      renderClubScreen();
     };
   </script>
 </body>
