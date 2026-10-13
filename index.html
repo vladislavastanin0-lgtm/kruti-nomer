@@ -335,6 +335,16 @@
     .pass-reward-box { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 3px 6px; border-radius: 4px; font-size: 0.7rem; }
     .pass-reward-box.premium { border: 1px solid rgba(255,215,0,0.3); background: rgba(255,215,0,0.05); }
 
+    /* DAILY & TASKS UI */
+    .daily-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+    .daily-card { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px; text-align: center; font-size: 0.7rem; }
+    .daily-card.claimed { opacity: 0.5; border-color: var(--green); }
+
+    .task-item { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.8rem; }
+
+    /* MARKET UI */
+    .market-item { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+
     /* CRAFT UI */
     .craft-slots { display: flex; justify-content: space-around; gap: 6px; margin: 10px 0; }
     .craft-slot { width: 75px; height: 45px; border: 2px dashed rgba(255,255,255,0.2); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 0.7rem; color: var(--text-sub); cursor: pointer; text-align: center; }
@@ -389,7 +399,6 @@
       <button class="nav-btn" onclick="switchTab('pass')"><span>🎟️</span>Пасс</button>
       <button class="nav-btn" onclick="switchTab('shop')"><span>🏬</span>Салон</button>
       <button class="nav-btn" onclick="switchTab('cases')"><span>🎁</span>Бонусы</button>
-      <button class="nav-btn" onclick="switchTab('club')"><span>🛡️</span>Клуб</button>
       <button class="nav-btn" onclick="switchTab('market')"><span>💬</span>Рынок</button>
       <button class="nav-btn" onclick="switchTab('tasks')"><span>🏆</span>Задания</button>
     </nav>
@@ -510,7 +519,7 @@
     <div id="casesScreen" class="screen">
       <div class="section-card">
         <h3>🎁 Ежедневные бонусы</h3>
-        <div id="dailyGrid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:8px;"></div>
+        <div class="daily-grid" id="dailyGrid"></div>
         <button id="claimDailyBtn" class="main-btn" style="width:100%; padding:8px; font-size:0.85rem;" onclick="claimDailyReward()">Забрать бонус дня</button>
       </div>
 
@@ -527,37 +536,33 @@
       </div>
     </div>
 
-    <!-- CLUB SCREEN -->
-    <div id="clubScreen" class="screen">
-      <div id="noClubCard" class="section-card">
-        <h3>🛡️ Создать автоклуб</h3>
-        <input type="text" id="clubNameInput" placeholder="Название клуба" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:8px; font-size:0.85rem;">
-        <button class="main-btn" style="width:100%; padding:8px; font-size:0.85rem;" onclick="createClub()">Создать за 1 000 🪙</button>
-      </div>
-
-      <div id="hasClubContainer" style="display:none;">
-        <div class="section-card">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h3 id="clubTitle" style="color:var(--accent-color);">Клуб: ---</h3>
-            <button class="btn-small" style="background:rgba(231,76,60,0.2); color:var(--red);" onclick="leaveClub()">Покинуть</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- MARKET SCREEN -->
     <div id="marketScreen" class="screen">
       <div class="section-card">
         <h3>💬 Авторынок номеров</h3>
-        <p>Выставляйте и продавайте свои номера.</p>
+        <p>Выставляйте свои номера на продажу или покупайте чужие!</p>
+        <button class="main-btn" style="width:100%; padding:8px; font-size:0.85rem; margin-bottom:10px;" onclick="openSellModal()">🏷️ Выставить свой номер</button>
       </div>
+      <div id="marketList"></div>
     </div>
 
     <!-- TASKS SCREEN -->
     <div id="tasksScreen" class="screen">
       <div class="section-card">
         <h3>🏆 Задания</h3>
-        <p>Крутите номера и выполняйте задания!</p>
+        <p>Выполняйте задания и получайте XP и монеты!</p>
+      </div>
+      <div id="tasksList"></div>
+    </div>
+
+    <!-- SELL MODAL -->
+    <div id="sellModal" class="modal-overlay">
+      <div class="modal-card">
+        <h2>Выставить номер</h2>
+        <select id="plateToSellSelect" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:8px;"></select>
+        <input type="number" id="sellPriceInput" placeholder="Цена в монетах" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:12px; text-align:center;">
+        <button class="main-btn" style="width:100%; padding:8px; margin-bottom:6px;" onclick="confirmSellPlate()">Выставить на рынок</button>
+        <button class="btn-small" style="width:100%;" onclick="closeSellModal()">Отмена</button>
       </div>
     </div>
 
@@ -634,6 +639,16 @@
       regularCases: 0,
       country: 'kz',
       pass: { level: 1, xp: 0, isPremium: false, claimedFree: [], claimedPremium: [] },
+      daily: { claimedDays: 0, lastDate: null },
+      tasks: {
+        spin5: { progress: 0, max: 5, claimed: false },
+        spin20: { progress: 0, max: 20, claimed: false }
+      },
+      market: [
+        { id: 101, text: "777 WWW 02", price: 15000, seller: "Арман" },
+        { id: 102, text: "001 KZ 01", price: 50000, seller: "Данияр" },
+        { id: 103, text: "555 VIP 05", price: 30000, seller: "Тимур" }
+      ],
       isSpinning: false
     };
 
@@ -668,7 +683,7 @@
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        state = { ...state, ...parsed, pass: { ...state.pass, ...(parsed.pass || {}) } };
+        state = { ...state, ...parsed, pass: { ...state.pass, ...(parsed.pass || {}) }, daily: { ...state.daily, ...(parsed.daily || {}) }, tasks: { ...state.tasks, ...(parsed.tasks || {}) } };
       } catch(e){}
     }
 
@@ -925,7 +940,139 @@
       saveState();
     }
 
-    // SPIN (Генерация номера и запуск рулетки)
+    // DAILY BONUSES
+    const DAILY_REWARDS = [
+      { day: 1, type: 'coins', val: 1000, label: '1 000 🪙' },
+      { day: 2, type: 'regular_case', val: 1, label: '📦 Кейс' },
+      { day: 3, type: 'coins', val: 5000, label: '5 000 🪙' },
+      { day: 4, type: 'luck', val: 1, label: '✨ Удача' }
+    ];
+
+    function renderDailyUI() {
+      const grid = document.getElementById('dailyGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      DAILY_REWARDS.forEach((rew, idx) => {
+        const dayNum = idx + 1;
+        const isClaimed = state.daily.claimedDays >= dayNum;
+        const div = document.createElement('div');
+        div.className = `daily-card ${isClaimed ? 'claimed' : ''}`;
+        div.innerHTML = `<div style="font-weight:bold; color:var(--gold);">День ${dayNum}</div><div style="margin:4px 0;">${rew.label}</div><div style="font-size:0.6rem; color:var(--text-sub);">${isClaimed ? 'Получено' : 'Доступно'}</div>`;
+        grid.appendChild(div);
+      });
+    }
+
+    function claimDailyReward() {
+      const today = new Date().toDateString();
+      if (state.daily.lastDate === today) { alert("Вы уже забрали бонус сегодня!"); return; }
+      if (state.daily.claimedDays >= DAILY_REWARDS.length) { state.daily.claimedDays = 0; }
+
+      let rew = DAILY_REWARDS[state.daily.claimedDays];
+      state.daily.claimedDays++;
+      state.daily.lastDate = today;
+
+      if (rew.type === 'coins') state.coins += rew.val;
+      else if (rew.type === 'regular_case') state.regularCases++;
+      else if (rew.type === 'luck') state.luckLvl++;
+
+      saveState(); updateHeader(); renderDailyUI();
+      alert(`🎉 Вы получили бонус: ${rew.label}!`);
+    }
+
+    // TASKS SYSTEM
+    function renderTasksUI() {
+      const list = document.getElementById('tasksList');
+      if (!list) return;
+      list.innerHTML = `
+        <div class="task-item">
+          <div>
+            <div style="font-weight:bold;">Сделать 5 спинов</div>
+            <div style="font-size:0.7rem; color:var(--text-sub);">Прогресс: ${state.tasks.spin5.progress} / 5</div>
+          </div>
+          <button class="btn-small" ${state.tasks.spin5.progress < 5 || state.tasks.spin5.claimed ? 'disabled' : ''} onclick="claimTask('spin5')">${state.tasks.spin5.claimed ? 'Готово' : 'Забрать (2000 🪙)'}</button>
+        </div>
+        <div class="task-item">
+          <div>
+            <div style="font-weight:bold;">Сделать 20 спинов</div>
+            <div style="font-size:0.7rem; color:var(--text-sub);">Прогресс: ${state.tasks.spin20.progress} / 20</div>
+          </div>
+          <button class="btn-small" ${state.tasks.spin20.progress < 20 || state.tasks.spin20.claimed ? 'disabled' : ''} onclick="claimTask('spin20')">${state.tasks.spin20.claimed ? 'Готово' : 'Забрать (10000 🪙)'}</button>
+        </div>
+      `;
+    }
+
+    function claimTask(key) {
+      if (state.tasks[key].claimed) return;
+      state.tasks[key].claimed = true;
+      if (key === 'spin5') { state.coins += 2000; addPassXp(20); }
+      if (key === 'spin20') { state.coins += 10000; addPassXp(50); }
+      saveState(); updateHeader(); renderTasksUI();
+      alert("Награда за задание получена!");
+    }
+
+    // MARKET SYSTEM
+    function renderMarket() {
+      const list = document.getElementById('marketList');
+      if (!list) return;
+      list.innerHTML = '';
+      if (state.market.length === 0) {
+        list.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.8rem;">На рынке пока нет номеров</p>';
+        return;
+      }
+      state.market.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = 'market-item';
+        div.innerHTML = `
+          <div>
+            <div class="plate-item-mini" style="display:inline-block; margin-bottom:2px;">${item.text}</div>
+            <div style="font-size:0.7rem; color:var(--text-sub);">Продавец: ${item.seller}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.8rem; font-weight:bold; color:var(--gold); margin-bottom:4px;">${item.price.toLocaleString()} 🪙</div>
+            <button class="btn-small" onclick="buyMarketPlate(${idx})">Купить</button>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function openSellModal() {
+      const select = document.getElementById('plateToSellSelect');
+      select.innerHTML = '';
+      if (state.ownedPlates.length === 0) {
+        select.innerHTML = '<option>Нет доступных номеров</option>';
+      } else {
+        state.ownedPlates.forEach((plate, idx) => {
+          select.innerHTML += `<option value="${idx}">${plate.text} (${plate.rarityName})</option>`;
+        });
+      }
+      document.getElementById('sellModal').classList.add('active');
+    }
+    function closeSellModal() { document.getElementById('sellModal').classList.remove('active'); }
+
+    function confirmSellPlate() {
+      const idx = parseInt(document.getElementById('plateToSellSelect').value);
+      const price = parseInt(document.getElementById('sellPriceInput').value);
+      if (isNaN(price) || price <= 0) { alert("Укажите корректную цену!"); return; }
+      if (state.ownedPlates.length <= idx) return;
+
+      const plate = state.ownedPlates.splice(idx, 1)[0];
+      state.market.push({ id: plate.id, text: plate.text, price: price, seller: "Вы" });
+      closeSellModal(); saveState(); renderMarket(); renderGarage();
+      alert("Номер успешно выставлен на авторынок!");
+    }
+
+    function buyMarketPlate(idx) {
+      const item = state.market[idx];
+      if (state.coins < item.price) { alert("Недостаточно монет!"); return; }
+      state.coins -= item.price;
+      state.ownedPlates.push({ id: item.id, text: item.text, rarity: 'green', rarityName: 'Редкий', color: '#22C55E', value: item.price });
+      state.market.splice(idx, 1);
+      saveState(); updateHeader(); renderMarket();
+      alert("Вы успешно купили номер!");
+    }
+
+    // SPIN
     function generateRandomPlateText() {
       const nums = Math.floor(100 + Math.random() * 900);
       const letters = "ABEKMHOPCTXY";
@@ -942,6 +1089,10 @@
       state.spins++;
       state.isSpinning = true;
       addPassXp(5);
+
+      if (state.tasks.spin5.progress < 5) state.tasks.spin5.progress++;
+      if (state.tasks.spin20.progress < 20) state.tasks.spin20.progress++;
+
       updateHeader();
 
       const plateCard = document.getElementById('plateCard');
@@ -1018,7 +1169,7 @@
     function switchTab(tab) {
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      const tabs = ['spin','garage','craft','pass','shop','cases','club','market','tasks'];
+      const tabs = ['spin','garage','craft','pass','shop','cases','market','tasks'];
       const idx = tabs.indexOf(tab);
       if (idx !== -1) {
         document.querySelectorAll('.nav-btn')[idx].classList.add('active');
@@ -1027,7 +1178,9 @@
       if (tab === 'garage') renderGarage();
       if (tab === 'shop') renderShop();
       if (tab === 'pass') renderPassUI();
-      if (tab === 'cases') updateTasksUI();
+      if (tab === 'cases') { updateTasksUI(); renderDailyUI(); }
+      if (tab === 'tasks') renderTasksUI();
+      if (tab === 'market') renderMarket();
     }
 
     window.onload = () => {
