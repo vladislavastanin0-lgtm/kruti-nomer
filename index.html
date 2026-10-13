@@ -522,7 +522,7 @@
   <div id="app">
     <!-- AUCTION ALERT BANNER -->
     <div id="auctionBanner" class="auction-alert-banner">
-      🔔 Внимание! Аукцион эксклюзивных номеров начнется через <span id="auctionBannerTime">05:00</span>!
+      🔔 Внимание! Аукцион начнётся в <span id="auctionTargetTime">--:30</span>! Успейте подготовиться!
     </div>
 
     <header>
@@ -596,7 +596,7 @@
     <!-- AUCTION SCREEN -->
     <div id="auctionScreen" class="screen">
       <div class="auction-timer-card">
-        <div style="font-size:0.85rem; color:var(--text-sub);">До следующего аукциона (Каждые 30 мин):</div>
+        <div style="font-size:0.85rem; color:var(--text-sub);">До ближайшего аукциона (ровно в 30 мин каждого часа):</div>
         <div id="auctionTimer" class="auction-timer-val">00:00</div>
       </div>
 
@@ -625,7 +625,7 @@
 
       <div id="auctionWaitArea" class="section-card" style="text-align:center; padding:20px;">
         <h3 style="color:var(--gold); margin-bottom:6px;">🔨 Торги закрыты</h3>
-        <p>Аукцион проходит каждые 30 минут часа. За 5 минут до начала вам придёт уведомление!</p>
+        <p>Аукцион проходит каждые 30 минут каждого часа (например, 20:30, 21:30, 22:30).</p>
       </div>
     </div>
 
@@ -983,7 +983,8 @@
       currentBid: 10000,
       leader: null,
       plateText: "777 VIP 77",
-      botTimer: null
+      botTimer: null,
+      bannerShownForMin: null
     };
 
     function updateAuctionTimer() {
@@ -991,24 +992,38 @@
       const minutes = now.getMinutes();
       const seconds = now.getSeconds();
 
-      let nextAuctionMin = minutes < 30 ? 30 : 60;
-      let diffMin = nextAuctionMin - minutes - 1;
+      // Аукцион ТОЛЬКО каждые 30 минут часа (например: 20:30, 21:30, 22:30...)
+      let nextMin = minutes < 30 ? 30 : 60;
+      let diffMin = nextMin - minutes - 1;
       let diffSec = 60 - seconds;
       if (diffSec === 60) { diffSec = 0; diffMin++; }
 
       const formatted = `${String(diffMin).padStart(2, '0')}:${String(diffSec).padStart(2, '0')}`;
       document.getElementById('auctionTimer').innerText = formatted;
-      document.getElementById('auctionBannerTime').innerText = formatted;
 
-      if (diffMin < 5 && !auctionState.isActive) {
-        document.getElementById('auctionBanner').style.display = 'block';
-      } else {
-        document.getElementById('auctionBanner').style.display = 'none';
+      // За 5 минут до 30-й минуты (в 25 или 55 минут часа) показываем плашку на 15 секунд!
+      if ((minutes === 25 || minutes === 55) && seconds < 15 && !auctionState.isActive) {
+        if (auctionState.bannerShownForMin !== minutes) {
+          auctionState.bannerShownForMin = minutes;
+          let targetH = minutes === 55 ? (now.getHours() + 1) % 24 : now.getHours();
+          let targetM = minutes === 55 ? "00" : "30";
+          document.getElementById('auctionTargetTime').innerText = `${String(targetH).padStart(2, '0')}:${targetM}`;
+          
+          const banner = document.getElementById('auctionBanner');
+          banner.style.display = 'block';
+          playSound('click');
+
+          // Ровно через 15 секунд плашка исчезает
+          setTimeout(() => {
+            banner.style.display = 'none';
+          }, 15000);
+        }
       }
 
-      if ((minutes === 0 || minutes === 30) && seconds < 120 && !auctionState.isActive) {
+      // Запуск аукциона ровно на 30-й минуте (длится 2 минуты)
+      if ((minutes === 30 || minutes === 0) && seconds < 120 && !auctionState.isActive) {
         startAuction();
-      } else if ((minutes !== 0 && minutes !== 30) && auctionState.isActive) {
+      } else if ((minutes !== 30 && minutes !== 0) && auctionState.isActive) {
         endAuction();
       }
     }
