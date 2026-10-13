@@ -226,12 +226,6 @@
       text-align: center;
     }
 
-    .plate-card.rarity-white { border-color: #E2E8F0; }
-    .plate-card.rarity-green { border-color: #22C55E; }
-    .plate-card.rarity-blue { border-color: #3B82F6; }
-    .plate-card.rarity-purple { border-color: #A855F7; }
-    .plate-card.rarity-yellow { border-color: #EAB308; }
-
     .drop-info { text-align: center; min-height: 45px; }
     .drop-rarity-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 2px; }
     .drop-value { color: var(--gold); font-weight: bold; font-size: 0.9rem; }
@@ -274,6 +268,7 @@
       font-weight: 700;
       cursor: pointer;
     }
+    .btn-small:disabled { opacity: 0.4; cursor: not-allowed; }
 
     /* GARAGE */
     .garage-carousel {
@@ -305,6 +300,7 @@
       background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1);
       border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between;
     }
+    .plate-item.equipped { border-color: var(--accent-color); background: rgba(59, 130, 246, 0.1); }
     .plate-item-mini { font-family: monospace; font-weight: bold; font-size: 0.85rem; padding: 3px 6px; background: #FFF; color: #000; border-radius: 4px; }
 
     /* SECTION CARD & SHOP */
@@ -834,7 +830,7 @@
       const container = document.getElementById('carSellSection');
       if (!container) return;
       container.innerHTML = '';
-      if (carId === 0) return; // Жигули нельзя продать
+      if (carId === 0) return;
 
       if (carId === 10) {
         container.innerHTML = `<button class="btn-small" style="background:rgba(168,85,247,0.2); color:var(--purple); border-color:var(--purple); width:100%;" onclick="openBugattiSellModal()">🏷️ Продать Bugatti (до 5M 🪙)</button>`;
@@ -878,7 +874,9 @@
 
     // SHOP SYSTEM
     function renderShop() {
-      const shopList = document.getElementById('shopList'); shopList.innerHTML = '';
+      const shopList = document.getElementById('shopList'); 
+      if (!shopList) return;
+      shopList.innerHTML = '';
       CARS_DATA.forEach(car => {
         if (car.type === 'Exclusive') return;
         const isOwned = state.ownedCars.includes(car.id);
@@ -915,7 +913,10 @@
       buyBtn.innerText = state.pass.isPremium ? "Premium Активен ✓" : "Открыть Premium (⭐ 10)";
       buyBtn.disabled = state.pass.isPremium;
 
-      const container = document.getElementById('passLevelsList'); container.innerHTML = '';
+      const container = document.getElementById('passLevelsList'); 
+      if (!container) return;
+      container.innerHTML = '';
+      
       for (let i = 1; i <= 10; i++) {
         const rew = PASS_REWARDS[i];
         if (!rew) continue;
