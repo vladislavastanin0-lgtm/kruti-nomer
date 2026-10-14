@@ -98,307 +98,125 @@
       z-index: 10;
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .header-left { display: flex; align-items: center; gap: 6px; }
 
     .balance-box {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      background: rgba(0,0,0,0.3);
-      padding: 4px 8px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,215,0,0.2);
+      display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,0.3);
+      padding: 4px 8px; border-radius: 20px; border: 1px solid rgba(255,215,0,0.2);
     }
 
-    .balance-val {
-      font-weight: 700;
-      color: var(--gold);
-      font-size: 0.85rem;
-    }
-
-    .spins-count-badge {
-      font-size: 0.7rem;
-      color: var(--text-sub);
-      background: rgba(255,255,255,0.05);
-      padding: 4px 6px;
-      border-radius: 12px;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-    }
+    .balance-val { font-weight: 700; color: var(--gold); font-size: 0.85rem; }
+    .spins-count-badge { font-size: 0.7rem; color: var(--text-sub); background: rgba(255,255,255,0.05); padding: 4px 6px; border-radius: 12px; }
+    .header-actions { display: flex; gap: 4px; align-items: center; }
 
     .donate-btn {
-      background: linear-gradient(135deg, #f1c40f, #f39c12);
-      color: #000;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 16px;
-      font-weight: 700;
-      font-size: 0.75rem;
-      cursor: pointer;
+      background: linear-gradient(135deg, #f1c40f, #f39c12); color: #000; border: none;
+      padding: 5px 10px; border-radius: 16px; font-weight: 700; font-size: 0.75rem; cursor: pointer;
       box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
     }
 
     .reset-btn {
-      background: rgba(231, 76, 60, 0.15);
-      color: var(--red);
-      border: 1px solid rgba(231, 76, 60, 0.3);
-      padding: 5px 8px;
-      border-radius: 16px;
-      font-weight: 700;
-      font-size: 0.75rem;
-      cursor: pointer;
+      background: rgba(231, 76, 60, 0.15); color: var(--red); border: 1px solid rgba(231, 76, 60, 0.3);
+      padding: 5px 8px; border-radius: 16px; font-weight: 700; font-size: 0.75rem; cursor: pointer;
     }
 
-    .country-select {
-      background: rgba(0,0,0,0.4);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 10px;
-      padding: 4px 6px;
-      font-size: 0.75rem;
-      outline: none;
-    }
+    .country-select { background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 4px 6px; font-size: 0.75rem; outline: none; }
 
     nav {
-      display: flex;
-      background: var(--card-bg);
-      border-bottom: 2px solid rgba(255,255,255,0.05);
-      overflow-x: auto;
-      scrollbar-width: none;
+      display: flex; background: var(--card-bg); border-bottom: 2px solid rgba(255,255,255,0.05);
+      overflow-x: auto; scrollbar-width: none;
     }
-
     nav::-webkit-scrollbar { display: none; }
 
     .nav-btn {
-      flex: 0 0 auto;
-      padding: 8px 10px;
-      background: none;
-      border: none;
-      color: var(--text-sub);
-      font-weight: 600;
-      font-size: 0.65rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      white-space: nowrap;
-      position: relative;
+      flex: 0 0 auto; padding: 8px 10px; background: none; border: none; color: var(--text-sub);
+      font-weight: 600; font-size: 0.65rem; cursor: pointer; transition: all 0.2s;
+      display: flex; flex-direction: column; align-items: center; gap: 2px; white-space: nowrap; position: relative;
     }
+    .nav-btn.active { color: var(--accent-color); border-bottom: 2px solid var(--accent-color); background: rgba(59, 130, 246, 0.08); }
 
-    .nav-btn.active {
-      color: var(--accent-color);
-      border-bottom: 2px solid var(--accent-color);
-      background: rgba(59, 130, 246, 0.08);
-    }
-
-    .screen {
-      flex: 1;
-      display: none;
-      flex-direction: column;
-      padding: 12px;
-      overflow-y: auto;
-    }
-
+    .screen { flex: 1; display: none; flex-direction: column; padding: 12px; overflow-y: auto; }
     .screen.active { display: flex; }
 
-    .plate-display-area {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      position: relative;
-    }
-
+    .plate-display-area { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; position: relative; }
     .plate-card {
-      width: 300px;
-      height: 75px;
-      background: #FFFFFF;
-      border: 4px solid #000;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      padding: 0 10px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-      position: relative;
+      width: 300px; height: 75px; background: #FFFFFF; border: 4px solid #000; border-radius: 8px;
+      display: flex; align-items: center; padding: 0 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.4); position: relative;
     }
-
-    .plate-flag-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      border-right: 2px solid #000;
-      padding-right: 8px;
-      margin-right: 10px;
-      height: 80%;
-      justify-content: center;
-      min-width: 36px;
-    }
-
+    .plate-flag-section { display: flex; flex-direction: column; align-items: center; border-right: 2px solid #000; padding-right: 8px; margin-right: 10px; height: 80%; justify-content: center; min-width: 36px; }
     .flag-icon { width: 22px; height: 13px; position: relative; border-radius: 1px; }
     .country-code { font-size: 10px; font-weight: bold; color: #000; margin-top: 2px; }
-
-    .plate-number-text {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 1.8rem;
-      font-weight: 900;
-      color: #000;
-      letter-spacing: 2px;
-      flex: 1;
-      text-align: center;
-    }
+    .plate-number-text { font-family: 'Courier New', Courier, monospace; font-size: 1.8rem; font-weight: 900; color: #000; letter-spacing: 2px; flex: 1; text-align: center; }
 
     .drop-info { text-align: center; min-height: 45px; }
     .drop-rarity-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 2px; }
     .drop-value { color: var(--gold); font-weight: bold; font-size: 0.9rem; }
 
     .main-btn {
-      background: var(--accent-color);
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(59,130,246,0.4);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
+      background: var(--accent-color); color: white; border: none; padding: 12px; border-radius: 12px;
+      font-size: 1rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(59,130,246,0.4);
+      display: flex; justify-content: center; align-items: center; gap: 8px;
     }
     .main-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 
     .luck-box {
-      background: var(--card-bg);
-      padding: 10px 12px;
-      border-radius: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid rgba(255,255,255,0.05);
-      margin-top: 10px;
+      background: var(--card-bg); padding: 10px 12px; border-radius: 12px; display: flex;
+      justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); margin-top: 10px;
     }
 
     .btn-small {
-      background: rgba(255,215,0,0.15);
-      color: var(--gold);
-      border: 1px solid rgba(255,215,0,0.3);
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
+      background: rgba(255,215,0,0.15); color: var(--gold); border: 1px solid rgba(255,215,0,0.3);
+      padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
     }
     .btn-small:disabled { opacity: 0.4; cursor: not-allowed; }
 
     .cs-case-viewport {
-      width: 100%;
-      height: 110px;
-      background: #0D0E15;
-      border: 2px solid var(--gold);
-      border-radius: 12px;
-      position: relative;
-      overflow: hidden;
-      margin: 15px 0;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+      width: 100%; height: 110px; background: #0D0E15; border: 2px solid var(--gold); border-radius: 12px;
+      position: relative; overflow: hidden; margin: 15px 0; box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
     }
-
     .cs-case-pointer {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 4px;
-      height: 100%;
-      background: var(--gold);
-      z-index: 10;
-      box-shadow: 0 0 10px var(--gold);
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 4px; height: 100%;
+      background: var(--gold); z-index: 10; box-shadow: 0 0 10px var(--gold);
     }
-
-    .cs-case-track {
-      display: flex;
-      position: absolute;
-      left: 0;
-      top: 10px;
-      height: 90px;
-      transition: transform 0.1s linear;
-    }
-
+    .cs-case-track { display: flex; position: absolute; left: 0; top: 10px; height: 90px; transition: transform 0.1s linear; }
     .cs-case-item {
-      width: 90px;
-      height: 90px;
-      margin: 0 4px;
-      background: var(--card-bg);
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 5px;
-      flex-shrink: 0;
-      border-bottom: 4px solid var(--text-sub);
+      width: 90px; height: 90px; margin: 0 4px; background: var(--card-bg); border-radius: 8px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5px; flex-shrink: 0; border-bottom: 4px solid var(--text-sub);
     }
-
     .cs-case-item.blue { border-color: #3B82F6; background: rgba(59,130,246,0.1); }
     .cs-case-item.purple { border-color: #A855F7; background: rgba(168,85,247,0.1); }
     .cs-case-item.gold { border-color: #FFD700; background: rgba(255,215,0,0.15); }
-
     .cs-item-icon { font-size: 1.8rem; margin-bottom: 4px; }
     .cs-item-title { font-size: 0.65rem; font-weight: bold; text-align: center; color: white; line-height: 1.1; }
 
     .garage-carousel {
-      background: var(--card-bg);
-      border-radius: 14px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      border: 1px solid rgba(255,255,255,0.05);
-      margin-bottom: 12px;
+      background: var(--card-bg); border-radius: 14px; padding: 12px; display: flex; flex-direction: column;
+      align-items: center; position: relative; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 12px;
     }
-
     .car-canvas-container { width: 100%; height: 160px; display: flex; justify-content: center; align-items: center; position: relative; }
     canvas#carCanvas { width: 100%; height: 100%; background: radial-gradient(circle, #2a2d42 0%, #181a26 100%); border-radius: 10px; cursor: grab; }
-
     .carousel-nav-btn {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      background: rgba(0,0,0,0.6); color: white; border: none;
-      width: 32px; height: 32px; border-radius: 50%; font-weight: bold; cursor: pointer; z-index: 5;
+      position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white;
+      border: none; width: 32px; height: 32px; border-radius: 50%; font-weight: bold; cursor: pointer; z-index: 5;
     }
     .carousel-nav-btn.prev { left: 8px; }
     .carousel-nav-btn.next { right: 8px; }
 
     .plates-grid { display: flex; flex-direction: column; gap: 8px; }
     .plate-item {
-      background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between;
+      background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+      padding: 8px 12px; display: flex; align-items: center; justify-content: space-between;
     }
     .plate-item.equipped { border-color: var(--accent-color); background: rgba(59, 130, 246, 0.1); }
     .plate-item-mini { font-family: monospace; font-weight: bold; font-size: 0.85rem; padding: 3px 6px; background: #FFF; color: #000; border-radius: 4px; }
 
-    .section-card {
-      background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05);
-    }
+    .section-card { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); }
     .section-card h3 { font-size: 0.95rem; color: var(--gold); margin-bottom: 4px; }
     .section-card p { font-size: 0.8rem; color: var(--text-sub); margin-bottom: 10px; }
 
     .car-shop-item {
-      background: var(--card-bg); border-radius: 12px; padding: 10px 14px;
-      display: flex; align-items: center; justify-content: space-between;
-      border: 1px solid rgba(255,255,255,0.05); margin-bottom: 8px;
+      background: var(--card-bg); border-radius: 12px; padding: 10px 14px; display: flex;
+      align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 8px;
     }
     .car-shop-info h4 { font-size: 0.9rem; }
     .car-shop-info p { font-size: 0.75rem; color: var(--gold); font-weight: bold; margin-top: 2px; }
@@ -409,7 +227,6 @@
     }
     .progress-bar-bg { width: 100%; height: 10px; background: rgba(0,0,0,0.4); border-radius: 8px; overflow: hidden; margin: 6px 0; }
     .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #3B82F6, #FFD700); width: 0%; transition: width 0.3s; }
-
     .pass-level-row {
       display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.3);
       border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px; margin-bottom: 6px;
@@ -422,16 +239,11 @@
     .daily-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
     .daily-card { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px; text-align: center; font-size: 0.65rem; }
     .daily-card.claimed { opacity: 0.5; border-color: var(--green); }
-
     .task-item { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.8rem; }
 
     .auction-timer-card {
       background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(59,130,246,0.15));
-      border: 1px solid rgba(168,85,247,0.4);
-      border-radius: 12px;
-      padding: 12px;
-      text-align: center;
-      margin-bottom: 12px;
+      border: 1px solid rgba(168,85,247,0.4); border-radius: 12px; padding: 12px; text-align: center; margin-bottom: 12px;
     }
     .auction-timer-val { font-size: 1.5rem; font-weight: 900; color: var(--gold); font-family: monospace; margin-top: 4px; }
     .auction-lot-card { background: var(--card-bg); border: 2px solid var(--purple); border-radius: 14px; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
@@ -458,7 +270,7 @@
 
     <header>
       <div class="header-left">
-        <div class="balance-box clickable" onclick="playSound('click'); alert('Баланс монет.');">
+        <div class="balance-box clickable" onclick="playSound('click'); alert('Ваш баланс монет.');">
           <span style="font-size:0.9rem;">🪙</span>
           <span id="balanceVal" class="balance-val">2,000</span>
         </div>
@@ -606,13 +418,13 @@
     <!-- CASES -->
     <div id="casesScreen" class="screen">
       <div class="section-card"><h3>🎁 Ежедневные бонусы</h3><div class="daily-grid" id="dailyGrid"></div><button class="main-btn clickable" style="width:100%; padding:8px;" onclick="claimDailyReward()">Забрать бонус</button></div>
-      <div class="section-card"><h3>📦 Особый кейс</h3><button class="main-btn clickable" style="width:100%; padding:10px;" onclick="openSpecialCase()">Открыть особый кейс</button></div>
-      <div class="section-card"><h3>📦 Обычный кейс</h3><button class="main-btn clickable" style="width:100%; padding:10px; background:linear-gradient(135deg, #22c55e, #3b82f6);" onclick="openRegularCase()">Открыть обычный кейс</button></div>
+      <div class="section-card"><h3>📦 Особый кейс</h3><p>Содержит Tank 500 или 2 000 000 монет!</p><button class="main-btn clickable" style="width:100%; padding:10px;" onclick="openSpecialCase()">Открыть особый кейс (<span id="specialCasesCount">0</span>)</button></div>
+      <div class="section-card"><h3>📦 Обычный кейс</h3><p>Содержит Camry 70 или 10 000 монет!</p><button class="main-btn clickable" style="width:100%; padding:10px; background:linear-gradient(135deg, #22c55e, #3b82f6);" onclick="openRegularCase()">Открыть обычный кейс (<span id="regularCasesCount">0</span>)</button></div>
     </div>
 
     <!-- TASKS -->
     <div id="tasksScreen" class="screen">
-      <div class="section-card"><h3>🏆 Задания</h3></div>
+      <div class="section-card"><h3>🏆 Задания</h3><p>Выполняйте задания для получения наград!</p></div>
       <div id="tasksList"></div>
     </div>
 
@@ -747,9 +559,11 @@
       document.getElementById('spinsCount').innerText = state.spins;
       document.getElementById('luckLvl').innerText = state.luckLvl;
       document.getElementById('luckCost').innerText = (1000 * Math.pow(2, state.luckLvl)).toLocaleString();
+      if(document.getElementById('specialCasesCount')) document.getElementById('specialCasesCount').innerText = state.specialCases;
+      if(document.getElementById('regularCasesCount')) document.getElementById('regularCasesCount').innerText = state.regularCases;
     }
 
-    // ССЫЛКА НА ВАШ СЕРВЕР (замените в кавычках на ваш реальный Render URL после деплоя бэкенда с токеном)
+    // Замените на вашу ссылку с Render после развертывания бэкенда
     const BACKEND_URL = "https://ваш-сервер.onrender.com";
 
     function requestTelegramStars(starsCount, rewardCoins, title) {
@@ -784,7 +598,7 @@
 
     function buyPremiumPass() {
       playSound('click');
-      if (state.pass.isPremium) return alert("Уже активирован!");
+      if (state.pass.isPremium) return alert("Премиум уже активен!");
       requestTelegramStars(10, 0, "Премиум Блатной Пасс");
       state.pass.isPremium = true;
       saveState(); renderPassUI();
@@ -803,21 +617,227 @@
       }, 1000);
     }
 
+    function upgradeLuck() {
+      playSound('click');
+      let cost = 1000 * Math.pow(2, state.luckLvl);
+      if (state.coins >= cost) {
+        state.coins -= cost;
+        state.luckLvl++;
+        saveState(); updateHeader();
+      } else {
+        alert("Недостаточно монет для улучшения удачи!");
+      }
+    }
+
+    // РУЛЕТКА КЕЙСОВ CS2
+    function startCs2CaseRoulette(title, pool, winningItem, callback) {
+      playSound('click');
+      const modal = document.getElementById('caseSpinnerModal');
+      const track = document.getElementById('csCaseTrack');
+      document.getElementById('caseSpinnerTitle').innerText = title;
+      track.innerHTML = '';
+      
+      let itemsList = [];
+      for (let i = 0; i < 35; i++) {
+        itemsList.push(pool[Math.floor(Math.random() * pool.length)]);
+      }
+      itemsList[30] = winningItem;
+
+      itemsList.forEach((item) => {
+        const div = document.createElement('div');
+        div.className = `cs-case-item ${item.type}`;
+        div.innerHTML = `<div class="cs-item-icon">${item.icon}</div><div class="cs-item-title">${item.title}</div>`;
+        track.appendChild(div);
+      });
+
+      modal.classList.add('active');
+      let currentX = 0;
+      let targetOffset = 30 * 98 - 130;
+      let startTime = null;
+
+      function animateTrack(timestamp) {
+        if (!startTime) startTime = timestamp;
+        let progress = (timestamp - startTime) / 4000;
+        if (progress > 1) progress = 1;
+        let easeOut = 1 - Math.pow(1 - progress, 3);
+        currentX = targetOffset * easeOut;
+        track.style.transform = `translateX(-${currentX}px)`;
+
+        if (progress < 1) {
+          requestAnimationFrame(animateTrack);
+        } else {
+          setTimeout(() => {
+            modal.classList.remove('active');
+            playSound('win');
+            callback();
+          }, 600);
+        }
+      }
+      requestAnimationFrame(animateTrack);
+    }
+
+    function openRegularCase() {
+      if (state.regularCases <= 0) return alert("У вас нет обычных кейсов!");
+      state.regularCases--;
+      saveState(); updateHeader();
+      const pool = [{ title: "5 000 🪙", icon: "🪙", type: "blue" }, { title: "Camry 70", icon: "🚗", type: "gold" }];
+      let isWin = Math.random() < 0.1;
+      startCs2CaseRoulette("Обычный кейс", pool, isWin ? pool[1] : pool[0], () => {
+        if (isWin) { state.ownedCars.push(2); alert("Вы выиграли Toyota Camry 70!"); }
+        else { state.coins += 5000; alert("Вы выиграли 5 000 монет!"); }
+        saveState(); updateHeader();
+      });
+    }
+
+    function openSpecialCase() {
+      if (state.specialCases <= 0) return alert("У вас нет особых кейсов!");
+      state.specialCases--;
+      saveState(); updateHeader();
+      const pool = [{ title: "500 000 🪙", icon: "🪙", type: "purple" }, { title: "Tank 500", icon: "🚙", type: "gold" }];
+      let isWin = Math.random() < 0.15;
+      startCs2CaseRoulette("Особый кейс", pool, isWin ? pool[1] : pool[0], () => {
+        if (isWin) { state.ownedCars.push(7); alert("Вы выиграли Tank 500!"); }
+        else { state.coins += 500000; alert("Вы выиграли 500 000 монет!"); }
+        saveState(); updateHeader();
+      });
+    }
+
+    function renderShop() {
+      const list = document.getElementById('shopList');
+      if (!list) return;
+      list.innerHTML = '';
+      CARS_DATA.forEach(car => {
+        let isOwned = state.ownedCars.includes(car.id);
+        const div = document.createElement('div');
+        div.className = 'car-shop-item';
+        div.innerHTML = `
+          <div class="car-shop-info"><h4>${car.name}</h4><p>${car.price.toLocaleString()} 🪙</p></div>
+          <button class="btn-small clickable" ${isOwned || state.coins < car.price ? 'disabled' : ''} onclick="buyCar(${car.id})">${isOwned ? 'Куплено' : 'Купить'}</button>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function buyCar(id) {
+      playSound('click');
+      let car = CARS_DATA[id];
+      if (state.coins >= car.price && !state.ownedCars.includes(id)) {
+        state.coins -= car.price;
+        state.ownedCars.push(id);
+        saveState(); updateHeader(); renderShop();
+      }
+    }
+
+    function renderPassUI() {
+      document.getElementById('passLvlBadge').innerText = `Ур. ${state.pass.level}`;
+      let container = document.getElementById('passLevelsList');
+      if (!container) return;
+      container.innerHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        let rew = PASS_REWARDS[i];
+        let row = document.createElement('div');
+        row.className = 'pass-level-row';
+        row.innerHTML = `
+          <div class="pass-level-badge">${i}</div>
+          <div class="pass-rewards-grid">
+            <div class="pass-reward-box"><span>🆓 ${rew.free.val} 🪙</span><button class="btn-small clickable" onclick="claimPass(${i}, false)">Забрать</button></div>
+          </div>
+        `;
+        container.appendChild(row);
+      }
+    }
+
+    function claimPass(lvl, isPrem) {
+      playSound('click');
+      state.coins += 1000;
+      saveState(); updateHeader(); alert("Награда получена!");
+    }
+
+    function renderTasks() {
+      const list = document.getElementById('tasksList');
+      if(!list) return;
+      list.innerHTML = `
+        <div class="task-item"><div><b>Сделать 5 спинов</b><br><small>${state.tasks.spin5.progress}/5</small></div><button class="btn-small clickable" onclick="claimTask('spin5')">Забрать</button></div>
+      `;
+    }
+
+    function claimTask(key) {
+      playSound('click');
+      if(state.tasks[key].progress >= state.tasks[key].max && !state.tasks[key].claimed) {
+        state.tasks[key].claimed = true;
+        state.coins += 2000;
+        saveState(); updateHeader(); renderTasks();
+        alert("Награда за задание получена!");
+      } else {
+        alert("Задание еще не выполнено!");
+      }
+    }
+
+    function renderDailyUI() {
+      const grid = document.getElementById('dailyGrid');
+      if(!grid) return;
+      grid.innerHTML = `<div class="daily-card claimed"><b>День 1</b><br>1000 🪙</div>`;
+    }
+
+    function claimDailyReward() {
+      playSound('click');
+      state.coins += 1000;
+      state.regularCases++;
+      saveState(); updateHeader();
+      alert("Ежедневный бонус успешно получен!");
+    }
+
+    function sendGlobalMessage() {
+      let input = document.getElementById('globalChatInput');
+      let text = input.value.trim();
+      if(!text) return;
+      db.ref('chat').push({ sender: playerName, text: text });
+      input.value = '';
+    }
+
+    db.ref('chat').limitToLast(20).on('child_added', (snapshot) => {
+      let msg = snapshot.val();
+      let chat = document.getElementById('globalChatMessages');
+      if(!chat) return;
+      let div = document.createElement('div');
+      div.className = 'chat-bubble';
+      div.innerHTML = `<b style="color:var(--gold);">${msg.sender}:</b> ${msg.text}`;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    });
+
+    function openCreateClubModal() { document.getElementById('createClubModal').classList.add('active'); }
+    function closeCreateClubModal() { document.getElementById('createClubModal').classList.remove('active'); }
+    function confirmCreateClub() {
+      let name = document.getElementById('clubNameInput').value.trim();
+      if(!name) return alert("Введите название!");
+      if(state.coins < 50000) return alert("Нужно 50 000 монет!");
+      state.coins -= 50000;
+      db.ref('clubs').push({ name, owner: playerName });
+      closeCreateClubModal(); saveState(); updateHeader();
+      alert("Клуб создан!");
+    }
+
     function switchTab(tab) {
       playSound('click');
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       const tabs = ['spin','auction','garage','globalChat','clubs','pass','shop','cases','tasks'];
-      const idx = tabs.indexOf(tab);
+      let idx = tabs.indexOf(tab);
       if (idx !== -1) {
         document.querySelectorAll('.nav-btn')[idx].classList.add('active');
         document.getElementById(`${tab}Screen`).classList.add('active');
       }
+      if (tab === 'shop') renderShop();
+      if (tab === 'pass') renderPassUI();
+      if (tab === 'tasks') renderTasks();
+      if (tab === 'cases') renderDailyUI();
     }
 
     function openStarsModal() { document.getElementById('starsModal').classList.add('active'); }
     function closeStarsModal() { document.getElementById('starsModal').classList.remove('active'); }
-    function resetGame() { if(confirm("Сбросить прогресс?")) { localStorage.clear(); location.reload(); } }
+    function resetGame() { if(confirm("Сбросить весь прогресс?")) { localStorage.clear(); location.reload(); } }
+    function onPlateClick() { alert("Нажмите кнопку 'Крутить' для получения новых номеров!"); }
 
     window.onload = () => { updateHeader(); };
   </script>
