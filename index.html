@@ -748,14 +748,14 @@
     <div id="starsModal" class="modal-overlay">
       <div class="modal-card" style="max-width:360px;">
         <h2>⭐ Магазин Telegram Stars</h2>
-        <p>Пополняйте баланс монет через Telegram Stars!</p>
+        <p>Списание звезд происходит напрямую с вашего баланса в Telegram!</p>
         
         <div class="stars-item">
           <div style="text-align:left;">
-            <div style="font-weight:bold; color:white;">💰 Набор монет</div>
+            <div style="font-weight:bold; color:white;">💰 Набор «Блатной стартер»</div>
             <div style="font-size:0.7rem; color:var(--gold);">+1 000 000 🪙</div>
           </div>
-          <button class="btn-small clickable" onclick="requestTelegramStars(10, 1000000, '1 000 000 монет')">⭐ 10 звезд</button>
+          <button class="btn-small clickable" onclick="requestTelegramStars(10, 1000000, 'Набор «Блатной стартер»')">⭐ 10 звезд</button>
         </div>
 
         <div class="stars-item">
@@ -763,7 +763,7 @@
             <div style="font-weight:bold; color:white;">💰 Большой чемодан</div>
             <div style="font-size:0.7rem; color:var(--gold);">+5 000 000 🪙</div>
           </div>
-          <button class="btn-small clickable" onclick="requestTelegramStars(50, 5000000, '5 000 000 монет')">⭐ 50 звезд</button>
+          <button class="btn-small clickable" onclick="requestTelegramStars(50, 5000000, 'Большой чемодан')">⭐ 50 звезд</button>
         </div>
 
         <div class="stars-item">
@@ -771,7 +771,7 @@
             <div style="font-weight:bold; color:white;">👑 Сейф олигарха</div>
             <div style="font-size:0.7rem; color:var(--gold);">+10 000 000 🪙</div>
           </div>
-          <button class="btn-small clickable" onclick="requestTelegramStars(100, 10000000, '10 000 000 монет')">⭐ 100 звезд</button>
+          <button class="btn-small clickable" onclick="requestTelegramStars(100, 10000000, 'Сейф олигарха')">⭐ 100 звезд</button>
         </div>
 
         <button class="btn-small clickable" style="width:100%; margin-top:10px;" onclick="closeStarsModal()">Закрыть</button>
@@ -1037,7 +1037,7 @@
       alert(`🎉 Клуб "${name}" успешно создан и опубликован для всех игроков!`);
     }
 
-    // TELEGRAM STARS DONATE SYSTEM (ПРАВИЛЬНЫЙ ВЫЗОВ ИНВОЙСА)
+    // TELEGRAM STARS REAL PAYMENT (РАБОТА С ЗВЕЗДАМИ АККАУНТА)
     function openStarsModal() {
       playSound('click');
       document.getElementById('starsModal').classList.add('active');
@@ -1052,33 +1052,20 @@
       playSound('click');
       
       if (tg && tg.openInvoice) {
-        // Вызываем официальный метод выставления счета Telegram Stars через инвойс-ссылку бота
-        // Убедитесь, что ваш бот в Telegram поддерживает создание инвойсов (например, через createInvoiceLink)
-        // Либо открываем тестовый платеж / перенаправляем на оплату боту
-        tg.openInvoice(`https://t.me/$INVOICE_SLUG_OR_BOT_LINK`, (status) => {
+        // Запрос на открытие реального счета в Telegram Stars (для работы требуется бэкенд бота, создающий инвойс с валютой XTR)
+        tg.openInvoice(`https://t.me/$INVOICE_LINK`, (status) => {
           if (status === 'paid') {
             state.coins += rewardCoins;
             saveState(); updateHeader();
             closeStarsModal();
             playSound('win');
-            alert(`⭐ Оплата прошла успешно! Начислено: +${rewardCoins.toLocaleString()} 🪙`);
-          } else {
-            // Если бот настроен на мгновенный тестовый режим или callback
-            // Для страховки при реальном использовании в Телеграме вызывается бот
+            alert(`⭐ Оплата прошла успешно! Списано звезд: ${starsCount}.\nНачислено: +${rewardCoins.toLocaleString()} 🪙`);
           }
         });
+      } else {
+        // Интерактив для проверки в Telegram
+        alert(`Для списания ${starsCount} Stars откройте игру внутри Telegram-бота и настройте бэкенд бота для создания инвойсов в валюте XTR.`);
       }
-
-      // Защитное резервное окно для теста вне Telegram или если openInvoice ожидает ответа бота
-      setTimeout(() => {
-        if (confirm(`⭐ Оплатить ${starsCount} Telegram Stars за ${title}?\n(Нажмите ОК для зачисления наград в тестовом режиме)`)) {
-          state.coins += rewardCoins;
-          saveState(); updateHeader();
-          closeStarsModal();
-          playSound('win');
-          alert(`⭐ Успешно приобретено: "${title}"!\nНачислено: +${rewardCoins.toLocaleString()} 🪙`);
-        }
-      }, 300);
     }
 
     function buyPremiumPass() {
@@ -1089,24 +1076,17 @@
       }
 
       if (tg && tg.openInvoice) {
-        tg.openInvoice(`https://t.me/$PREMIUM_PASS_INVOICE`, (status) => {
+        tg.openInvoice(`https://t.me/$PASS_INVOICE_LINK`, (status) => {
           if (status === 'paid') {
             state.pass.isPremium = true;
             saveState(); updateHeader(); renderPassUI();
             playSound('win');
-            alert("⭐ Премиум Блатной Пасс успешно активирован!");
+            alert("⭐ Премиум Блатной Пасс успешно куплен за 10 Telegram Stars!");
           }
         });
+      } else {
+        alert("Для списания 10 Stars за Пасс откройте игру внутри Telegram-бота с настроенным инвойсом.");
       }
-
-      setTimeout(() => {
-        if (confirm("⭐ Активировать Премиум Блатной Пасс за 10 Telegram Stars?\n(Нажмите ОК для подтверждения в тестовом режиме)")) {
-          state.pass.isPremium = true;
-          saveState(); updateHeader(); renderPassUI();
-          playSound('win');
-          alert("⭐ Премиум Блатной Пасс успешно активирован! Все премиум награды разблокированы!");
-        }
-      }, 300);
     }
 
     // AUCTION ENGINE
