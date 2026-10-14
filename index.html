@@ -248,10 +248,6 @@
     .auction-timer-val { font-size: 1.5rem; font-weight: 900; color: var(--gold); font-family: monospace; margin-top: 4px; }
     .auction-lot-card { background: var(--card-bg); border: 2px solid var(--purple); border-radius: 14px; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 
-    .chat-container { display: flex; flex-direction: column; height: 380px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; }
-    .chat-messages { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-    .chat-bubble { max-width: 90%; padding: 8px 12px; border-radius: 12px; font-size: 0.8rem; line-height: 1.3; background: rgba(255,255,255,0.08); align-self: flex-start; }
-
     .modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; padding: 15px; z-index: 100; }
     .modal-overlay.active { display: flex; }
     .modal-card { background: var(--card-bg); border-radius: 16px; padding: 20px; text-align: center; max-width: 340px; width: 100%; border: 1px solid rgba(255,215,0,0.3); }
@@ -270,7 +266,7 @@
 
     <header>
       <div class="header-left">
-        <div class="balance-box clickable" onclick="playSound('click'); alert('Ваш баланс монет.');">
+        <div class="balance-box clickable" onclick="playSound('click'); alert('Баланс монет.');">
           <span style="font-size:0.9rem;">🪙</span>
           <span id="balanceVal" class="balance-val">2,000</span>
         </div>
@@ -291,8 +287,6 @@
       <button class="nav-btn active clickable" onclick="switchTab('spin')"><span>🎲</span>Рулетка</button>
       <button class="nav-btn clickable" onclick="switchTab('auction')"><span>🔨</span>Аукцион</button>
       <button class="nav-btn clickable" onclick="switchTab('garage')"><span>🚗</span>Гараж</button>
-      <button class="nav-btn clickable" onclick="switchTab('globalChat')"><span>💬</span>Чат</button>
-      <button class="nav-btn clickable" onclick="switchTab('clubs')"><span>🛡️</span>Клубы</button>
       <button class="nav-btn clickable" onclick="switchTab('pass')"><span>🎟️</span>Пасс</button>
       <button class="nav-btn clickable" onclick="switchTab('shop')"><span>🏬</span>Салон</button>
       <button class="nav-btn clickable" onclick="switchTab('cases')"><span>🎁</span>Бонусы</button>
@@ -372,27 +366,6 @@
       <div id="platesGrid" class="plates-grid"></div>
     </div>
 
-    <!-- CHAT -->
-    <div id="globalChatScreen" class="screen">
-      <div class="section-card"><h3>💬 Общий чат онлайн</h3><p>Сообщения видны всем игрокам!</p></div>
-      <div class="chat-container">
-        <div id="globalChatMessages" class="chat-messages"></div>
-        <div style="display:flex; gap:6px; padding:10px; background:rgba(0,0,0,0.4); border-top:1px solid rgba(255,255,255,0.05);">
-          <input type="text" id="globalChatInput" placeholder="Написать..." style="flex:1; padding:8px 12px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; outline:none;">
-          <button class="main-btn clickable" style="padding:8px 14px; font-size:0.8rem;" onclick="sendGlobalMessage()">Отправить</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- CLUBS -->
-    <div id="clubsScreen" class="screen">
-      <div class="section-card" style="display:flex; justify-content:space-between; align-items:center;">
-        <div><h3>🛡️ Автоклубы</h3><p>Создайте свой клуб!</p></div>
-        <button class="btn-small clickable" onclick="openCreateClubModal()">+ Создать</button>
-      </div>
-      <div id="clubsList" style="display:flex; flex-direction:column; gap:8px;"></div>
-    </div>
-
     <!-- PASS -->
     <div id="passScreen" class="screen">
       <div class="pass-header">
@@ -426,16 +399,6 @@
     <div id="tasksScreen" class="screen">
       <div class="section-card"><h3>🏆 Задания</h3><p>Выполняйте задания для получения наград!</p></div>
       <div id="tasksList"></div>
-    </div>
-
-    <!-- CLUB MODAL -->
-    <div id="createClubModal" class="modal-overlay">
-      <div class="modal-card">
-        <h2>Создать Клуб</h2>
-        <input type="text" id="clubNameInput" placeholder="Название" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:12px; text-align:center;">
-        <button class="main-btn clickable" style="width:100%; padding:8px; margin-bottom:6px;" onclick="confirmCreateClub()">Создать за 50K 🪙</button>
-        <button class="btn-small clickable" style="width:100%;" onclick="closeCreateClubModal()">Отмена</button>
-      </div>
     </div>
 
     <!-- STARS DONATE MODAL -->
@@ -485,19 +448,6 @@
     const tg = window.Telegram?.WebApp;
     if (tg) { tg.ready(); tg.expand(); }
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAdKWzgzS_TtsgFZoYw9MJzHRxu4OC1TlM",
-      authDomain: "krutinomer.firebaseapp.com",
-      databaseURL: "https://krutinomer-default-rtdb.firebaseio.com",
-      projectId: "krutinomer",
-      storageBucket: "krutinomer.firebasestorage.app",
-      messagingSenderId: "1093706348256",
-      appId: "1:1093706348256:web:7ddafe2408ac0f319a0285"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    let playerName = tg?.initDataUnsafe?.user?.first_name || `Игрок_${Math.floor(1000 + Math.random() * 9000)}`;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     function playSound(type) {
@@ -563,7 +513,7 @@
       if(document.getElementById('regularCasesCount')) document.getElementById('regularCasesCount').innerText = state.regularCases;
     }
 
-    // Замените на вашу ссылку с Render после развертывания бэкенда
+    // Ссылка на ваш сервер (замените на ваш Render URL)
     const BACKEND_URL = "https://ваш-сервер.onrender.com";
 
     function requestTelegramStars(starsCount, rewardCoins, title) {
@@ -629,7 +579,6 @@
       }
     }
 
-    // РУЛЕТКА КЕЙСОВ CS2
     function startCs2CaseRoulette(title, pool, winningItem, callback) {
       playSound('click');
       const modal = document.getElementById('caseSpinnerModal');
@@ -729,7 +678,6 @@
     }
 
     function renderPassUI() {
-      document.getElementById('passLvlBadge').innerText = `Ур. ${state.pass.level}`;
       let container = document.getElementById('passLevelsList');
       if (!container) return;
       container.innerHTML = '';
@@ -740,14 +688,14 @@
         row.innerHTML = `
           <div class="pass-level-badge">${i}</div>
           <div class="pass-rewards-grid">
-            <div class="pass-reward-box"><span>🆓 ${rew.free.val} 🪙</span><button class="btn-small clickable" onclick="claimPass(${i}, false)">Забрать</button></div>
+            <div class="pass-reward-box"><span>🆓 ${rew.free.val} 🪙</span><button class="btn-small clickable" onclick="claimPass(${i})">Забрать</button></div>
           </div>
         `;
         container.appendChild(row);
       }
     }
 
-    function claimPass(lvl, isPrem) {
+    function claimPass(lvl) {
       playSound('click');
       state.coins += 1000;
       saveState(); updateHeader(); alert("Награда получена!");
@@ -787,42 +735,11 @@
       alert("Ежедневный бонус успешно получен!");
     }
 
-    function sendGlobalMessage() {
-      let input = document.getElementById('globalChatInput');
-      let text = input.value.trim();
-      if(!text) return;
-      db.ref('chat').push({ sender: playerName, text: text });
-      input.value = '';
-    }
-
-    db.ref('chat').limitToLast(20).on('child_added', (snapshot) => {
-      let msg = snapshot.val();
-      let chat = document.getElementById('globalChatMessages');
-      if(!chat) return;
-      let div = document.createElement('div');
-      div.className = 'chat-bubble';
-      div.innerHTML = `<b style="color:var(--gold);">${msg.sender}:</b> ${msg.text}`;
-      chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
-    });
-
-    function openCreateClubModal() { document.getElementById('createClubModal').classList.add('active'); }
-    function closeCreateClubModal() { document.getElementById('createClubModal').classList.remove('active'); }
-    function confirmCreateClub() {
-      let name = document.getElementById('clubNameInput').value.trim();
-      if(!name) return alert("Введите название!");
-      if(state.coins < 50000) return alert("Нужно 50 000 монет!");
-      state.coins -= 50000;
-      db.ref('clubs').push({ name, owner: playerName });
-      closeCreateClubModal(); saveState(); updateHeader();
-      alert("Клуб создан!");
-    }
-
     function switchTab(tab) {
       playSound('click');
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      const tabs = ['spin','auction','garage','globalChat','clubs','pass','shop','cases','tasks'];
+      const tabs = ['spin','auction','garage','pass','shop','cases','tasks'];
       let idx = tabs.indexOf(tab);
       if (idx !== -1) {
         document.querySelectorAll('.nav-btn')[idx].classList.add('active');
@@ -838,6 +755,7 @@
     function closeStarsModal() { document.getElementById('starsModal').classList.remove('active'); }
     function resetGame() { if(confirm("Сбросить весь прогресс?")) { localStorage.clear(); location.reload(); } }
     function onPlateClick() { alert("Нажмите кнопку 'Крутить' для получения новых номеров!"); }
+    function changeCountry() { state.country = document.getElementById('countrySelect').value; saveState(); }
 
     window.onload = () => { updateHeader(); };
   </script>
