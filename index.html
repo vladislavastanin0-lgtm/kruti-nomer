@@ -54,6 +54,16 @@
       overflow: hidden;
     }
 
+    /* Click feedback effect */
+    .clickable {
+      cursor: pointer;
+      transition: transform 0.1s ease, filter 0.1s ease;
+    }
+    .clickable:active {
+      transform: scale(0.96);
+      filter: brightness(1.2);
+    }
+
     /* Notification Banner */
     .auction-alert-banner {
       position: absolute;
@@ -404,7 +414,9 @@
     .plate-item {
       background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1);
       border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; justify-content: space-between;
+      transition: transform 0.1s ease, border-color 0.2s;
     }
+    .plate-item:active { transform: scale(0.98); }
     .plate-item.equipped { border-color: var(--accent-color); background: rgba(59, 130, 246, 0.1); }
     .plate-item-mini { font-family: monospace; font-weight: bold; font-size: 0.85rem; padding: 3px 6px; background: #FFF; color: #000; border-radius: 4px; }
 
@@ -514,7 +526,7 @@
 
     <header>
       <div class="header-left">
-        <div class="balance-box">
+        <div class="balance-box clickable" onclick="playSound('click'); alert('Баланс монет для покупок авто и вращений.');">
           <span style="font-size:0.9rem;">🪙</span>
           <span id="balanceVal" class="balance-val">2,000</span>
         </div>
@@ -523,33 +535,34 @@
         </div>
       </div>
       <div class="header-actions">
-        <select id="countrySelect" class="country-select" onchange="changeCountry()">
+        <select id="countrySelect" class="country-select clickable" onchange="changeCountry()">
           <option value="kz">🇰🇿 KZ</option>
           <option value="ru">🇷🇺 RU</option>
           <option value="ua">🇺🇦 UA</option>
         </select>
-        <button class="reset-btn" onclick="resetGame()">🔄</button>
-        <button class="donate-btn" onclick="openStarsModal()">⭐ Донат</button>
+        <button class="reset-btn clickable" onclick="resetGame()">🔄</button>
+        <button class="donate-btn clickable" onclick="openStarsModal()">⭐ Донат</button>
       </div>
     </header>
 
     <!-- Navigation Menu -->
     <nav>
-      <button class="nav-btn active" onclick="switchTab('spin')"><span>🎲</span>Рулетка</button>
-      <button class="nav-btn" onclick="switchTab('auction')"><span>🔨</span>Аукцион</button>
-      <button class="nav-btn" onclick="switchTab('garage')"><span>🚗</span>Гараж</button>
-      <button class="nav-btn" onclick="switchTab('globalChat')"><span>💬</span>Чат</button>
-      <button class="nav-btn" onclick="switchTab('clubs')"><span>🛡️</span>Клубы</button>
-      <button class="nav-btn" onclick="switchTab('pass')"><span>🎟️</span>Пасс</button>
-      <button class="nav-btn" onclick="switchTab('shop')"><span>🏬</span>Салон</button>
-      <button class="nav-btn" onclick="switchTab('cases')"><span>🎁</span>Бонусы</button>
-      <button class="nav-btn" onclick="switchTab('tasks')"><span>🏆</span>Задания</button>
+      <button class="nav-btn active clickable" onclick="switchTab('spin')"><span>🎲</span>Рулетка</button>
+      <button class="nav-btn clickable" onclick="switchTab('auction')"><span>🔨</span>Аукцион</button>
+      <button class="nav-btn clickable" onclick="switchTab('garage')"><span>🚗</span>Гараж</button>
+      <button class="nav-btn clickable" onclick="switchTab('globalChat')"><span>💬</span>Чат</button>
+      <button class="nav-btn clickable" onclick="switchTab('clubs')"><span>🛡️</span>Клубы</button>
+      <button class="nav-btn clickable" onclick="switchTab('pass')"><span>🎟️</span>Пасс</button>
+      <button class="nav-btn clickable" onclick="switchTab('shop')"><span>🏬</span>Салон</button>
+      <button class="nav-btn clickable" onclick="switchTab('cases')"><span>🎁</span>Бонусы</button>
+      <button class="nav-btn clickable" onclick="switchTab('tasks')"><span>🏆</span>Задания</button>
     </nav>
 
     <!-- SPIN SCREEN -->
     <div id="spinScreen" class="screen active">
       <div class="plate-display-area">
-        <div id="plateCard" class="plate-card rarity-white">
+        <!-- КЛИКАБЕЛЬНАЯ КАРТОЧКА НОМЕРА -->
+        <div id="plateCard" class="plate-card clickable" onclick="onPlateClick()">
           <div class="plate-flag-section">
             <div id="flagIcon" class="flag-icon"></div>
             <div id="countryCodeText" class="country-code">KZ</div>
@@ -558,13 +571,13 @@
         </div>
 
         <div class="drop-info">
-          <div id="dropTitle" class="drop-rarity-title" style="color: #A0AEC0;">Испытай удачу!</div>
+          <div id="dropTitle" class="drop-rarity-title" style="color: #A0AEC0;">Нажмите на номер или вращайте!</div>
           <div id="dropVal" class="drop-value"></div>
         </div>
       </div>
 
       <div style="display:flex; flex-direction:column; gap:8px; width:100%;">
-        <button id="spinBtn" class="main-btn" onclick="performSpin()">
+        <button id="spinBtn" class="main-btn clickable" onclick="performSpin()">
           <span>Крутить</span>
           <span id="spinCostBadge">(100 🪙)</span>
         </button>
@@ -574,7 +587,7 @@
             <h4 style="font-size:0.85rem;">Прокачка Удачи (Ур. <span id="luckLvl">0</span>)</h4>
             <p style="font-size:0.7rem; color:var(--text-sub);">Шанс супер-номеров: +<span id="luckBonus">0.0</span>%</p>
           </div>
-          <button id="upgradeLuckBtn" class="btn-small" onclick="upgradeLuck()">
+          <button id="upgradeLuckBtn" class="btn-small clickable" onclick="upgradeLuck()">
             Улучшить (<span id="luckCost">1 000</span> 🪙)
           </button>
         </div>
@@ -591,7 +604,7 @@
       <div id="auctionActiveArea" style="display:none; flex-direction:column; gap:10px;">
         <div class="auction-lot-card">
           <div style="font-size:0.75rem; color:var(--purple); font-weight:bold;">👑 ЭКСКЛЮЗИВНЫЙ ЛОТ</div>
-          <div class="plate-card">
+          <div class="plate-card clickable" onclick="playSound('click'); alert('Аукционный редкий номер!');">
             <div class="plate-flag-section">
               <div class="flag-icon" style="background:#00AFCA;"></div>
               <div class="country-code">KZ</div>
@@ -605,7 +618,7 @@
             <div id="auctionLeader" style="font-size:0.75rem; color:var(--green); font-weight:bold; margin-top:2px;">Лидер: Нет</div>
           </div>
 
-          <button id="placeBidBtn" class="main-btn" style="width:100%; padding:10px; margin-top:8px;" onclick="placeAuctionBid()">
+          <button id="placeBidBtn" class="main-btn clickable" style="width:100%; padding:10px; margin-top:8px;" onclick="placeAuctionBid()">
             Сделать ставку (+5 000 🪙)
           </button>
         </div>
@@ -620,11 +633,11 @@
     <!-- GARAGE SCREEN -->
     <div id="garageScreen" class="screen">
       <div class="garage-carousel">
-        <button class="carousel-nav-btn prev" onclick="prevCar()">◀</button>
-        <button class="carousel-nav-btn next" onclick="nextCar()">▶</button>
+        <button class="carousel-nav-btn prev clickable" onclick="prevCar()">◀</button>
+        <button class="carousel-nav-btn next clickable" onclick="nextCar()">▶</button>
         
         <div class="car-canvas-container">
-          <canvas id="carCanvas" width="360" height="160"></canvas>
+          <canvas id="carCanvas" width="360" height="160" class="clickable"></canvas>
         </div>
 
         <div style="text-align:center; width:100%; margin-top:6px;">
@@ -635,7 +648,7 @@
         </div>
       </div>
 
-      <div style="font-size:0.85rem; color:var(--text-sub); margin-bottom:6px;">Коллекция номеров (нажмите, чтобы надеть):</div>
+      <div style="font-size:0.85rem; color:var(--text-sub); margin-bottom:6px;">Коллекция номеров (нажмите на номер, чтобы надеть):</div>
       <div id="platesGrid" class="plates-grid"></div>
     </div>
 
@@ -649,7 +662,7 @@
         <div id="globalChatMessages" class="chat-messages"></div>
         <div style="display:flex; gap:6px; padding:10px; background:rgba(0,0,0,0.4); border-top:1px solid rgba(255,255,255,0.05);">
           <input type="text" id="globalChatInput" placeholder="Написать в чат..." style="flex:1; padding:8px 12px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; outline:none;">
-          <button class="main-btn" style="padding:8px 14px; font-size:0.8rem;" onclick="sendGlobalMessage()">Отправить</button>
+          <button class="main-btn clickable" style="padding:8px 14px; font-size:0.8rem;" onclick="sendGlobalMessage()">Отправить</button>
         </div>
       </div>
     </div>
@@ -661,7 +674,7 @@
           <h3>🛡️ Автоклубы сервера</h3>
           <p>Создайте свой клуб или вступите в существующий!</p>
         </div>
-        <button class="btn-small" onclick="openCreateClubModal()">+ Создать</button>
+        <button class="btn-small clickable" onclick="openCreateClubModal()">+ Создать</button>
       </div>
       <div id="clubsList" style="display:flex; flex-direction:column; gap:8px;"></div>
     </div>
@@ -678,7 +691,7 @@
         </div>
         <div style="display:flex; justify-content:space-between; font-size:0.75rem; align-items:center;">
           <span id="passXpText">XP: 0 / 50</span>
-          <button id="buyPremiumPassBtn" class="btn-small" onclick="buyPremiumPass()">Открыть Premium (⭐ 10)</button>
+          <button id="buyPremiumPassBtn" class="btn-small clickable" onclick="buyPremiumPass()">Открыть Premium (⭐ 10)</button>
         </div>
       </div>
       <div id="passLevelsList"></div>
@@ -698,17 +711,17 @@
       <div class="section-card">
         <h3>🎁 Ежедневные бонусы (7 Дней)</h3>
         <div class="daily-grid" id="dailyGrid"></div>
-        <button id="claimDailyBtn" class="main-btn" style="width:100%; padding:8px; font-size:0.85rem;" onclick="claimDailyReward()">Забрать бонус дня</button>
+        <button id="claimDailyBtn" class="main-btn clickable" style="width:100%; padding:8px; font-size:0.85rem;" onclick="claimDailyReward()">Забрать бонус дня</button>
       </div>
       <div class="section-card">
         <h3>📦 Особый кейс</h3>
         <p>Содержит Tank 500 (редко) или 2 000 000 монет!</p>
-        <button id="openSpecialCaseBtn" class="main-btn" style="width:100%; padding:10px;" onclick="openSpecialCase()">Открыть особый кейс (<span id="specialCasesCount">0</span>)</button>
+        <button id="openSpecialCaseBtn" class="main-btn clickable" style="width:100%; padding:10px;" onclick="openSpecialCase()">Открыть особый кейс (<span id="specialCasesCount">0</span>)</button>
       </div>
       <div class="section-card">
         <h3>📦 Обычный кейс</h3>
         <p>Содержит Toyota Camry 70 (редко) или 10 000 монет!</p>
-        <button id="openRegularCaseBtn" class="main-btn" style="width:100%; padding:10px; background:linear-gradient(135deg, #22c55e, #3b82f6);" onclick="openRegularCase()">Открыть обычный кейс (<span id="regularCasesCount">0</span>)</button>
+        <button id="openRegularCaseBtn" class="main-btn clickable" style="width:100%; padding:10px; background:linear-gradient(135deg, #22c55e, #3b82f6);" onclick="openRegularCase()">Открыть обычный кейс (<span id="regularCasesCount">0</span>)</button>
       </div>
     </div>
 
@@ -727,8 +740,8 @@
         <h2>Создать Автоклуб</h2>
         <p style="font-size:0.75rem; color:var(--text-sub); margin-bottom:10px;">Стоимость создания: 50 000 🪙</p>
         <input type="text" id="clubNameInput" placeholder="Название клуба" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:12px; text-align:center;">
-        <button class="main-btn" style="width:100%; padding:8px; margin-bottom:6px;" onclick="confirmCreateClub()">Создать за 50K 🪙</button>
-        <button class="btn-small" style="width:100%;" onclick="closeCreateClubModal()">Отмена</button>
+        <button class="main-btn clickable" style="width:100%; padding:8px; margin-bottom:6px;" onclick="confirmCreateClub()">Создать за 50K 🪙</button>
+        <button class="btn-small clickable" style="width:100%;" onclick="closeCreateClubModal()">Отмена</button>
       </div>
     </div>
 
@@ -831,7 +844,8 @@
         spin5: { progress: 0, max: 5, claimed: false },
         spin20: { progress: 0, max: 20, claimed: false }
       },
-      isSpinning: false
+      isSpinning: false,
+      lastDroppedPlate: null
     };
 
     const CARS_DATA = [
@@ -940,13 +954,13 @@
           div.className = 'section-card';
           div.style.display = 'flex';
           div.style.justifyContent = 'space-between';
-          div.style.alignItems: center;
+          div.style.alignItems = 'center';
           div.innerHTML = `
             <div>
               <div style="font-weight:bold; color:var(--gold); font-size:1rem;">🛡️ ${club.name}</div>
               <div style="font-size:0.7rem; color:var(--text-sub);">Основатель: <span style="color:white; font-weight:bold;">${club.owner}</span></div>
             </div>
-            <button class="btn-small" onclick="alert('Вы в клубе ${club.name}!')">Вступить</button>
+            <button class="btn-small clickable" onclick="alert('Вы зашли в клуб ${club.name}!')">Вступить</button>
           `;
           clubsList.appendChild(div);
         });
@@ -1231,6 +1245,7 @@
       canvas.addEventListener('touchstart', (e) => { isDragging = true; startX = e.touches[0].clientX; });
       window.addEventListener('touchend', () => { isDragging = false; });
       window.addEventListener('touchmove', (e) => { if (!isDragging) return; carAngle += (e.touches[0].clientX - startX) * 0.02; startX = e.touches[0].clientX; drawGarageCar(); });
+      canvas.addEventListener('click', () => { playSound('click'); carAngle += 0.5; drawGarageCar(); });
     }
 
     function drawGarageCar() {
@@ -1281,8 +1296,9 @@
         state.ownedPlates.forEach((plate, index) => {
           const item = document.createElement('div');
           const isEquipped = equippedPlate && equippedPlate.id === plate.id;
-          item.className = `plate-item ${isEquipped ? 'equipped' : ''}`;
-          item.innerHTML = `<div style="display:flex; align-items:center; gap:8px; cursor:pointer; flex:1;" onclick="equipPlate(${index})"><div class="plate-item-mini">${plate.text}</div><div><div style="font-size:0.7rem; color:${plate.color}">${plate.rarityName}</div><div style="font-size:0.6rem; color:var(--text-sub);">${isEquipped ? 'На авто ✓' : 'Надеть'}</div></div></div>`;
+          item.className = `plate-item clickable ${isEquipped ? 'equipped' : ''}`;
+          item.onclick = () => equipPlate(index);
+          item.innerHTML = `<div style="display:flex; align-items:center; gap:8px; flex:1;"><div class="plate-item-mini">${plate.text}</div><div><div style="font-size:0.7rem; color:${plate.color}">${plate.rarityName}</div><div style="font-size:0.6rem; color:var(--text-sub);">${isEquipped ? 'Надет на авто ✓' : 'Нажмите, чтобы надеть'}</div></div></div>`;
           grid.appendChild(item);
         });
       }
@@ -1294,7 +1310,7 @@
       container.innerHTML = '';
       if (carId === 0) return;
       let halfPrice = Math.round(carData.price / 2);
-      container.innerHTML = `<button class="btn-small" style="background:rgba(231,76,60,0.2); color:var(--red); border-color:var(--red); width:100%;" onclick="sellRegularCar(${carId}, ${halfPrice})">🏷️ Продать за ${halfPrice.toLocaleString()} 🪙 (50%)</button>`;
+      container.innerHTML = `<button class="btn-small clickable" style="background:rgba(231,76,60,0.2); color:var(--red); border-color:var(--red); width:100%;" onclick="sellRegularCar(${carId}, ${halfPrice})">🏷️ Продать за ${halfPrice.toLocaleString()} 🪙 (50%)</button>`;
     }
 
     function sellRegularCar(carId, price) {
@@ -1317,6 +1333,17 @@
       saveState(); renderGarage();
     }
 
+    // CLICK ON MAIN PLATE
+    function onPlateClick() {
+      playSound('click');
+      const plateText = document.getElementById('plateText').innerText;
+      if (state.lastDroppedPlate) {
+        alert(`🚗 Номер: ${state.lastDroppedPlate.text}\n⭐ Редкость: ${state.lastDroppedPlate.rarityName}\n🪙 Оценка стоимости: ${state.lastDroppedPlate.value} монет`);
+      } else {
+        alert(`🚗 Госномер: ${plateText}\nИспытайте удачу и нажимайте "Крутить"!`);
+      }
+    }
+
     // SHOP SYSTEM
     function renderShop() {
       const shopList = document.getElementById('shopList'); 
@@ -1332,7 +1359,7 @@
             <h4>${car.name}</h4>
             <p>${car.price.toLocaleString()} 🪙</p>
           </div>
-          <button class="btn-small" ${isOwned || state.coins < car.price ? 'disabled' : ''} onclick="buyCar(${car.id})">${isOwned ? 'Куплено' : 'Купить'}</button>
+          <button class="btn-small clickable" ${isOwned || state.coins < car.price ? 'disabled' : ''} onclick="buyCar(${car.id})">${isOwned ? 'Куплено' : 'Купить'}</button>
         `;
         shopList.appendChild(item);
       });
@@ -1374,11 +1401,11 @@
           <div class="pass-rewards-grid">
             <div class="pass-reward-box">
               <span>🆓 ${getRewardText(rew.free)}</span>
-              <button class="btn-small" style="padding:2px 6px; font-size:0.65rem;" ${(state.pass.level < i || freeC) ? 'disabled' : ''} onclick="claimPassReward(${i}, false)">${freeC ? '✓' : 'Забрать'}</button>
+              <button class="btn-small clickable" style="padding:2px 6px; font-size:0.65rem;" ${(state.pass.level < i || freeC) ? 'disabled' : ''} onclick="claimPassReward(${i}, false)">${freeC ? '✓' : 'Забрать'}</button>
             </div>
             <div class="pass-reward-box premium">
               <span>🌟 ${getRewardText(rew.prem)}</span>
-              <button class="btn-small" style="padding:2px 6px; font-size:0.65rem;" ${(state.pass.level < i || !state.pass.isPremium || premC) ? 'disabled' : ''} onclick="claimPassReward(${i}, true)">${premC ? '✓' : 'Забрать'}</button>
+              <button class="btn-small clickable" style="padding:2px 6px; font-size:0.65rem;" ${(state.pass.level < i || !state.pass.isPremium || premC) ? 'disabled' : ''} onclick="claimPassReward(${i}, true)">${premC ? '✓' : 'Забрать'}</button>
             </div>
           </div>
         `;
@@ -1442,7 +1469,8 @@
         const dayNum = idx + 1;
         const isClaimed = state.daily.claimedDays >= dayNum;
         const div = document.createElement('div');
-        div.className = `daily-card ${isClaimed ? 'claimed' : ''}`;
+        div.className = `daily-card clickable ${isClaimed ? 'claimed' : ''}`;
+        div.onclick = () => { playSound('click'); alert(`Бонус дня ${dayNum}: ${rew.label}`); };
         div.innerHTML = `<div style="font-weight:bold; color:var(--gold);">День ${dayNum}</div><div style="margin:4px 0;">${rew.label}</div><div style="font-size:0.6rem; color:var(--text-sub);">${isClaimed ? 'Получено' : 'Доступно'}</div>`;
         grid.appendChild(div);
       });
@@ -1473,14 +1501,14 @@
             <div style="font-weight:bold;">Сделать 5 спинов</div>
             <div style="font-size:0.7rem; color:var(--text-sub);">Прогресс: ${state.tasks.spin5.progress} / 5</div>
           </div>
-          <button class="btn-small" ${state.tasks.spin5.progress < 5 || state.tasks.spin5.claimed ? 'disabled' : ''} onclick="claimTask('spin5')">${state.tasks.spin5.claimed ? 'Готово' : 'Забрать (2000 🪙)'}</button>
+          <button class="btn-small clickable" ${state.tasks.spin5.progress < 5 || state.tasks.spin5.claimed ? 'disabled' : ''} onclick="claimTask('spin5')">${state.tasks.spin5.claimed ? 'Готово' : 'Забрать (2000 🪙)'}</button>
         </div>
         <div class="task-item">
           <div>
             <div style="font-weight:bold;">Сделать 20 спинов</div>
             <div style="font-size:0.7rem; color:var(--text-sub);">Прогресс: ${state.tasks.spin20.progress} / 20</div>
           </div>
-          <button class="btn-small" ${state.tasks.spin20.progress < 20 || state.tasks.spin20.claimed ? 'disabled' : ''} onclick="claimTask('spin20')">${state.tasks.spin20.claimed ? 'Готово' : 'Забрать (10000 🪙)'}</button>
+          <button class="btn-small clickable" ${state.tasks.spin20.progress < 20 || state.tasks.spin20.claimed ? 'disabled' : ''} onclick="claimTask('spin20')">${state.tasks.spin20.claimed ? 'Готово' : 'Забрать (10000 🪙)'}</button>
         </div>
       `;
     }
@@ -1544,10 +1572,11 @@
           color: '#E2E8F0',
           value: val
         };
+        state.lastDroppedPlate = newPlate;
         state.ownedPlates.push(newPlate);
 
         plateTextEl.innerText = newPlate.text;
-        dropTitle.innerText = "Выпал номер!";
+        dropTitle.innerText = "Выпал номер! (нажмите на него)";
         dropVal.innerText = `+${val.toLocaleString()} 🪙`;
 
         playSound('win');
