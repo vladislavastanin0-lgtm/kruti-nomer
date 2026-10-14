@@ -6,6 +6,9 @@
   <title>Крути номера</title>
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Firebase SDK (Realtime Database) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <style>
     :root {
       --bg-color: #12131C;
@@ -472,33 +475,17 @@
       gap: 10px;
     }
 
-    /* MARKET UI */
-    .buyer-card {
-      background: rgba(255,255,255,0.05); border-radius: 10px; padding: 10px; text-align: left; margin-bottom: 10px; border-left: 3px solid var(--accent-color);
-    }
-
     /* CHAT UI */
     .chat-container {
-      display: flex; flex-direction: column; height: 350px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;
+      display: flex; flex-direction: column; height: 380px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;
     }
     .chat-messages {
       flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
     }
     .chat-bubble {
-      max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.8rem; line-height: 1.3;
+      max-width: 90%; padding: 8px 12px; border-radius: 12px; font-size: 0.8rem; line-height: 1.3;
+      background: rgba(255,255,255,0.08); align-self: flex-start;
     }
-    .chat-bubble.bot { background: rgba(255,255,255,0.1); align-self: flex-start; border-bottom-left-radius: 2px; }
-    .chat-bubble.user { background: var(--accent-color); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-
-    .chat-actions-box {
-      display: flex; flex-direction: column; gap: 6px; padding: 10px; background: rgba(0,0,0,0.4); border-top: 1px solid rgba(255,255,255,0.05);
-    }
-    .chat-action-btn {
-      width: 100%; padding: 8px; border-radius: 8px; border: none; font-weight: bold; font-size: 0.75rem; cursor: pointer; text-align: center;
-    }
-    .btn-haggle { background: rgba(241, 196, 15, 0.2); color: var(--gold); border: 1px solid rgba(241, 196, 15, 0.4); }
-    .btn-accept { background: rgba(34, 197, 94, 0.2); color: var(--green); border: 1px solid rgba(34, 197, 94, 0.4); }
-    .btn-decline { background: rgba(231, 76, 60, 0.2); color: var(--red); border: 1px solid rgba(231, 76, 60, 0.4); }
 
     /* MODAL */
     .modal-overlay {
@@ -551,10 +538,11 @@
       <button class="nav-btn active" onclick="switchTab('spin')"><span>🎲</span>Рулетка</button>
       <button class="nav-btn" onclick="switchTab('auction')"><span>🔨</span>Аукцион</button>
       <button class="nav-btn" onclick="switchTab('garage')"><span>🚗</span>Гараж</button>
+      <button class="nav-btn" onclick="switchTab('globalChat')"><span>💬</span>Чат</button>
+      <button class="nav-btn" onclick="switchTab('clubs')"><span>🛡️</span>Клубы</button>
       <button class="nav-btn" onclick="switchTab('pass')"><span>🎟️</span>Пасс</button>
       <button class="nav-btn" onclick="switchTab('shop')"><span>🏬</span>Салон</button>
       <button class="nav-btn" onclick="switchTab('cases')"><span>🎁</span>Бонусы</button>
-      <button class="nav-btn" onclick="switchTab('market')"><span>💬</span>Рынок</button>
       <button class="nav-btn" onclick="switchTab('tasks')"><span>🏆</span>Задания</button>
     </nav>
 
@@ -651,6 +639,33 @@
       <div id="platesGrid" class="plates-grid"></div>
     </div>
 
+    <!-- GLOBAL CHAT SCREEN -->
+    <div id="globalChatScreen" class="screen">
+      <div class="section-card">
+        <h3>💬 Общий чат онлайн</h3>
+        <p>Сообщения видны всем реальным игрокам на сервере!</p>
+      </div>
+      <div class="chat-container">
+        <div id="globalChatMessages" class="chat-messages"></div>
+        <div style="display:flex; gap:6px; padding:10px; background:rgba(0,0,0,0.4); border-top:1px solid rgba(255,255,255,0.05);">
+          <input type="text" id="globalChatInput" placeholder="Написать в чат..." style="flex:1; padding:8px 12px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; outline:none;">
+          <button class="main-btn" style="padding:8px 14px; font-size:0.8rem;" onclick="sendGlobalMessage()">Отправить</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLUBS SCREEN -->
+    <div id="clubsScreen" class="screen">
+      <div class="section-card" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3>🛡️ Автоклубы сервера</h3>
+          <p>Создайте свой клуб или вступите в существующий!</p>
+        </div>
+        <button class="btn-small" onclick="openCreateClubModal()">+ Создать</button>
+      </div>
+      <div id="clubsList" style="display:flex; flex-direction:column; gap:8px;"></div>
+    </div>
+
     <!-- DRIVE PASS SCREEN -->
     <div id="passScreen" class="screen">
       <div class="pass-header">
@@ -658,7 +673,6 @@
           <h3 style="color:var(--gold); font-size:0.95rem;">🏆 Блатной Пасс (Сезон 1)</h3>
           <span style="font-weight:bold; font-size:0.8rem;" id="passLvlBadge">Ур. 1</span>
         </div>
-        
         <div class="progress-bar-bg">
           <div id="passProgressBar" class="progress-bar-fill"></div>
         </div>
@@ -667,7 +681,6 @@
           <button id="buyPremiumPassBtn" class="btn-small" onclick="buyPremiumPass()">Открыть Premium (⭐ 10)</button>
         </div>
       </div>
-
       <div id="passLevelsList"></div>
     </div>
 
@@ -687,31 +700,15 @@
         <div class="daily-grid" id="dailyGrid"></div>
         <button id="claimDailyBtn" class="main-btn" style="width:100%; padding:8px; font-size:0.85rem;" onclick="claimDailyReward()">Забрать бонус дня</button>
       </div>
-
       <div class="section-card">
         <h3>📦 Особый кейс</h3>
         <p>Содержит Tank 500 (редко) или 2 000 000 монет!</p>
         <button id="openSpecialCaseBtn" class="main-btn" style="width:100%; padding:10px;" onclick="openSpecialCase()">Открыть особый кейс (<span id="specialCasesCount">0</span>)</button>
       </div>
-
       <div class="section-card">
         <h3>📦 Обычный кейс</h3>
         <p>Содержит Toyota Camry 70 (редко) или 10 000 монет!</p>
         <button id="openRegularCaseBtn" class="main-btn" style="width:100%; padding:10px; background:linear-gradient(135deg, #22c55e, #3b82f6);" onclick="openRegularCase()">Открыть обычный кейс (<span id="regularCasesCount">0</span>)</button>
-      </div>
-    </div>
-
-    <!-- MARKET SCREEN -->
-    <div id="marketScreen" class="screen">
-      <div class="section-card">
-        <h3>💬 Продажа номеров</h3>
-        <p>Выставляйте свои номера на продажу. Покупатели свяжутся с вами в чате!</p>
-        <button class="main-btn" style="width:100%; padding:8px; font-size:0.85rem; margin-bottom:10px;" onclick="openSellModal()">🏷️ Выставить свой номер</button>
-      </div>
-
-      <div class="section-card">
-        <h3>📩 Ваши объявления и чаты</h3>
-        <div id="myMarketListings"></div>
       </div>
     </div>
 
@@ -724,35 +721,14 @@
       <div id="tasksList"></div>
     </div>
 
-    <!-- CHAT MODAL -->
-    <div id="chatModal" class="modal-overlay">
-      <div class="modal-card" style="max-width:380px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <h3 id="chatTitle" style="color:var(--gold); font-size:0.95rem;">Чат с покупателем</h3>
-          <button class="btn-small" onclick="closeChatModal()">✕</button>
-        </div>
-        
-        <div class="chat-container">
-          <div id="chatMessages" class="chat-messages"></div>
-          
-          <div id="chatActions" class="chat-actions-box">
-            <button class="chat-action-btn btn-haggle" onclick="handleChatAction('haggle')">🤝 Сторговаться (-15%)</button>
-            <button class="chat-action-btn btn-accept" onclick="handleChatAction('keep')">🛑 Оставить цену</button>
-            <button class="chat-action-btn btn-decline" onclick="handleChatAction('decline')">❌ Отказаться</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SELL MODAL -->
-    <div id="sellModal" class="modal-overlay">
+    <!-- CREATE CLUB MODAL -->
+    <div id="createClubModal" class="modal-overlay">
       <div class="modal-card">
-        <h2>Выставить номер</h2>
-        <select id="plateToSellSelect" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:8px;"></select>
-        <div style="font-size:0.7rem; color:var(--gold); margin-bottom:6px;" id="priceLimitHint">Макс. цена: --</div>
-        <input type="number" id="sellPriceInput" placeholder="Цена в монетах" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:12px; text-align:center;">
-        <button class="main-btn" style="width:100%; padding:8px; margin-bottom:6px;" onclick="confirmSellPlate()">Выставить на рынок</button>
-        <button class="btn-small" style="width:100%;" onclick="closeSellModal()">Отмена</button>
+        <h2>Создать Автоклуб</h2>
+        <p style="font-size:0.75rem; color:var(--text-sub); margin-bottom:10px;">Стоимость создания: 50 000 🪙</p>
+        <input type="text" id="clubNameInput" placeholder="Название клуба" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:12px; text-align:center;">
+        <button class="main-btn" style="width:100%; padding:8px; margin-bottom:6px;" onclick="confirmCreateClub()">Создать за 50K 🪙</button>
+        <button class="btn-small" style="width:100%;" onclick="closeCreateClubModal()">Отмена</button>
       </div>
     </div>
 
@@ -760,58 +736,11 @@
     <div id="caseSpinnerModal" class="modal-overlay">
       <div class="modal-card" style="max-width:360px;">
         <h2 id="caseSpinnerTitle">Открытие кейса...</h2>
-        
         <div class="cs-case-viewport">
           <div class="cs-case-pointer"></div>
           <div id="csCaseTrack" class="cs-case-track"></div>
         </div>
-
         <p style="font-size:0.75rem; color:var(--text-sub);" id="spinnerSub">Испытываем удачу!</p>
-      </div>
-    </div>
-
-    <!-- STARS DONATE MODAL -->
-    <div id="starsModal" class="modal-overlay">
-      <div class="modal-card">
-        <h2>Магазин Telegram Stars ⭐</h2>
-        <p>Выберите пакет монет:</p>
-        
-        <div class="stars-item">
-          <div style="text-align:left;">
-            <div style="font-weight:bold; color:var(--gold);">1 000 000 🪙</div>
-            <div style="font-size:0.7rem; color:var(--text-sub);">Стартовый пакет</div>
-          </div>
-          <button class="btn-small" onclick="buyWithStars('1 000 000 монет', 'Пакет монет', 10, 1000000)">⭐ 10</button>
-        </div>
-
-        <div class="stars-item">
-          <div style="text-align:left;">
-            <div style="font-weight:bold; color:var(--gold);">5 000 000 🪙</div>
-            <div style="font-size:0.7rem; color:var(--text-sub);">Выгодный пакет</div>
-          </div>
-          <button class="btn-small" onclick="buyWithStars('5 000 000 монет', 'Пакет монет', 20, 5000000)">⭐ 20</button>
-        </div>
-
-        <div class="stars-item" style="margin-bottom:12px;">
-          <div style="text-align:left;">
-            <div style="font-weight:bold; color:var(--gold);">10 000 000 🪙</div>
-            <div style="font-size:0.7rem; color:var(--text-sub);">Элитный пакет</div>
-          </div>
-          <button class="btn-small" onclick="buyWithStars('10 000 000 монет', 'Пакет монет', 50, 10000000)">⭐ 50</button>
-        </div>
-
-        <button class="btn-small" style="width:100%;" onclick="closeStarsModal()">Закрыть</button>
-      </div>
-    </div>
-
-    <!-- BUGATTI SELL MODAL -->
-    <div id="bugattiSellModal" class="modal-overlay">
-      <div class="modal-card">
-        <h2>Продажа Bugatti Chiron</h2>
-        <p style="font-size:0.75rem; color:var(--gold); margin-bottom:8px;">Макс. цена: до 5 000 000 🪙!</p>
-        <input type="number" id="bugattiPriceInput" placeholder="Цена (до 5M)" style="width:100%; padding:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; margin-bottom:10px; text-align:center;">
-        <button class="main-btn" style="width:100%; padding:8px; margin-bottom:6px;" onclick="confirmSellBugatti()">Продать</button>
-        <button class="btn-small" style="width:100%;" onclick="closeBugattiSellModal()">Отмена</button>
       </div>
     </div>
   </div>
@@ -820,7 +749,21 @@
     const tg = window.Telegram?.WebApp;
     if (tg) { tg.ready(); tg.expand(); }
 
-    const BOT_TOKEN = "8977809186:AAF0fqobqVRQf8wbnwApirFl_dwSrHZvxPc";
+    // Конфигурация Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAdKWzgzS_TtsgFZoYw9MJzHRxu4OC1TlM",
+      authDomain: "krutinomer.firebaseapp.com",
+      databaseURL: "https://krutinomer-default-rtdb.firebaseio.com",
+      projectId: "krutinomer",
+      storageBucket: "krutinomer.firebasestorage.app",
+      messagingSenderId: "1093706348256",
+      appId: "1:1093706348256:web:7ddafe2408ac0f319a0285"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let playerName = tg?.initDataUnsafe?.user?.first_name || `Игрок_${Math.floor(1000 + Math.random() * 9000)}`;
 
     // WEB AUDIO API SOUND SYSTEM
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -871,16 +814,6 @@
       } catch(e){}
     }
 
-    // RARITY & LIMITS
-    const RARITY_LIMITS = {
-      'white': { name: 'Обычный', max: 300, color: '#E2E8F0' },
-      'green': { name: 'Редкий', max: 600, color: '#22C55E' },
-      'blue': { name: 'Супер-редкий', max: 1000, color: '#3B82F6' },
-      'purple': { name: 'Эпический', max: 2000, color: '#A855F7' },
-      'yellow': { name: 'Легендарный', max: 7000, color: '#FFD700' },
-      'red': { name: 'Супер-легендарный', max: 20000, color: '#E74C3C' }
-    };
-
     let state = {
       coins: 2000,
       spins: 0,
@@ -898,7 +831,6 @@
         spin5: { progress: 0, max: 5, claimed: false },
         spin20: { progress: 0, max: 20, claimed: false }
       },
-      myListings: [],
       isSpinning: false
     };
 
@@ -977,6 +909,87 @@
       }
     }
 
+    // FIREBASE REALTIME CHAT & CLUBS LOGIC
+    function initFirebaseListeners() {
+      db.ref('chat').limitToLast(30).on('child_added', (snapshot) => {
+        const msg = snapshot.val();
+        const chatContainer = document.getElementById('globalChatMessages');
+        if (!chatContainer) return;
+
+        const div = document.createElement('div');
+        div.className = 'chat-bubble';
+        div.innerHTML = `<span style="color:var(--gold); font-weight:bold;">${msg.sender}:</span> ${msg.text}`;
+        chatContainer.appendChild(div);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      });
+
+      db.ref('clubs').on('value', (snapshot) => {
+        const clubsList = document.getElementById('clubsList');
+        if (!clubsList) return;
+        clubsList.innerHTML = '';
+
+        const clubs = snapshot.val();
+        if (!clubs) {
+          clubsList.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.8rem;">Пока нет созданных клубов</p>';
+          return;
+        }
+
+        Object.keys(clubs).forEach(clubId => {
+          const club = clubs[clubId];
+          const div = document.createElement('div');
+          div.className = 'section-card';
+          div.style.display = 'flex';
+          div.style.justifyContent = 'space-between';
+          div.style.alignItems: center;
+          div.innerHTML = `
+            <div>
+              <div style="font-weight:bold; color:var(--gold); font-size:1rem;">🛡️ ${club.name}</div>
+              <div style="font-size:0.7rem; color:var(--text-sub);">Основатель: <span style="color:white; font-weight:bold;">${club.owner}</span></div>
+            </div>
+            <button class="btn-small" onclick="alert('Вы в клубе ${club.name}!')">Вступить</button>
+          `;
+          clubsList.appendChild(div);
+        });
+      });
+    }
+
+    function sendGlobalMessage() {
+      const input = document.getElementById('globalChatInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      playSound('click');
+      db.ref('chat').push({
+        sender: playerName,
+        text: text,
+        timestamp: Date.now()
+      });
+      input.value = '';
+    }
+
+    function openCreateClubModal() { playSound('click'); document.getElementById('createClubModal').classList.add('active'); }
+    function closeCreateClubModal() { playSound('click'); document.getElementById('createClubModal').classList.remove('active'); }
+
+    function confirmCreateClub() {
+      playSound('click');
+      const name = document.getElementById('clubNameInput').value.trim();
+      if (!name) { alert("Введите название клуба!"); return; }
+      if (state.coins < 50000) { alert("Недостаточно монет (нужно 50 000 🪙)!"); return; }
+
+      state.coins -= 50000;
+      saveState();
+      updateHeader();
+
+      db.ref('clubs').push({
+        name: name,
+        owner: playerName,
+        createdAt: Date.now()
+      });
+
+      closeCreateClubModal();
+      alert(`🎉 Клуб "${name}" успешно создан и опубликован для всех игроков!`);
+    }
+
     // AUCTION ENGINE
     let auctionState = {
       isActive: false,
@@ -992,7 +1005,6 @@
       const minutes = now.getMinutes();
       const seconds = now.getSeconds();
 
-      // Аукцион ТОЛЬКО каждые 30 минут часа (например: 20:30, 21:30, 22:30...)
       let nextMin = minutes < 30 ? 30 : 60;
       let diffMin = nextMin - minutes - 1;
       let diffSec = 60 - seconds;
@@ -1001,7 +1013,6 @@
       const formatted = `${String(diffMin).padStart(2, '0')}:${String(diffSec).padStart(2, '0')}`;
       document.getElementById('auctionTimer').innerText = formatted;
 
-      // За 5 минут до 30-й минуты (в 25 или 55 минут часа) показываем плашку на 15 секунд!
       if ((minutes === 25 || minutes === 55) && seconds < 15 && !auctionState.isActive) {
         if (auctionState.bannerShownForMin !== minutes) {
           auctionState.bannerShownForMin = minutes;
@@ -1013,14 +1024,10 @@
           banner.style.display = 'block';
           playSound('click');
 
-          // Ровно через 15 секунд плашка исчезает
-          setTimeout(() => {
-            banner.style.display = 'none';
-          }, 15000);
+          setTimeout(() => { banner.style.display = 'none'; }, 15000);
         }
       }
 
-      // Запуск аукциона ровно на 30-й минуте (длится 2 минуты)
       if ((minutes === 30 || minutes === 0) && seconds < 120 && !auctionState.isActive) {
         startAuction();
       } else if ((minutes !== 30 && minutes !== 0) && auctionState.isActive) {
@@ -1165,7 +1172,7 @@
     function openRegularCase() {
       if ((state.regularCases || 0) <= 0) { alert("У вас нет обычных кейсов!"); return; }
       state.regularCases--;
-      updateTasksUI(); saveState();
+      saveState();
 
       const pool = [
         { title: "10 000 🪙", icon: "🪙", type: "blue" },
@@ -1191,7 +1198,7 @@
     function openSpecialCase() {
       if ((state.specialCases || 0) <= 0) { alert("У вас нет особых кейсов!"); return; }
       state.specialCases--;
-      updateTasksUI(); saveState();
+      saveState();
 
       const pool = [
         { title: "2 000 000 🪙", icon: "🪙", type: "purple" },
@@ -1286,13 +1293,8 @@
       if (!container) return;
       container.innerHTML = '';
       if (carId === 0) return;
-
-      if (carId === 10) {
-        container.innerHTML = `<button class="btn-small" style="background:rgba(168,85,247,0.2); color:var(--purple); border-color:var(--purple); width:100%;" onclick="openBugattiSellModal()">🏷️ Продать Bugatti (до 5M 🪙)</button>`;
-      } else {
-        let halfPrice = Math.round(carData.price / 2);
-        container.innerHTML = `<button class="btn-small" style="background:rgba(231,76,60,0.2); color:var(--red); border-color:var(--red); width:100%;" onclick="sellRegularCar(${carId}, ${halfPrice})">🏷️ Продать за ${halfPrice.toLocaleString()} 🪙 (50%)</button>`;
-      }
+      let halfPrice = Math.round(carData.price / 2);
+      container.innerHTML = `<button class="btn-small" style="background:rgba(231,76,60,0.2); color:var(--red); border-color:var(--red); width:100%;" onclick="sellRegularCar(${carId}, ${halfPrice})">🏷️ Продать за ${halfPrice.toLocaleString()} 🪙 (50%)</button>`;
     }
 
     function sellRegularCar(carId, price) {
@@ -1304,21 +1306,6 @@
         state.selectedCarIdx = 0;
         saveState(); updateHeader(); renderGarage();
       }
-    }
-
-    function openBugattiSellModal() { playSound('click'); document.getElementById('bugattiSellModal').classList.add('active'); }
-    function closeBugattiSellModal() { playSound('click'); document.getElementById('bugattiSellModal').classList.remove('active'); }
-    function confirmSellBugatti() {
-      playSound('click');
-      const price = parseInt(document.getElementById('bugattiPriceInput').value);
-      if (isNaN(price) || price <= 0 || price > 5000000) { alert("Укажите цену не более 5 000 000 🪙!"); return; }
-      state.coins += price;
-      state.ownedCars = state.ownedCars.filter(id => id !== 10);
-      delete state.equippedPlates[10];
-      state.selectedCarIdx = 0;
-      closeBugattiSellModal();
-      saveState(); updateHeader(); renderGarage();
-      alert(`Bugatti успешно продана за ${price.toLocaleString()} 🪙!`);
     }
 
     function prevCar() { playSound('click'); if (state.selectedCarIdx > 0) { state.selectedCarIdx--; renderGarage(); } }
@@ -1420,7 +1407,7 @@
       else if (rew.type === 'special_case') state.specialCases += rew.val;
       else if (rew.type === 'luck') state.luckLvl += rew.val;
 
-      saveState(); updateHeader(); renderPassUI(); updateTasksUI();
+      saveState(); updateHeader(); renderPassUI();
     }
 
     function addPassXp(amount) {
@@ -1470,241 +1457,10 @@
       let rew = DAILY_REWARDS_7[state.daily.claimedDays];
       state.daily.claimedDays++;
       state.daily.lastDate = today;
-
       rew.action();
 
-      saveState(); updateHeader(); renderDailyUI(); updateTasksUI();
+      saveState(); updateHeader(); renderDailyUI();
       alert(`🎉 Вы получили бонус: ${rew.label}!`);
-    }
-
-    // BOT PERSONALITIES & DIALOG SYSTEM
-    let activeChatListingIdx = null;
-
-    const BOT_PERSONALITIES = [
-      { 
-        name: "Добряк", 
-        type: "kind", 
-        greetings: (price) => `Здарова! Заинтересовал твой номер. За ${price.toLocaleString()} 🪙 отдашь?`,
-        haggleResponse: "О, скидочка! Приятно иметь дело, забираю!",
-        acceptResponse: "Отличная цена, берем! По рукам!",
-        declineResponse: "Ну ладно, удачи с продажей!"
-      },
-      { 
-        name: "Хамло", 
-        type: "rude", 
-        greetings: (price) => `Э, слышь, чё за цена ${price.toLocaleString()} 🪙? За сколько реально отдашь?`,
-        haggleResponse: "Ну вот, другое дело! Хватай бабло, пока я добрый.",
-        acceptResponse: "Хрен с тобой, заберу раз уж выставил.",
-        declineResponse: "Пфф, вали с такими ценами, дядЯ!"
-      },
-      { 
-        name: "Наглый", 
-        type: "arrogant", 
-        greetings: (price) => `Привет. У тебя стоит ${price.toLocaleString()} 🪙. Скинешь цену или я ушёл?`,
-        haggleResponse: "Забираю со скидкой. Готовь документы.",
-        acceptResponse: "Ладно, заберу без торга. Оформляем.",
-        declineResponse: "Ахах, удачи найти дурака за такие деньги!"
-      },
-      { 
-        name: "Злой", 
-        type: "angry", 
-        greetings: (price) => `Ну и цена... ${price.toLocaleString()} 🪙?! Совсем с ума сошел?`,
-        haggleResponse: "Чёрт с тобой, со скидкой заберу!",
-        acceptResponse: "Ладно, забью его себе. Плачу!",
-        declineResponse: "Ариведерчи, грабитель!"
-      }
-    ];
-
-    function renderMarket() {
-      const list = document.getElementById('myMarketListings');
-      if (!list) return;
-      list.innerHTML = '';
-
-      const activeListings = (state.myListings || []).filter(item => item.status === 'chatting');
-
-      if (activeListings.length === 0) {
-        list.innerHTML = '<p style="color:var(--text-sub); text-align:center; font-size:0.75rem;">Пока нет новых покупателей и сообщений</p>';
-        return;
-      }
-
-      state.myListings.forEach((item, idx) => {
-        if (item.status !== 'chatting') return;
-
-        const div = document.createElement('div');
-        div.className = 'buyer-card';
-
-        const statusHtml = `
-          <div style="font-size:0.75rem; color:var(--green); margin-bottom:6px;">Новое сообщение! (${item.buyer.name})</div>
-          <button class="main-btn" style="width:100%; padding:6px; font-size:0.8rem;" onclick="openChatModal(${idx})">💬 Открыть чат</button>
-        `;
-
-        div.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <b style="color:var(--gold); font-size:0.9rem;">${item.text}</b>
-            <span style="font-size:0.7rem; color:var(--text-sub);">Цена: ${item.price.toLocaleString()} 🪙</span>
-          </div>
-          ${statusHtml}
-        `;
-        list.appendChild(div);
-      });
-    }
-
-    function openSellModal() {
-      playSound('click');
-      const select = document.getElementById('plateToSellSelect');
-      select.innerHTML = '';
-      if (state.ownedPlates.length === 0) {
-        select.innerHTML = '<option value="">Нет доступных номеров</option>';
-        document.getElementById('priceLimitHint').innerText = "Нет номеров";
-      } else {
-        state.ownedPlates.forEach((plate, idx) => {
-          select.innerHTML += `<option value="${idx}">${plate.text} (${plate.rarityName})</option>`;
-        });
-        updatePriceLimitHint();
-      }
-      select.onchange = updatePriceLimitHint;
-      document.getElementById('sellModal').classList.add('active');
-    }
-
-    function updatePriceLimitHint() {
-      const select = document.getElementById('plateToSellSelect');
-      if (!select.value && select.value !== "0") return;
-      const plate = state.ownedPlates[parseInt(select.value)];
-      if (plate) {
-        const lim = RARITY_LIMITS[plate.rarity || 'white'];
-        document.getElementById('priceLimitHint').innerText = `Категория: ${lim.name} | Обычная цена: ${lim.max.toLocaleString()} 🪙`;
-      }
-    }
-
-    function closeSellModal() { playSound('click'); document.getElementById('sellModal').classList.remove('active'); }
-
-    function confirmSellPlate() {
-      playSound('click');
-      const select = document.getElementById('plateToSellSelect');
-      if (select.value === "") return;
-      const idx = parseInt(select.value);
-      const price = parseInt(document.getElementById('sellPriceInput').value);
-
-      if (state.ownedPlates.length <= idx) return;
-      const plate = state.ownedPlates[idx];
-
-      if (isNaN(price) || price <= 0) { alert("Укажите корректную цену!"); return; }
-
-      state.ownedPlates.splice(idx, 1);
-      if (!state.myListings) state.myListings = [];
-
-      const listing = {
-        id: plate.id,
-        text: plate.text,
-        price: price,
-        rarity: plate.rarity || 'white',
-        status: 'searching',
-        chatHistory: [],
-        buyer: null
-      };
-
-      state.myListings.push(listing);
-      closeSellModal(); saveState(); renderMarket(); renderGarage();
-
-      const searchTime = Math.floor(Math.random() * 180) * 1000;
-      setTimeout(() => {
-        const pers = BOT_PERSONALITIES[Math.floor(Math.random() * BOT_PERSONALITIES.length)];
-        listing.status = 'chatting';
-        listing.buyer = pers;
-        listing.chatHistory.push({ sender: 'bot', text: pers.greetings(listing.price) });
-        saveState(); renderMarket();
-      }, searchTime);
-    }
-
-    // CHAT ACTIONS SYSTEM
-    function openChatModal(idx) {
-      playSound('click');
-      activeChatListingIdx = idx;
-      const listing = state.myListings[idx];
-      document.getElementById('chatTitle').innerText = `Чат с ${listing.buyer.name}`;
-      renderChatMessages();
-      document.getElementById('chatModal').classList.add('active');
-    }
-
-    function closeChatModal() { playSound('click'); document.getElementById('chatModal').classList.remove('active'); activeChatListingIdx = null; }
-
-    function renderChatMessages() {
-      const container = document.getElementById('chatMessages');
-      if (!container || activeChatListingIdx === null) return;
-      container.innerHTML = '';
-
-      const listing = state.myListings[activeChatListingIdx];
-      listing.chatHistory.forEach(msg => {
-        const div = document.createElement('div');
-        div.className = `chat-bubble ${msg.sender}`;
-        div.innerText = msg.text;
-        container.appendChild(div);
-      });
-      container.scrollTop = container.scrollHeight;
-    }
-
-    function handleChatAction(action) {
-      playSound('click');
-      if (activeChatListingIdx === null) return;
-      const listing = state.myListings[activeChatListingIdx];
-      const b = listing.buyer;
-      const lim = RARITY_LIMITS[listing.rarity || 'white'];
-
-      if (action === 'haggle') {
-        let discountedPrice = Math.round(listing.price * 0.85);
-        listing.chatHistory.push({ sender: 'user', text: `Давай уступлю до ${discountedPrice.toLocaleString()} 🪙!` });
-        renderChatMessages();
-
-        setTimeout(() => {
-          listing.chatHistory.push({ sender: 'bot', text: b.haggleResponse });
-          saveState(); renderChatMessages();
-          completeSale(listing, discountedPrice);
-        }, 1000);
-
-      } else if (action === 'keep') {
-        listing.chatHistory.push({ sender: 'user', text: `Цена окончательная: ${listing.price.toLocaleString()} 🪙.` });
-        renderChatMessages();
-
-        setTimeout(() => {
-          if (listing.price > lim.max && Math.random() < 0.7) {
-            listing.chatHistory.push({ sender: 'bot', text: b.declineResponse });
-            saveState(); renderChatMessages();
-            cancelSale(listing);
-          } else {
-            listing.chatHistory.push({ sender: 'bot', text: b.acceptResponse });
-            saveState(); renderChatMessages();
-            completeSale(listing, listing.price);
-          }
-        }, 1000);
-
-      } else if (action === 'decline') {
-        listing.chatHistory.push({ sender: 'user', text: "Извини, я передумал продавать." });
-        renderChatMessages();
-
-        setTimeout(() => {
-          listing.chatHistory.push({ sender: 'bot', text: "Ну и ладно, бывай." });
-          saveState(); renderChatMessages();
-          cancelSale(listing);
-        }, 800);
-      }
-    }
-
-    function completeSale(listing, price) {
-      setTimeout(() => {
-        playSound('win');
-        state.coins += price;
-        state.myListings = state.myListings.filter(l => l.id !== listing.id);
-        saveState(); updateHeader(); closeChatModal(); renderMarket();
-        alert(`🎉 Номер ${listing.text} успешно продан за ${price.toLocaleString()} 🪙!`);
-      }, 1200);
-    }
-
-    function cancelSale(listing) {
-      setTimeout(() => {
-        state.myListings = state.myListings.filter(l => l.id !== listing.id);
-        saveState(); closeChatModal(); renderMarket();
-        alert(`❌ Сделка отменена.`);
-      }, 1200);
     }
 
     // TASKS SYSTEM
@@ -1808,41 +1564,13 @@
     }
 
     // DONATE STARS
-    function openStarsModal() { playSound('click'); document.getElementById('starsModal').classList.add('active'); }
-    function closeStarsModal() { playSound('click'); document.getElementById('starsModal').classList.remove('active'); }
-
-    async function buyWithStars(title, description, amountStars, rewardCoins) {
-      playSound('click');
-      if (!tg) { alert("Откройте игру через Telegram!"); return; }
-      try {
-        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/createInvoiceLink`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, description, payload: `stars_${Date.now()}`, provider_token: "", currency: "XTR", prices: [{ label: title, amount: amountStars }] })
-        });
-        const data = await response.json();
-        if (data.ok && data.result) {
-          tg.openInvoice(data.result, function(status) {
-            if (status === 'paid') {
-              state.coins += rewardCoins;
-              saveState(); updateHeader(); closeStarsModal();
-              playSound('win');
-              tg.showAlert(`⭐ Успешно! Зачислено ${rewardCoins.toLocaleString()} монет!`);
-            }
-          });
-        }
-      } catch (err) { alert("Ошибка оплаты"); }
-    }
-
-    function updateTasksUI() {
-      document.getElementById('specialCasesCount').innerText = state.specialCases || 0;
-      document.getElementById('regularCasesCount').innerText = state.regularCases || 0;
-    }
+    function openStarsModal() { playSound('click'); alert("Магазин Telegram Stars доступен в Telegram WebApp!"); }
 
     function switchTab(tab) {
       playSound('click');
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      const tabs = ['spin','auction','garage','pass','shop','cases','market','tasks'];
+      const tabs = ['spin','auction','garage','globalChat','clubs','pass','shop','cases','tasks'];
       const idx = tabs.indexOf(tab);
       if (idx !== -1) {
         document.querySelectorAll('.nav-btn')[idx].classList.add('active');
@@ -1851,14 +1579,14 @@
       if (tab === 'garage') renderGarage();
       if (tab === 'shop') renderShop();
       if (tab === 'pass') renderPassUI();
-      if (tab === 'cases') { updateTasksUI(); renderDailyUI(); }
+      if (tab === 'cases') { renderDailyUI(); }
       if (tab === 'tasks') renderTasksUI();
-      if (tab === 'market') renderMarket();
     }
 
     window.onload = () => {
       initGarageCanvas();
       updateHeader();
+      initFirebaseListeners();
     };
   </script>
 </body>
